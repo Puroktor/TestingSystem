@@ -13,7 +13,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class CompletedTest {
+public class Attempt {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -28,13 +28,13 @@ public class CompletedTest {
 
     @NotNull(message = "Enter your score")
     @Min(value = 0, message = "Your score must be >= 0")
-    private Integer score;
+    private Double score;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        CompletedTest that = (CompletedTest) o;
+        Attempt that = (Attempt) o;
         return id != null && Objects.equals(id, that.id);
     }
 

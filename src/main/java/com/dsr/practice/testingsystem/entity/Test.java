@@ -17,6 +17,7 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,7 @@ public class Test {
 
     @NotNull(message = "Enter programming language")
     @Size(min = 1, max = 20, message = "Programming language must be be between 1 and 20 characters")
-    private String programmingLanguage;
+    private String programmingLang;
 
     @NotNull(message = "Enter test name")
     @Size(min = 1, max = 50, message = "Test name must be be between 1 and 50 characters")
@@ -35,11 +36,11 @@ public class Test {
     @Max(value = 50, message = "Questions count must be <= 50")
     private Integer questionsCount;
 
-    @OneToMany(mappedBy="test", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<CompletedTest> completedTests;
+    private Set<Attempt> attempts;
 
-    @OneToMany(mappedBy="test", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Question> questionsBank;
 

@@ -39,9 +39,9 @@ public class Student {
     @Size(min = 1, max = 320 , message = "Email must be be between 1 and 320 characters")
     private String email;
 
-    @OneToMany(mappedBy="student", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="student", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<CompletedTest> completedTests;
+    private Set<Attempt> attempts;
 
     @Override
     public boolean equals(Object o) {

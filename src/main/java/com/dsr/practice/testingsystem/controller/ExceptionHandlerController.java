@@ -7,12 +7,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.ValidationException;
+
 @ControllerAdvice
 public class ExceptionHandlerController {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ErrorDto handleRuntimeException(RuntimeException e) {
+        return new ErrorDto(e.getMessage());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorDto handleRuntimeException(ValidationException e) {
+        return new ErrorDto(e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorDto handleRuntimeException(IllegalArgumentException e) {
         return new ErrorDto(e.getMessage());
     }
 }
