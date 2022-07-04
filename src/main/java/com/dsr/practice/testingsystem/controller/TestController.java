@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/")
 @RequiredArgsConstructor
 public class TestController {
     private final TestService testService;
 
-    @PostMapping("/test")
+    @PostMapping("test")
     public ResponseEntity<?> createTest(@RequestBody FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
         Test newTest = testService.createTest(test);
@@ -25,14 +25,14 @@ public class TestController {
                 .body(testDto);
     }
 
-    @PostMapping("/test-check")
+    @PostMapping("test-check")
     public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("student-id") int studentId) {
         Test test = TestMapper.toEntity(testDto);
         testService.submitAttempt(test, studentId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/test")
+    @GetMapping("test")
     public ResponseEntity<?> fetchTestPage(@RequestParam(value = "programmingLang", required = false) String programmingLang,
                                            @RequestParam("index") int index,
                                            @RequestParam("size") int size) {
@@ -41,21 +41,21 @@ public class TestController {
                 .body(testService.fetchTestPage(programmingLang, index, size).map(TestMapper::tooThemeDto));
     }
 
-    @GetMapping("/test/{id}")
+    @GetMapping("test/{id}")
     public ResponseEntity<?> getTest(@PathVariable Integer id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(TestMapper.toFullDto(testService.getTest(id)));
     }
 
-    @PutMapping("/test/{id}")
+    @PutMapping("test/{id}")
     public ResponseEntity<?> updateTest(@PathVariable int id, @RequestBody FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
         testService.updateTest(id, test);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/test/{id}")
+    @DeleteMapping("test/{id}")
     public ResponseEntity<?> deleteTest(@PathVariable int id) {
         testService.deleteTest(id);
         return ResponseEntity.status(HttpStatus.OK).build();

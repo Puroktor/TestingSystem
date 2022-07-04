@@ -12,7 +12,6 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -16,7 +16,6 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TestThemeDto {
+public class SystemUserDto {
     private Integer id;
 
-    private String programmingLang;
+    private String university;
 
-    private String name;
+    private Integer year;
 
-    private Integer questionsCount;
+    private Integer groupNumber;
+
+    private String email;
 }

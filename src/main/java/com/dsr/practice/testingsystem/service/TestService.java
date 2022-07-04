@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +20,13 @@ public class TestService {
     private final TestRepository testRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    private final StudentRepository studentRepository;
+    private final SystemUserRepository systemUserRepository;
     private final AttemptRepository attemptRepository;
 
     public Test createTest(@Valid Test test) {
+        if (test.getQuestionsCount() > test.getQuestionsBank().size()) {
+            throw new IllegalArgumentException("Invalid questions count");
+        }
         return testRepository.save(test);
     }
 
@@ -38,13 +40,13 @@ public class TestService {
     }
 
     public void updateTest(int id, @Valid Test test) {
-        Optional<Test> oldTest = testRepository.findById(id);
-        if (!oldTest.isPresent()) {
-            throw new IllegalArgumentException("Invalid test Id:" + id);
+        if (test.getQuestionsCount() > test.getQuestionsBank().size()) {
+            throw new IllegalArgumentException("Invalid questions count");
         }
-        test.setId(id);
-        // Should attempts be dumped?
-        // test.setAttempts(oldTest.get().getAttempts());
+        Test oldTest = testRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + id));
+        test.setId(oldTest.getId());
+        testRepository.deleteById(oldTest.getId());
         testRepository.save(test);
     }
 
@@ -54,7 +56,6 @@ public class TestService {
         testRepository.delete(test);
     }
 
-
     public Test getTest(Integer id) {
         return testRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + id));
     }
@@ -62,7 +63,7 @@ public class TestService {
     public void submitAttempt(Test submittedTest, int studentId) {
         Test dbTest = testRepository.findById(submittedTest.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + submittedTest.getId()));
-        Student student = studentRepository.findById(studentId)
+        SystemUser user = systemUserRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + studentId));
         double score = 0;
         for (Question submittedQuestion : submittedTest.getQuestionsBank()) {
@@ -84,11 +85,6 @@ public class TestService {
                 score += dbQuestion.getMaxScore() * (double) correct / all;
             }
         }
-        Attempt attempt = new Attempt();
-        attempt.setTest(dbTest);
-        attempt.setStudent(student);
-        attempt.setScore(score);
-        attemptRepository.save(new Attempt());
-
+        attemptRepository.save( new Attempt(0, user,dbTest, score));
     }
 }

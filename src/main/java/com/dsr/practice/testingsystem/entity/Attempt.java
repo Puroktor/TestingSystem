@@ -12,15 +12,16 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Attempt {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @ManyToOne()
-    @JoinColumn(name="student_id", nullable=false)
-    private Student student;
+    @JoinColumn(name="user_id", nullable=false)
+    private SystemUser user;
 
     @ManyToOne()
     @JoinColumn(name="test_id", nullable=false)

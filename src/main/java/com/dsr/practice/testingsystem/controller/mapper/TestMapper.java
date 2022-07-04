@@ -15,12 +15,7 @@ import java.util.List;
 
 public class TestMapper {
     public static TestThemeDto tooThemeDto(Test test) {
-        return TestThemeDto.builder()
-                .id(test.getId())
-                .name(test.getName())
-                .programmingLang(test.getProgrammingLang())
-                .questionsCount(test.getQuestionsCount())
-                .build();
+        return new TestThemeDto(test.getId(), test.getName(), test.getProgrammingLang(), test.getQuestionsCount());
     }
 
     public static FullTestDto toFullDto(Test test) {
@@ -40,27 +35,14 @@ public class TestMapper {
     }
 
     public static Test toEntity(FullTestDto testDto) {
-        Test test = Test.builder()
-                .id(testDto.getTestThemeDto().getId())
-                .programmingLang(testDto.getTestThemeDto().getProgrammingLang())
-                .name(testDto.getTestThemeDto().getName())
-                .questionsCount(testDto.getTestThemeDto().getQuestionsCount())
-                .questionsBank(new HashSet<>())
-                .build();
+        Test test = new Test(testDto.getTestThemeDto().getId(), testDto.getTestThemeDto().getProgrammingLang(),
+                testDto.getTestThemeDto().getName(), testDto.getTestThemeDto().getQuestionsCount(),
+                null, new HashSet<>());
         for (QuestionDto questionDto : testDto.getQuestionList()) {
-            Question question = Question.builder()
-                    .id(questionDto.getId())
-                    .test(test)
-                    .maxScore(questionDto.getMaxScore())
-                    .text(questionDto.getText())
-                    .answers(new HashSet<>())
-                    .build();
+            Question question = new Question(questionDto.getId(), test, questionDto.getText(),
+                    questionDto.getMaxScore(), new HashSet<>());
             for (AnswerDto answerDto : questionDto.getAnswers()) {
-                Answer answer = Answer.builder()
-                        .id(answerDto.getId())
-                        .text(answerDto.getText())
-                        .isRight(answerDto.getIsSelected())
-                        .question(question).build();
+                Answer answer = new Answer(answerDto.getId(), answerDto.getText(), answerDto.getIsSelected(), question);
                 question.getAnswers().add(answer);
             }
             test.getQuestionsBank().add(question);

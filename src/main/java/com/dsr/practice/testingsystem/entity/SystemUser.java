@@ -17,7 +17,7 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student {
+public class SystemUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -39,7 +39,7 @@ public class Student {
     @Size(min = 1, max = 320 , message = "Email must be be between 1 and 320 characters")
     private String email;
 
-    @OneToMany(mappedBy="student", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Attempt> attempts;
 
@@ -47,8 +47,8 @@ public class Student {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Student student = (Student) o;
-        return id != null && Objects.equals(id, student.id);
+        SystemUser user = (SystemUser) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override
