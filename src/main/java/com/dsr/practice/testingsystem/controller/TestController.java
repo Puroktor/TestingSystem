@@ -16,7 +16,7 @@ public class TestController {
     private final TestService testService;
 
     @PostMapping("/test")
-    public ResponseEntity<?> createTest(FullTestDto testDto) {
+    public ResponseEntity<?> createTest(@RequestBody FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
         Test newTest = testService.createTest(test);
         testDto.getTestThemeDto().setId(newTest.getId());
@@ -26,7 +26,7 @@ public class TestController {
     }
 
     @PostMapping("/test-check")
-    public ResponseEntity<?> submitAttempt(FullTestDto testDto, @RequestParam("student-id") int studentId) {
+    public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("student-id") int studentId) {
         Test test = TestMapper.toEntity(testDto);
         testService.submitAttempt(test, studentId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -49,7 +49,7 @@ public class TestController {
     }
 
     @PutMapping("/test/{id}")
-    public ResponseEntity<?> updateTest(@PathVariable int id, FullTestDto testDto) {
+    public ResponseEntity<?> updateTest(@PathVariable int id, @RequestBody FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
         testService.updateTest(id, test);
         return ResponseEntity.status(HttpStatus.OK).build();

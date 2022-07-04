@@ -10,6 +10,7 @@ import com.dsr.practice.testingsystem.entity.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class TestMapper {
@@ -44,6 +45,7 @@ public class TestMapper {
                 .programmingLang(testDto.getTestThemeDto().getProgrammingLang())
                 .name(testDto.getTestThemeDto().getName())
                 .questionsCount(testDto.getTestThemeDto().getQuestionsCount())
+                .questionsBank(new HashSet<>())
                 .build();
         for (QuestionDto questionDto : testDto.getQuestionList()) {
             Question question = Question.builder()
@@ -51,6 +53,7 @@ public class TestMapper {
                     .test(test)
                     .maxScore(questionDto.getMaxScore())
                     .text(questionDto.getText())
+                    .answers(new HashSet<>())
                     .build();
             for (AnswerDto answerDto : questionDto.getAnswers()) {
                 Answer answer = Answer.builder()
