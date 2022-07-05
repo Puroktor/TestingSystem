@@ -14,6 +14,8 @@ import Swal from "sweetalert2";
 export class TestsListComponent implements OnInit {
 
   pageSize: number = 5;
+  pageNumb: number = 0;
+  lang: string = '';
   page?: Page;
 
   constructor(private testService: TestService, private route: ActivatedRoute, private router: Router) {
@@ -23,11 +25,11 @@ export class TestsListComponent implements OnInit {
     this.getPageNumber()
       .subscribe({
         next: value => {
-          let pageNumb = value[0] == null ? 0 : +value[0];
-          pageNumb = Math.max(pageNumb, 0);
-          let lang = value[1] ?? '';
-          (document.getElementById('filterInput') as HTMLInputElement).value = lang;
-          this.getPageFromServer(pageNumb, lang);
+          this.pageNumb = value[0] == null ? 0 : +value[0];
+          this.pageNumb = Math.max(this.pageNumb, 0);
+          this.lang = value[1] ?? '';
+          (document.getElementById('filterInput') as HTMLInputElement).value = this.lang;
+          this.getPageFromServer(this.pageNumb, this.lang);
         }
       });
   }
@@ -49,7 +51,7 @@ export class TestsListComponent implements OnInit {
   filterPage() {
     let filterValue = (document.getElementById('filterInput') as HTMLInputElement).value;
     this.router.navigate([''], {
-      queryParams: {page: this.page?.number, filter: filterValue}
+      queryParams: {page: this.pageNumb, filter: filterValue}
     });
   }
 }
