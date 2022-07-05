@@ -1,10 +1,22 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {TestsListComponent} from "./tests-list/tests-list.component";
+import {LoginComponent} from "./login/login.component";
+import {SignupComponent} from "./signup/signup.component";
+import {LeaderboardComponent} from "./leaderboard/leaderboard.component";
+import {TestComponent} from "./test/test.component";
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path: '', component: TestsListComponent},
+  {path: 'leaderboard', component: LeaderboardComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'signup', component: SignupComponent},
+  {path: 'test', component: TestComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
+export const routingComponents = [TestsListComponent, LoginComponent, SignupComponent, LeaderboardComponent, TestComponent]

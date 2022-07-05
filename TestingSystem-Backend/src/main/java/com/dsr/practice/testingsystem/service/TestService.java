@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +40,11 @@ public class TestService {
         if (test.getQuestionsCount() > test.getQuestionsBank().size()) {
             throw new IllegalArgumentException("Invalid questions count");
         }
-        Test oldTest = testRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + id));
-        test.setId(oldTest.getId());
-        testRepository.deleteById(oldTest.getId());
+        Optional<Test> oldTest = testRepository.findById(id);
+        if (oldTest.isPresent()) {
+            test.setId(oldTest.get().getId());
+            testRepository.delete(oldTest.get());
+        }
         testRepository.save(test);
     }
 

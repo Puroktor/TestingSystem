@@ -1,0 +1,17 @@
+.card{
+  padding: .5rem 1rem;
+  margin: 2rem 5rem;
+  border: 1px dashed #ccc;
+}
+.card:hover{
+  background: #eee;
+}
+.card:active{
+  margin: 2.25rem 5.25rem
+}
+.card h2{
+  margin-bottom: 1rem;
+}
+b{
+  text-align: right;
+}

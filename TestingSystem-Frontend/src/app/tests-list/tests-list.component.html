@@ -1,0 +1,15 @@
+<div *ngIf="page != null; else loadingBlock">
+  <div *ngIf="page.content.length > 0; else nothingBlock">
+    <app-test-card
+      *ngFor="let iterCard of page.content"
+      [card]="iterCard"
+    ></app-test-card>
+  </div>
+  <ng-template #nothingBlock>
+    <h1>Nothing is here!</h1>
+  </ng-template>
+</div>
+<ng-template #loadingBlock>
+  <h1>Loading...</h1>
+</ng-template>
+<app-pagination [page]="page"></app-pagination>
