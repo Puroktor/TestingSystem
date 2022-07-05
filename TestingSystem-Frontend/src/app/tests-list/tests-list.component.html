@@ -1,3 +1,7 @@
+<div class="search">
+<input type="text" class="form-control" placeholder="Enter language:" id="filterInput"
+      [readonly]="page==null"  (input)="filterPage()">
+</div>
 <div *ngIf="page != null; else loadingBlock">
   <div *ngIf="page.content.length > 0; else nothingBlock">
     <app-test-card

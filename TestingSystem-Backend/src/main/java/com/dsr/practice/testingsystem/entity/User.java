@@ -28,7 +28,7 @@ public class User {
     private String name;
 
     @NotNull(message = "Enter your nickname")
-    @Size(min = 1, max = 50, message = "Your nickname must be be between 1 and 100 characters")
+    @Size(min = 1, max = 50, message = "Your nickname must be be between 1 and 50 characters")
     @Column(unique = true)
     private String nickname;
 

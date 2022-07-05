@@ -27,7 +27,8 @@ public class TestService {
         return testRepository.save(test);
     }
 
-    public Page<Test> fetchTestPage(String filter, @Min(0) int index, @Min(1) int size) {
+    public Page<Test> fetchTestPage(String filter, @Min(value = 0, message = "Index must be >=0") int index,
+                                    @Min(value = 1, message = "Page size must be >=1") int size) {
         Pageable pageable = PageRequest.of(index, size, Sort.by("id").ascending());
         if (filter == null || filter.trim().isEmpty()) {
             return testRepository.findAll(pageable);

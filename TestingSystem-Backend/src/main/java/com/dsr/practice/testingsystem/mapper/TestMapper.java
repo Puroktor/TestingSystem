@@ -15,7 +15,7 @@ import java.util.List;
 public class TestMapper {
 
     public static TestInfoDto tooInfoDto(Test test) {
-        return new TestInfoDto(test.getId(), test.getName(), test.getProgrammingLang(), test.getQuestionsCount());
+        return new TestInfoDto(test.getId(), test.getProgrammingLang(), test.getName(), test.getQuestionsCount());
     }
 
     public static FullTestDto toFullDto(Test test) {

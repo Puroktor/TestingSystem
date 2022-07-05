@@ -1,1 +1,11 @@
-<p>login works!</p>
+<div class="h-100 row align-items-center pt-5 m-0">
+  <div class="col text-center">
+    <h2>Login</h2>
+    <h4 class="mb-4">(or <a class="link-primary" routerLink="/signup">register</a>)</h4>
+    <input type="text" class="m-3 p-1" placeholder="Nickname" id="name">
+    <br>
+    <input class="m-3 p-1" type="password" placeholder="Password" id="password">
+    <p class="text-danger"></p>
+    <button class="btn btn-primary m-2" (click)="submit()">Submit</button>
+  </div>
+</div>

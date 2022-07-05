@@ -2,14 +2,14 @@ import {TestCard} from "./TestCard";
 
 export interface Page {
   content: TestCard[]
-  pageable?: any
+  pageable: any
   last: boolean
-  totalPages?: number
-  totalElements?: number
-  size?: number
+  totalPages: number
+  totalElements: number
+  size: number
   number: number
-  sort?: any
+  sort: any
   first: boolean
-  numberOfElements?: number
-  empty?: boolean
+  numberOfElements: number
+  empty: boolean
 }

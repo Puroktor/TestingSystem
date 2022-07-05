@@ -30,7 +30,7 @@ public class UserController {
                 .body(userRegistrationDto);
     }
 
-    @GetMapping("login")
+    @PostMapping("login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto) {
         User user = UserMapper.toEntity(userLoginDto);
         Integer id = userService.loginUser(user);
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("submit")
-    public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("student-id") int studentId) {
+    public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("studentId") int studentId) {
         Test test = TestMapper.toEntity(testDto);
         userService.submitAttempt(test, studentId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
