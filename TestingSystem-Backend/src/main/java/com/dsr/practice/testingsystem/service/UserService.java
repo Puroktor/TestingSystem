@@ -21,10 +21,10 @@ public class UserService {
     private final AttemptRepository attemptRepository;
 
     public User createUser(@Valid User user) {
-        if(userRepository.findByNickname(user.getNickname()).isPresent()){
+        if (userRepository.findByNickname(user.getNickname()).isPresent()) {
             throw new IllegalStateException("User with such nickname already exists");
-        }else if(!user.getEmail().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")){
+        } else if (!user.getEmail().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")) {
             throw new ValidationException("Not valid email");
         }
         return userRepository.save(user);
@@ -43,7 +43,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + submittedTest.getId()));
         User user = userRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + studentId));
-        double score = 0;
+        double score = 0, maxScore = 0;
         for (Question submittedQuestion : submittedTest.getQuestionsBank()) {
             Question dbQuestion = questionRepository.findById(submittedQuestion.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid question Id:" + submittedQuestion.getId()));
@@ -62,7 +62,8 @@ public class UserService {
             if (correct > 0) {
                 score += dbQuestion.getMaxScore() * (double) correct / all;
             }
+            maxScore += dbQuestion.getMaxScore();
         }
-        attemptRepository.save( new Attempt(0, user,dbTest, score));
+        attemptRepository.save(new Attempt(0, user, dbTest, score / maxScore * 100));
     }
 }
