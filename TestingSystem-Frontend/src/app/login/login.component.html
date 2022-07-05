@@ -5,7 +5,7 @@
     <input type="text" class="m-3 p-1" placeholder="Nickname" id="name">
     <br>
     <input class="m-3 p-1" type="password" placeholder="Password" id="password">
-    <p class="text-danger"></p>
-    <button class="btn btn-primary m-2" (click)="submit()">Submit</button>
+    <br>
+    <button class="btn btn-primary m-3" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
   </div>
 </div>

@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {UserService} from '../user.service';
+import {Router} from '@angular/router';
+import Swal from 'sweetalert2';
+import {Md5} from 'ts-md5';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-signup',
@@ -6,10 +11,56 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
+  buttonDisabled: boolean = false;
 
-  constructor() { }
+  constructor(private userService: UserService, private router: Router) {
+  }
 
   ngOnInit(): void {
+  }
+
+  submit() {
+    let name = (document.getElementById('name') as HTMLInputElement).value.trim();
+    let nickname = (document.getElementById('nickname') as HTMLInputElement).value.trim();
+    let email = (document.getElementById('email') as HTMLInputElement).value.trim();
+    let password = (document.getElementById('password') as HTMLInputElement).value.trim();
+    let university = (document.getElementById('university') as HTMLInputElement).value.trim();
+    let year = +((document.getElementById('year') as HTMLInputElement).value.trim());
+    let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
+    if (name.length == 0 || name.length > 100) {
+      Swal.fire('Your full name must be between 1 and 100 characters');
+    } else if (nickname.length == 0 || nickname.length > 50) {
+      Swal.fire('Your nickname must be between 1 and 50 characters');
+    } else if (email.length == 0 || email.length > 320) {
+      Swal.fire('Email must be between 1 and 320 characters');
+    } else if (!email.match(/^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/)) {
+      Swal.fire('Not valid email!');
+    } else if (password.length == 0) {
+      Swal.fire('Enter your password');
+    } else if (university.length == 0 || university.length > 100) {
+      Swal.fire('University name must be between 1 and 100 characters');
+    } else if (isNaN(year)) {
+      Swal.fire('Enter student year in numeric format');
+    } else if (year < 1 || year > 6) {
+      Swal.fire('Student year must be between 1 and 6');
+    } else if (isNaN(groupNumber)) {
+      Swal.fire('Enter group number in numeric format');
+    } else if (groupNumber < 1) {
+      Swal.fire('Group number must be >=1');
+    } else {
+      this.buttonDisabled = true;
+      this.userService.createUser({
+        name: name, nickname: nickname, email: email, passwordHash: Md5.hashStr(password),
+        university: university, year: year, groupNumber: groupNumber, id: 1
+      }).subscribe({
+        next: response => {
+          localStorage.setItem('nickname', nickname);
+          localStorage.setItem('id', String(response.id));
+          this.router.navigate(['/']);
+        },
+        error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
+      });
+    }
   }
 
 }

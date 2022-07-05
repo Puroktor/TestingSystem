@@ -24,11 +24,11 @@ public class User {
     private Integer id;
 
     @NotNull(message = "Enter your name")
-    @Size(min = 1, max = 100, message = "Your name must be be between 1 and 100 characters")
+    @Size(min = 1, max = 100, message = "Your name must be between 1 and 100 characters")
     private String name;
 
     @NotNull(message = "Enter your nickname")
-    @Size(min = 1, max = 50, message = "Your nickname must be be between 1 and 50 characters")
+    @Size(min = 1, max = 50, message = "Your nickname must be between 1 and 50 characters")
     @Column(unique = true)
     private String nickname;
 
@@ -36,7 +36,7 @@ public class User {
     private String passwordHash;
 
     @NotNull(message = "Enter your university")
-    @Size(min = 1, max = 100, message = "University name must be be between 1 and 100 characters")
+    @Size(min = 1, max = 100, message = "University name must be between 1 and 100 characters")
     private String university;
 
     @NotNull(message = "Enter your university year")
@@ -49,7 +49,7 @@ public class User {
     private Integer groupNumber;
 
     @NotNull(message = "Enter your email")
-    @Size(min = 1, max = 320 , message = "Email must be be between 1 and 320 characters")
+    @Size(min = 1, max = 320 , message = "Email must be between 1 and 320 characters")
     private String email;
 
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

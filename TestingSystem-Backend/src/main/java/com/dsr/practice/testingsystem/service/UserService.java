@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.Optional;
 
 @Service
@@ -21,7 +22,10 @@ public class UserService {
 
     public User createUser(@Valid User user) {
         if(userRepository.findByNickname(user.getNickname()).isPresent()){
-            throw new IllegalStateException("User with such n");
+            throw new IllegalStateException("User with such nickname already exists");
+        }else if(!user.getEmail().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")){
+            throw new ValidationException("Not valid email");
         }
         return userRepository.save(user);
     }

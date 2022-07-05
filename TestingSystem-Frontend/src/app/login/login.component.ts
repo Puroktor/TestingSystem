@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  buttonDisabled: boolean = false;
 
   constructor(private userService: UserService, private router: Router) {
   }
@@ -21,20 +22,20 @@ export class LoginComponent implements OnInit {
     let name = (document.getElementById('name') as HTMLInputElement).value.trim();
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     if (name.length == 0 || name.length > 50) {
-      Swal.fire("Your nickname must be be between 1 and 50 characters");
+      Swal.fire('Your nickname must be between 1 and 50 characters');
     } else if (password.length == 0) {
-      Swal.fire("Enter your password");
+      Swal.fire('Enter your password');
     } else {
+      this.buttonDisabled = true;
       this.userService.loginUser({nickname: name, passwordHash: Md5.hashStr(password)})
         .subscribe({
           next: response => {
-            localStorage.setItem("nickname", name);
-            localStorage.setItem("id", String(response));
+            localStorage.setItem('nickname', name);
+            localStorage.setItem('id', String(response));
             this.router.navigate(['/']);
           },
-          error: () => Swal.fire("Wrong nickname or password")
+          error: () => Swal.fire('Wrong nickname or password').then(() => this.buttonDisabled = false)
         });
     }
-    return false;
   }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,7 +28,7 @@ public class Question {
     private Test test;
 
     @NotNull(message = "Enter your question")
-    @Size(min = 1, max = 200, message = "Question must be be between 1 and 200 characters")
+    @Size(min = 1, max = 200, message = "Question must be between 1 and 200 characters")
     private String text;
 
     @NotNull(message = "Enter question score")
@@ -36,6 +37,7 @@ public class Question {
 
     @OneToMany(mappedBy="question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Valid
     private List<Answer> answers;
 
     @Override

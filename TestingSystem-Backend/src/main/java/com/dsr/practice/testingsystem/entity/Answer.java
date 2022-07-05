@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -17,8 +19,11 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull(message = "Enter your answer")
+    @Size(min = 1, max = 100, message = "Your answer must be between 1 and 100 characters")
     private String text;
 
+    @NotNull(message = "Select right answer")
     private Boolean isRight;
 
     @ManyToOne

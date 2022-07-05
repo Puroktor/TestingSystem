@@ -18,7 +18,7 @@
         <li class="nav-item">
           <a *ngIf="getLocalStorageId() == null; else elseBlock" class="nav-link" routerLink="login">Login</a>
           <ng-template #elseBlock>
-            <a class="nav-link" (click)="logout()" >{{getLocalStorageNickname()}}, Logout</a>
+            <a class="nav-link" routerLink="" (click)="logout()">{{getLocalStorageNickname()}}, Logout</a>
           </ng-template>
         </li>
       </ul>

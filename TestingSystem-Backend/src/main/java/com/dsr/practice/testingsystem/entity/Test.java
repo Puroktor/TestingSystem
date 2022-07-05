@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -23,11 +24,11 @@ public class Test {
     private Integer id;
 
     @NotNull(message = "Enter programming language")
-    @Size(min = 1, max = 20, message = "Programming language must be be between 1 and 20 characters")
+    @Size(min = 1, max = 20, message = "Programming language must be between 1 and 20 characters")
     private String programmingLang;
 
     @NotNull(message = "Enter test name")
-    @Size(min = 1, max = 50, message = "Test name must be be between 1 and 50 characters")
+    @Size(min = 1, max = 50, message = "Test name must be between 1 and 50 characters")
     private String name;
 
     @NotNull(message = "Enter questions count!")
@@ -37,10 +38,12 @@ public class Test {
 
     @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Valid
     private List<Attempt> attempts;
 
     @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Valid
     private List<Question> questionsBank;
 
     @Override
