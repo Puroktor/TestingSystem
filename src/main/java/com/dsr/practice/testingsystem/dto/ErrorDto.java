@@ -1,4 +1,4 @@
-package com.dsr.practice.testingsystem.controller.dto;
+package com.dsr.practice.testingsystem.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

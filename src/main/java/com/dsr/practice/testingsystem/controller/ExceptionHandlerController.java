@@ -1,6 +1,6 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.dto.ErrorDto;
+import com.dsr.practice.testingsystem.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

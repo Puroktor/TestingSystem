@@ -1,9 +1,9 @@
-package com.dsr.practice.testingsystem.controller.mapper;
+package com.dsr.practice.testingsystem.mapper;
 
-import com.dsr.practice.testingsystem.controller.dto.AnswerDto;
-import com.dsr.practice.testingsystem.controller.dto.FullTestDto;
-import com.dsr.practice.testingsystem.controller.dto.QuestionDto;
-import com.dsr.practice.testingsystem.controller.dto.TestInfoDto;
+import com.dsr.practice.testingsystem.dto.AnswerDto;
+import com.dsr.practice.testingsystem.dto.FullTestDto;
+import com.dsr.practice.testingsystem.dto.QuestionDto;
+import com.dsr.practice.testingsystem.dto.TestInfoDto;
 import com.dsr.practice.testingsystem.entity.Answer;
 import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;

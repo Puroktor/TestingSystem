@@ -16,7 +16,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Attempt {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne()

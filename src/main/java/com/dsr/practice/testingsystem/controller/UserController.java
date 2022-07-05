@@ -1,10 +1,10 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.dto.FullTestDto;
-import com.dsr.practice.testingsystem.controller.dto.UserLoginDto;
-import com.dsr.practice.testingsystem.controller.dto.UserRegistrationDto;
-import com.dsr.practice.testingsystem.controller.mapper.TestMapper;
-import com.dsr.practice.testingsystem.controller.mapper.UserMapper;
+import com.dsr.practice.testingsystem.dto.FullTestDto;
+import com.dsr.practice.testingsystem.dto.UserLoginDto;
+import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
+import com.dsr.practice.testingsystem.mapper.TestMapper;
+import com.dsr.practice.testingsystem.mapper.UserMapper;
 import com.dsr.practice.testingsystem.entity.Test;
 import com.dsr.practice.testingsystem.entity.User;
 import com.dsr.practice.testingsystem.service.UserService;

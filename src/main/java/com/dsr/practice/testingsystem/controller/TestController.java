@@ -1,7 +1,7 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.dto.FullTestDto;
-import com.dsr.practice.testingsystem.controller.mapper.TestMapper;
+import com.dsr.practice.testingsystem.dto.FullTestDto;
+import com.dsr.practice.testingsystem.mapper.TestMapper;
 import com.dsr.practice.testingsystem.entity.Test;
 import com.dsr.practice.testingsystem.service.TestService;
 import lombok.RequiredArgsConstructor;

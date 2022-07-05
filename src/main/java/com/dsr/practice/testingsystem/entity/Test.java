@@ -19,7 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Test {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull(message = "Enter programming language")
