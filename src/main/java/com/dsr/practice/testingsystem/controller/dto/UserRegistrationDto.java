@@ -5,8 +5,14 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SystemUserDto {
+public class UserRegistrationDto {
     private Integer id;
+
+    private String name;
+
+    private String nickname;
+
+    private String passwordHash;
 
     private String university;
 

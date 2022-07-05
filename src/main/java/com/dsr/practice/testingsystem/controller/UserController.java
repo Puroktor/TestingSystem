@@ -1,9 +1,13 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.dto.SystemUserDto;
+import com.dsr.practice.testingsystem.controller.dto.FullTestDto;
+import com.dsr.practice.testingsystem.controller.dto.UserLoginDto;
+import com.dsr.practice.testingsystem.controller.dto.UserRegistrationDto;
+import com.dsr.practice.testingsystem.controller.mapper.TestMapper;
 import com.dsr.practice.testingsystem.controller.mapper.UserMapper;
-import com.dsr.practice.testingsystem.entity.SystemUser;
-import com.dsr.practice.testingsystem.service.SystemUserService;
+import com.dsr.practice.testingsystem.entity.Test;
+import com.dsr.practice.testingsystem.entity.User;
+import com.dsr.practice.testingsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +17,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/")
 @RequiredArgsConstructor
 public class UserController {
-    private final SystemUserService systemUserService;
+    private final UserService userService;
 
     @PostMapping("user")
-    public ResponseEntity<?> createUser(@RequestBody SystemUserDto systemUserDto) {
-        SystemUser user = UserMapper.toEntity(systemUserDto);
-        SystemUser newUser = systemUserService.createUser(user);
-        systemUserDto.setId(newUser.getId());
+    public ResponseEntity<?> createUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+        User user = UserMapper.toEntity(userRegistrationDto);
+        User newUser = userService.createUser(user);
+        userRegistrationDto.setId(newUser.getId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(systemUserDto);
+                .body(userRegistrationDto);
     }
 
-    @GetMapping("user/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Integer id) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(UserMapper.toDto(systemUserService.getUser(id)));
+    @GetMapping("login")
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto) {
+        User user = UserMapper.toEntity(userLoginDto);
+        Integer id = userService.loginUser(user);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
+    }
+
+    @PostMapping("submit")
+    public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("student-id") int studentId) {
+        Test test = TestMapper.toEntity(testDto);
+        userService.submitAttempt(test, studentId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

@@ -21,7 +21,7 @@ public class Attempt {
 
     @ManyToOne()
     @JoinColumn(name="user_id", nullable=false)
-    private SystemUser user;
+    private User user;
 
     @ManyToOne()
     @JoinColumn(name="test_id", nullable=false)

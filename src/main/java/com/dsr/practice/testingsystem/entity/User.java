@@ -8,19 +8,32 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
+@Table(name = "system_user")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SystemUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    @NotNull(message = "Enter your name")
+    @Size(min = 1, max = 100, message = "Your name must be be between 1 and 100 characters")
+    private String name;
+
+    @NotNull(message = "Enter your nickname")
+    @Size(min = 1, max = 50, message = "Your nickname must be be between 1 and 100 characters")
+    @Column(unique = true)
+    private String nickname;
+
+    @NotNull(message = "Enter your password")
+    private String passwordHash;
 
     @NotNull(message = "Enter your university")
     @Size(min = 1, max = 100, message = "University name must be be between 1 and 100 characters")
@@ -41,13 +54,13 @@ public class SystemUser {
 
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<Attempt> attempts;
+    private List<Attempt> attempts;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        SystemUser user = (SystemUser) o;
+        User user = (User) o;
         return id != null && Objects.equals(id, user.id);
     }
 

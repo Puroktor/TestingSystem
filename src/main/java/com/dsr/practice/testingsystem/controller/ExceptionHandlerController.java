@@ -21,14 +21,21 @@ public class ExceptionHandlerController {
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorDto handleRuntimeException(ValidationException e) {
+    public ErrorDto handleValidationException(ValidationException e) {
         return new ErrorDto(e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorDto handleRuntimeException(IllegalArgumentException e) {
+    public ErrorDto handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ErrorDto(e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ErrorDto handleIllegalStateException(IllegalStateException e) {
         return new ErrorDto(e.getMessage());
     }
 }

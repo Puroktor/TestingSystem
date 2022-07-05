@@ -18,18 +18,10 @@ public class TestController {
     @PostMapping("test")
     public ResponseEntity<?> createTest(@RequestBody FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
-        Test newTest = testService.createTest(test);
-        testDto.getTestThemeDto().setId(newTest.getId());
+        Test savedTest = testService.createTest(test);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(testDto);
-    }
-
-    @PostMapping("test-check")
-    public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("student-id") int studentId) {
-        Test test = TestMapper.toEntity(testDto);
-        testService.submitAttempt(test, studentId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+                .body(TestMapper.toFullDto(savedTest));
     }
 
     @GetMapping("test")
@@ -38,7 +30,7 @@ public class TestController {
                                            @RequestParam("size") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(testService.fetchTestPage(programmingLang, index, size).map(TestMapper::tooThemeDto));
+                .body(testService.fetchTestPage(programmingLang, index, size).map(TestMapper::tooInfoDto));
     }
 
     @GetMapping("test/{id}")

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TestThemeDto {
+public class TestInfoDto {
     private Integer id;
 
     private String programmingLang;
