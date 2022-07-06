@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ValidationException;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -36,6 +37,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDto handleIllegalStateException(IllegalStateException e) {
+        return new ErrorDto(e.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorDto handleNoSuchElementException(NoSuchElementException e) {
         return new ErrorDto(e.getMessage());
     }
 }

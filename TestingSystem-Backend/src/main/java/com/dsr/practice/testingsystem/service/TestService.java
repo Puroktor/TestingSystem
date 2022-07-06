@@ -1,7 +1,7 @@
 package com.dsr.practice.testingsystem.service;
 
-import com.dsr.practice.testingsystem.entity.*;
-import com.dsr.practice.testingsystem.repository.*;
+import com.dsr.practice.testingsystem.entity.Test;
+import com.dsr.practice.testingsystem.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -51,11 +52,11 @@ public class TestService {
 
     public void deleteTest(int id) {
         Test test = testRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + id));
+                .orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
         testRepository.delete(test);
     }
 
     public Test getTest(Integer id) {
-        return testRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid test Id:" + id));
+        return testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
     }
 }

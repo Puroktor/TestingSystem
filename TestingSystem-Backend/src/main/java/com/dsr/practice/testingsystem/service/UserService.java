@@ -45,7 +45,7 @@ public class UserService {
             private int all;
         }
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + userId));
+                .orElseThrow(() -> new NoSuchElementException("Invalid user Id:" + userId));
         HashMap<Question, Score> questionIdToScoreMap = new HashMap<>();
         for (Answer submittedAnswer : answers) {
             Answer dbAnswer = answerRepository.findById(submittedAnswer.getId())
