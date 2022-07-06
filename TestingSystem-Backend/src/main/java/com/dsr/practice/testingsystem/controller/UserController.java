@@ -15,8 +15,12 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,16 +47,16 @@ public class UserController {
 
     @ApiOperation(value = "Logins and returns your id if OK")
     @PostMapping("login")
-    public ResponseEntity<Integer> loginUser(@RequestBody @ApiParam(value = "Your login info") UserLoginDto userLoginDto) {
+    public ResponseEntity<UserLoginDto> loginUser(@RequestBody @ApiParam(value = "Your login info") UserLoginDto userLoginDto) {
         User user = UserMapper.toEntity(userLoginDto);
-        Integer id = userService.loginUser(user);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(id);
+                .body(userService.loginUser(user));
     }
 
     @ApiOperation(value = "Checks your test")
     @PostMapping("submit")
+    @PreAuthorize("hasAuthority('USERS_PASS')")
     public ResponseEntity<Void> submitAttempt(@RequestBody @ApiParam(value = "Your answers") AnswerDto[] answerDtos,
                                               @RequestParam("userId") @ApiParam(value = "Your user id", example = "1")
                                                       int userId) {
@@ -69,5 +73,12 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getLeaderboard());
+    }
+
+    @ApiOperation(value = "Logs out user")
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response){
+        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+        securityContextLogoutHandler.logout(request, response, null);
     }
 }

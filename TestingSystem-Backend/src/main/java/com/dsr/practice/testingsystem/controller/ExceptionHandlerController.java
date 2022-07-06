@@ -1,6 +1,7 @@
 package com.dsr.practice.testingsystem.controller;
 
 import com.dsr.practice.testingsystem.dto.ErrorDto;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

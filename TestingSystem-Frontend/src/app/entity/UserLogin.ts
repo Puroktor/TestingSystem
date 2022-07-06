@@ -1,4 +1,5 @@
 export interface UserLogin {
+  id: number|null
   nickname: string
-  passwordHash: string
+  password: string
 }

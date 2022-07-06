@@ -2,7 +2,8 @@ export interface UserRegistration {
   id: number|null
   name: string
   nickname: string
-  passwordHash: string
+  password: string
+  role: string
   university: string
   year: number
   groupNumber: number

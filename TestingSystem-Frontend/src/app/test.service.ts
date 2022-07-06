@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {FullTest} from "./entity/FullTest";
 import {environment} from "../environments/environment";
@@ -14,12 +14,14 @@ export class TestService {
   constructor(private http: HttpClient) {
   }
 
-  public createTest(test: FullTest): Observable<FullTest> {
-    return this.http.post<FullTest>(`${this.apiServerUrl}/test`, test);
+  public createTest(test: FullTest, token: string): Observable<FullTest> {
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this.http.post<FullTest>(`${this.apiServerUrl}/test`, test, {headers:headers});
   }
 
-  public getTest(id: number): Observable<FullTest> {
-    return this.http.get<FullTest>(`${this.apiServerUrl}/test/${id}`);
+  public getTest(id: number, token: string): Observable<FullTest> {
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this.http.get<FullTest>(`${this.apiServerUrl}/test/${id}`, {headers:headers});
   }
 
   public fetchPage(programmingLang: string, index: number, size: number): Observable<Page> {
@@ -27,11 +29,13 @@ export class TestService {
     return this.http.get<Page>(`${this.apiServerUrl}/test`, {params: params});
   }
 
-  public updateTest(id: number, test: FullTest): Observable<void> {
-    return this.http.put<void>(`${this.apiServerUrl}/test/${id}`, test);
+  public updateTest(id: number, test: FullTest, token: string): Observable<void> {
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this.http.put<void>(`${this.apiServerUrl}/test/${id}`, test, {headers:headers});
   }
 
-  public deleteTest(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/test/${id}`);
+  public deleteTest(id: number, token: string): Observable<void> {
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this.http.delete<void>(`${this.apiServerUrl}/test/${id}`, {headers:headers});
   }
 }

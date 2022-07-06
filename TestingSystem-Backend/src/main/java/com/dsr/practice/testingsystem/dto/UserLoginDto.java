@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserLoginDto {
+    private Integer id;
     private String nickname;
-
-    private String passwordHash;
+    private String password;
 }

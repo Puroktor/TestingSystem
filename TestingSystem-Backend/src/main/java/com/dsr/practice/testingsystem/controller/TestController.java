@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -26,6 +27,7 @@ public class TestController {
 
     @ApiOperation(value = "Creates new test")
     @PostMapping("test")
+    @PreAuthorize("hasAuthority('USERS_EDIT')")
     public ResponseEntity<FullTestDto> createTest(
             @RequestBody @ApiParam(value = "Test you want to save") FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
@@ -50,6 +52,7 @@ public class TestController {
     @ApiOperation(value = "Returns single test by id")
     @GetMapping("test/{id}")
     @Transactional
+    @PreAuthorize("hasAuthority('USERS_PASS')")
     public ResponseEntity<FullTestDto> getTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -58,6 +61,7 @@ public class TestController {
 
     @ApiOperation(value = "Changes test by id")
     @PutMapping("test/{id}")
+    @PreAuthorize("hasAuthority('USERS_EDIT')")
     public ResponseEntity<Void> updateTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id,
                                            @RequestBody @ApiParam(value = "New test") FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
@@ -69,6 +73,7 @@ public class TestController {
 
     @ApiOperation(value = "Deletes test by id")
     @DeleteMapping("test/{id}")
+    @PreAuthorize("hasAuthority('USERS_EDIT')")
     public ResponseEntity<Void> deleteTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id) {
         testService.deleteTest(id);
         return ResponseEntity

@@ -17,6 +17,7 @@ export class TestComponent implements OnInit {
 
   @Input() test?: FullTest;
   userId!: number;
+  token!: string
   buttonDisabled: boolean = false;
 
   constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
@@ -26,6 +27,7 @@ export class TestComponent implements OnInit {
       this.goToHomePage();
     } else {
       this.userId = +userId;
+      this.token = localStorage.getItem('token') ?? '';
     }
   }
 
@@ -52,7 +54,7 @@ export class TestComponent implements OnInit {
   }
 
   getTestFromServer(value: number) {
-    this.testService.getTest(value)
+    this.testService.getTest(value, this.token)
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.goToHomePage())
@@ -66,7 +68,7 @@ export class TestComponent implements OnInit {
       this.test.questionList.forEach((question) =>
         question.answers.forEach((answer) => answers.push(answer))
       )
-      this.userService.submitAttempt(answers, this.userId)
+      this.userService.submitAttempt(answers, this.userId, this.token)
         .subscribe({
           next: () => this.goToHomePage(),
           error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)

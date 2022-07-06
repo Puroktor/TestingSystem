@@ -1,9 +1,17 @@
 package com.dsr.practice.testingsystem.service;
 
 import com.dsr.practice.testingsystem.dto.LeaderboardDto;
+import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.entity.*;
-import com.dsr.practice.testingsystem.repository.*;
+import com.dsr.practice.testingsystem.repository.AnswerRepository;
+import com.dsr.practice.testingsystem.repository.AttemptRepository;
+import com.dsr.practice.testingsystem.repository.TestRepository;
+import com.dsr.practice.testingsystem.repository.UserRepository;
+import com.dsr.practice.testingsystem.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,6 +29,9 @@ public class UserService {
     private final TestRepository testRepository;
     private final AttemptRepository attemptRepository;
 
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
     public User createUser(@Valid User user) {
         if (userRepository.findByNickname(user.getNickname()).isPresent()) {
             throw new IllegalStateException("User with such nickname already exists");
@@ -31,12 +42,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Integer loginUser(User user) {
-        Optional<User> dbUser = userRepository.findByNickname(user.getNickname());
-        if (!dbUser.isPresent() || !dbUser.get().getPasswordHash().equals(user.getPasswordHash())) {
-            throw new IllegalStateException("Invalid name or password!");
+    public UserLoginDto loginUser(User user) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getNickname(), user.getPassword()));
+            User dbUser = userRepository.findByNickname(user.getNickname())
+                    .orElseThrow(() -> new NoSuchElementException("User doesn't exist"));
+            String token = jwtTokenProvider.createToken(user.getNickname(), dbUser.getRole().name());
+            return new UserLoginDto(user.getId(), user.getNickname(), token);
+        } catch (AuthenticationException e) {
+            throw new IllegalStateException("Invalid nickname/password combination!");
         }
-        return dbUser.get().getId();
     }
 
     public void submitAttempt(@Size(min = 1, message = "Provide at least one answer!") List<Answer> answers, int userId) {

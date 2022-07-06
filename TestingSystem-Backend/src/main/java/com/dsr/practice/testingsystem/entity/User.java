@@ -33,7 +33,11 @@ public class User {
     private String nickname;
 
     @NotNull(message = "Enter your password")
-    private String passwordHash;
+    @Size(min = 1, max = 100, message = "Your password must be between 1 and 100 characters")
+    private String password;
+
+    @NotNull(message = "Enter your role")
+    private Role role;
 
     @NotNull(message = "Enter your university")
     @Size(min = 1, max = 100, message = "University name must be between 1 and 100 characters")

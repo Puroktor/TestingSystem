@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../user.service";
-import {Md5} from 'ts-md5/dist/md5'
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
 
@@ -23,15 +22,16 @@ export class LoginComponent implements OnInit {
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     if (name.length == 0 || name.length > 50) {
       Swal.fire('Your nickname must be between 1 and 50 characters');
-    } else if (password.length == 0) {
-      Swal.fire('Enter your password');
+    } else if (password.length == 0 || password.length > 100) {
+      Swal.fire('Your password must be between 1 and 100 characters');
     } else {
       this.buttonDisabled = true;
-      this.userService.loginUser({nickname: name, passwordHash: Md5.hashStr(password)})
+      this.userService.loginUser({nickname: name, password: password, id:null})
         .subscribe({
           next: response => {
             localStorage.setItem('nickname', name);
             localStorage.setItem('id', String(response));
+            localStorage.setItem('token', response.password);
             this.router.navigate(['/']);
           },
           error: () => Swal.fire('Wrong nickname or password').then(() => this.buttonDisabled = false)

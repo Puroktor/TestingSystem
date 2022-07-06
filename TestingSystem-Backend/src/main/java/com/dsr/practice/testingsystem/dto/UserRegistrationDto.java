@@ -1,5 +1,6 @@
 package com.dsr.practice.testingsystem.dto;
 
+import com.dsr.practice.testingsystem.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,7 +13,9 @@ public class UserRegistrationDto {
 
     private String nickname;
 
-    private String passwordHash;
+    private String password;
+
+    private Role role;
 
     private String university;
 

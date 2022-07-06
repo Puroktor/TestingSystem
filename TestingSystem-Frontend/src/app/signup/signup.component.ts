@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from '../user.service';
 import {Router} from '@angular/router';
 import Swal from 'sweetalert2';
-import {Md5} from 'ts-md5';
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
@@ -27,6 +26,7 @@ export class SignupComponent implements OnInit {
     let university = (document.getElementById('university') as HTMLInputElement).value.trim();
     let year = +((document.getElementById('year') as HTMLInputElement).value.trim());
     let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
+    let role = +((document.getElementById('range') as HTMLInputElement).value) == 1 ? 'STUDENT' : 'TEACHER';
     if (name.length == 0 || name.length > 100) {
       Swal.fire('Your full name must be between 1 and 100 characters');
     } else if (nickname.length == 0 || nickname.length > 50) {
@@ -35,8 +35,8 @@ export class SignupComponent implements OnInit {
       Swal.fire('Email must be between 1 and 320 characters');
     } else if (!email.match(/^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/)) {
       Swal.fire('Not valid email!');
-    } else if (password.length == 0) {
-      Swal.fire('Enter your password');
+    } else if (password.length == 0 || password.length > 100) {
+      Swal.fire('Your password must be between 1 and 100 characters');
     } else if (university.length == 0 || university.length > 100) {
       Swal.fire('University name must be between 1 and 100 characters');
     } else if (isNaN(year)) {
@@ -50,13 +50,11 @@ export class SignupComponent implements OnInit {
     } else {
       this.buttonDisabled = true;
       this.userService.createUser({
-        name: name, nickname: nickname, email: email, passwordHash: Md5.hashStr(password),
+        name: name, nickname: nickname, email: email, password: password, role: role,
         university: university, year: year, groupNumber: groupNumber, id: null
       }).subscribe({
-        next: response => {
-          localStorage.setItem('nickname', nickname);
-          localStorage.setItem('id', String(response.id));
-          this.router.navigate(['/']);
+        next: () => {
+          this.router.navigate(['/login']);
         },
         error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
       });
