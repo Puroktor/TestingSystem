@@ -21,7 +21,7 @@ export class TestsListComponent implements OnInit {
   constructor(private testService: TestService, private route: ActivatedRoute, private router: Router) {
   }
 
-  ngOnInit() {
+  ngOnInit() : void {
     this.getPageNumber()
       .subscribe({
         next: value => {

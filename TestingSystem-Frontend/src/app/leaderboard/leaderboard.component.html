@@ -1,1 +1,30 @@
-<p>leaderboard works!</p>
+<table class="table table-bordered mt-3" *ngIf="leaderBoard!=null; else elseBlock">
+  <thead>
+  <tr class="table-secondary">
+    <th style="width: 10%" scope="col">&nbsp;</th>
+    <th style="width: 2.5%" class="text-center align-middle" scope="col">Total</th>
+    <th
+      *ngFor="let iterTestRecord of leaderBoard.testRecords"
+      [style.width.%]="87.5 / leaderBoard.testRecords.length"
+      class="text-center align-middle" scope="col">
+      <a href="/test?id={{iterTestRecord.id}}">{{iterTestRecord.name}}</a>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+    *ngFor="let userRecord of leaderBoard.userRecords"
+    [ngClass]="{'table-info': userRecord.nickname == nickName}">
+    <th class="text-center align-middle" scope="row">{{userRecord.nickname}}</th>
+    <td class="text-center align-middle">{{userRecord.total.toFixed(2)}}</td>
+    <td
+      *ngFor="let testRecord of leaderBoard.testRecords"
+      class="text-center align-middle">
+      {{userRecord.testToScoreMap.get(testRecord.id.toString())?.toFixed(2) }}
+    </td>
+  </tr>
+  </tbody>
+</table>
+<ng-template #elseBlock>
+  <h1>Loading...</h1>
+</ng-template>

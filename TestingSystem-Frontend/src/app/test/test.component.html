@@ -1,1 +1,22 @@
-<p>test works!</p>
+<div *ngIf="test!=null; else elseBlock">
+  <div class="info">
+    <div class="flex">
+      <h2>{{test.testInfoDto.name}}</h2>
+      <b>{{test.testInfoDto.programmingLang}}</b>
+    </div>
+    <p>Questions: {{test.testInfoDto.questionsCount}}</p>
+  </div>
+  <div>
+    <app-question
+      *ngFor="let iterQuestion of test.questionList; index as i"
+      [question]="iterQuestion"
+      [index]="i"
+    ></app-question>
+  </div>
+  <div class="text-center">
+    <button class="btn btn-primary m-1" (click)="submit()"> Submit</button>
+  </div>
+</div>
+<ng-template #elseBlock>
+  <h1>Loading...</h1>
+</ng-template>

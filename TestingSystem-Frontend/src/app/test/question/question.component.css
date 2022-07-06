@@ -1,0 +1,17 @@
+.question{
+  padding: 1.5rem 1.5rem .5rem 1.5rem;
+  margin: 2rem 5rem;
+  background: #ADD8E6;
+}
+h5, i{
+  display: inline;
+}
+.head{
+  display: flex;
+  justify-content: space-between;
+}
+
+p{
+  margin: 1rem 0;
+  text-align: center;
+}

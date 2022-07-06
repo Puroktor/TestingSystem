@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping("/api/")
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class TestController {
     }
 
     @GetMapping("test/{id}")
+    @Transactional
     public ResponseEntity<?> getTest(@PathVariable Integer id) {
         return ResponseEntity
                 .status(HttpStatus.OK)

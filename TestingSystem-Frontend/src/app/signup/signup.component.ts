@@ -51,7 +51,7 @@ export class SignupComponent implements OnInit {
       this.buttonDisabled = true;
       this.userService.createUser({
         name: name, nickname: nickname, email: email, passwordHash: Md5.hashStr(password),
-        university: university, year: year, groupNumber: groupNumber, id: 1
+        university: university, year: year, groupNumber: groupNumber, id: null
       }).subscribe({
         next: response => {
           localStorage.setItem('nickname', nickname);

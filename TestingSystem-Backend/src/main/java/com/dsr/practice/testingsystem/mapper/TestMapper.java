@@ -8,6 +8,7 @@ import com.dsr.practice.testingsystem.entity.Answer;
 import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +26,9 @@ public class TestMapper {
         for (Question question : test.getQuestionsBank().subList(0, test.getQuestionsCount())) {
             List<AnswerDto> answerDtos = new ArrayList<>();
             for (Answer answer : question.getAnswers()) {
-                answerDtos.add(new AnswerDto(answer.getId(), answer.getText(), false));
+                answerDtos.add(AnswerMapper.toDto(answer));
             }
+            Collections.shuffle(answerDtos);
             QuestionDto questionDto = new QuestionDto(question.getId(), question.getText(), question.getMaxScore(), answerDtos);
             shuffledDtoList.add(questionDto);
         }

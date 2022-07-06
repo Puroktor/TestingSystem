@@ -6,6 +6,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -14,17 +15,22 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(Attempt.AttemptId.class)
 public class Attempt {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Data
+    public static class AttemptId implements Serializable {
+        private Integer user;
+        private Integer test;
+    }
 
+    @Id
     @ManyToOne()
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Id
     @ManyToOne()
-    @JoinColumn(name="test_id", nullable=false)
+    @JoinColumn(name = "test_id", nullable = false)
     private Test test;
 
     @NotNull(message = "Enter your score")
@@ -35,12 +41,13 @@ public class Attempt {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Attempt that = (Attempt) o;
-        return id != null && Objects.equals(id, that.id);
+        Attempt attempt = (Attempt) o;
+        return user != null && Objects.equals(user, attempt.user)
+                && test != null && Objects.equals(test, attempt.test);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(user, test);
     }
 }

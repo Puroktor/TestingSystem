@@ -43,6 +43,8 @@ public class Test {
 
     @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @NotNull(message = "Enter at least 1 question!")
+    @Size(min = 1, message = "Enter at least 1 question!")
     @Valid
     private List<Question> questionsBank;
 

@@ -1,17 +1,21 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.dto.FullTestDto;
+import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
-import com.dsr.practice.testingsystem.mapper.TestMapper;
-import com.dsr.practice.testingsystem.mapper.UserMapper;
-import com.dsr.practice.testingsystem.entity.Test;
+import com.dsr.practice.testingsystem.entity.Answer;
 import com.dsr.practice.testingsystem.entity.User;
+import com.dsr.practice.testingsystem.mapper.AnswerMapper;
+import com.dsr.practice.testingsystem.mapper.UserMapper;
 import com.dsr.practice.testingsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/")
@@ -38,9 +42,14 @@ public class UserController {
     }
 
     @PostMapping("submit")
-    public ResponseEntity<?> submitAttempt(@RequestBody FullTestDto testDto, @RequestParam("studentId") int studentId) {
-        Test test = TestMapper.toEntity(testDto);
-        userService.submitAttempt(test, studentId);
+    public ResponseEntity<?> submitAttempt(@RequestBody AnswerDto[] answerDtos, @RequestParam("userId") int userId) {
+        List<Answer> answers = Arrays.stream(answerDtos).map(AnswerMapper::toEntity).collect(Collectors.toList());
+        userService.submitAttempt(answers, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("leaderboard")
+    public ResponseEntity<?> getLeaderboard() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getLeaderboard());
     }
 }

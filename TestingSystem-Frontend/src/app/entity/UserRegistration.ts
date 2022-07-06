@@ -1,5 +1,5 @@
 export interface UserRegistration {
-  id: number
+  id: number|null
   name: string
   nickname: string
   passwordHash: string

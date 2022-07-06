@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { TestCardComponent } from './tests-list/test-card/test-card.component';
 import { HeaderComponent } from './header/header.component';
 import { HttpClientModule } from '@angular/common/http';
+import {QuestionComponent} from "./test/question/question.component";
+import {AnswerComponent} from "./test/answer/answer.component";
 
 @NgModule({
   declarations: [
@@ -13,6 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
     TestCardComponent,
     HeaderComponent,
     routingComponents,
+    QuestionComponent,
+    AnswerComponent,
   ],
   imports: [
     BrowserModule,

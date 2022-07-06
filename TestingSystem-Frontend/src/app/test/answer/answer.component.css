@@ -1,0 +1,7 @@
+.answer{
+  display: flex;
+  justify-content: space-between;
+}
+p{
+  display: inline;
+}
