@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class SecurityConfig implements WebMvcConfigurer  {
+public class SecurityConfig implements WebMvcConfigurer {
     private final JwtTokenFilter jwtTokenFilter;
 
     @Override
@@ -37,8 +37,9 @@ public class SecurityConfig implements WebMvcConfigurer  {
         http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/login", "/api/leaderboard", "/api/user").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/test").permitAll();
+        http.authorizeRequests().antMatchers("/v2/api-docs/**",  "/swagger-ui/**", "/swagger-resources/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login", "/api/leaderboard", "/api/user").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/test").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
