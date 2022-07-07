@@ -3,23 +3,33 @@
     <h2>Register</h2>
     <h4 class="mb-4">(or <a class="link-primary" routerLink="/login">login</a>)</h4>
     <b>Teacher</b>
-    <input type="range" class="form-range" min="0" max="1" step="1" id="range">
+    <input type="range" class="form-range" min="0" max="1" step="1" (input)="changeRole($event)">
     <b>Student</b>
     <br>
-    <input type="text" class="m-3 p-1" placeholder="Full name" id="name">
+    <input type="text" class="inp m-3 p-1" placeholder="Full name" id="name">
     <br>
-    <input type="text" class="m-3 p-1" placeholder="Nickname" id="nickname">
+    <input type="text" class="inp m-3 p-1" placeholder="Nickname" id="nickname">
     <br>
-    <input type="text" class="m-3 p-1" placeholder="Email" id="email">
+    <input type="text" class="inp m-3 p-1" placeholder="Email" id="email">
     <br>
-    <input class="m-3 p-1" type="password" placeholder="Password" id="password">
+    <input class="inp m-3 p-1" type="password" placeholder="Password" id="password">
     <br>
-    <input type="text" class="m-3 p-1" placeholder="University" id="university">
+    <input type="text" class="inp m-3 p-1" placeholder="University" id="university">
     <br>
-    <input type="text" class="m-3 p-1" placeholder="University year" id="year">
-    <br>
-    <input type="text" class="m-3 p-1" placeholder="Your group number" id="groupNumber">
-    <br>
+    <div [style.display]="isVisible ? 'inline' : 'none'">
+      <select class="inp m-3 p-1" id="year" required>
+        <option class="text-muted" value="" selected disabled>University year</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 (mag. - 1)</option>
+        <option value="6">6 (mag. - 2)</option>
+      </select>
+      <br>
+      <input type="text" class="inp m-3 p-1" placeholder="Your group number" id="groupNumber">
+      <br>
+    </div>
     <button class="btn btn-primary m-3" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
   </div>
 </div>

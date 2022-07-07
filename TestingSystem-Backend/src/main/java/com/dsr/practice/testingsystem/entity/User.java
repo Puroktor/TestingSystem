@@ -43,12 +43,10 @@ public class User {
     @Size(min = 1, max = 100, message = "University name must be between 1 and 100 characters")
     private String university;
 
-    @NotNull(message = "Enter your university year")
     @Min(value = 1, message = "Year must be >= 1")
     @Max(value = 6, message = "Year must be <= 6")
     private Integer year;
 
-    @NotNull(message = "Enter your group number")
     @Min(value = 1, message = "Group number must be >= 1")
     private Integer groupNumber;
 

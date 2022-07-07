@@ -36,6 +36,10 @@ public class UserService {
     public User createUser(@Valid User user) {
         if (userRepository.findByNickname(user.getNickname()).isPresent()) {
             throw new IllegalArgumentException("User with such nickname already exists");
+        } else if (user.getRole() == Role.STUDENT && (user.getGroupNumber() == null || user.getYear() == null)) {
+            throw new IllegalArgumentException("Student must have university year and group number!");
+        } else if (user.getRole() == Role.TEACHER && (user.getGroupNumber() != null || user.getYear() != null)) {
+            throw new IllegalArgumentException("Student must not have university year or group number!");
         } else if (!user.getEmail().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")) {
             throw new ValidationException("Not valid email");
@@ -80,7 +84,7 @@ public class UserService {
 
     public LeaderboardDto getLeaderboard() {
         Iterable<Test> testList = testRepository.findAll();
-        Iterable<User> userList = userRepository.findAll();
+        Iterable<User> userList = userRepository.findAllByRole(Role.STUDENT);
         List<LeaderboardDto.UserRecord> userRecordList = new ArrayList<>();
         for (User user : userList) {
             List<Attempt> attempts = attemptRepository.findAllByUser(user);

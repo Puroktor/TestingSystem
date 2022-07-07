@@ -1,7 +1,25 @@
-.form-range{
+.form-range {
   width: 50px;
 }
-b{
+
+b {
   padding: 0 1rem;
-  vertical-align:top;
+  vertical-align: top;
+}
+
+.inp {
+  width: 225px;
+  height: 35px;
+}
+
+select:required:invalid {
+  color: gray;
+}
+
+option[value=""][disabled] {
+  display: none;
+}
+
+option {
+  color: black;
 }

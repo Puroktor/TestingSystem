@@ -11,11 +11,16 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class SignupComponent implements OnInit {
   buttonDisabled: boolean = false;
+  isVisible: boolean = true;
 
   constructor(private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {
+  }
+
+  changeRole(event: any) {
+    this.isVisible = (event.target as HTMLInputElement).value == '1';
   }
 
   submit() {
@@ -24,9 +29,6 @@ export class SignupComponent implements OnInit {
     let email = (document.getElementById('email') as HTMLInputElement).value.trim();
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     let university = (document.getElementById('university') as HTMLInputElement).value.trim();
-    let year = +((document.getElementById('year') as HTMLInputElement).value.trim());
-    let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
-    let role = +((document.getElementById('range') as HTMLInputElement).value) == 1 ? 'STUDENT' : 'TEACHER';
     if (name.length == 0 || name.length > 100) {
       Swal.fire('Your full name must be between 1 and 100 characters');
     } else if (nickname.length == 0 || nickname.length > 50) {
@@ -39,26 +41,40 @@ export class SignupComponent implements OnInit {
       Swal.fire('Your password must be between 1 and 256 characters');
     } else if (university.length == 0 || university.length > 100) {
       Swal.fire('University name must be between 1 and 100 characters');
-    } else if (isNaN(year)) {
-      Swal.fire('Enter student year in numeric format');
-    } else if (year < 1 || year > 6) {
-      Swal.fire('Student year must be between 1 and 6');
-    } else if (isNaN(groupNumber)) {
-      Swal.fire('Enter group number in numeric format');
-    } else if (groupNumber < 1) {
-      Swal.fire('Group number must be >=1');
     } else {
-      this.buttonDisabled = true;
-      this.userService.createUser({
-        name: name, nickname: nickname, email: email, password: password, role: role,
-        university: university, year: year, groupNumber: groupNumber, id: null
-      }).subscribe({
-        next: () => {
-          this.router.navigate(['/login']);
-        },
-        error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
-      });
+      if (this.isVisible) {
+        let year = +((document.getElementById('year') as HTMLSelectElement).value.trim());
+        console.log(year);
+        let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
+        if (isNaN(year)) {
+          Swal.fire('Enter student year in numeric format');
+        } else if (year < 1 || year > 6) {
+          Swal.fire('Student year must be between 1 and 6');
+        } else if (isNaN(groupNumber)) {
+          Swal.fire('Enter group number in numeric format');
+        } else if (groupNumber < 1) {
+          Swal.fire('Group number must be >=1');
+        } else {
+          this.sendRequest(name, nickname, email, password, "STUDENT", university, year, groupNumber);
+        }
+      } else {
+        this.sendRequest(name, nickname, email, password, "TEACHER", university, null, null);
+      }
     }
+  }
+
+  private sendRequest(name: string, nickname: string, email: string, password: string, role: string, university: string,
+                      year: number | null, groupNumber: number | null) {
+    this.buttonDisabled = true;
+    this.userService.createUser({
+      name: name, nickname: nickname, email: email, password: password, role: role,
+      university: university, year: year, groupNumber: groupNumber, id: null
+    }).subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
+    });
   }
 
 }

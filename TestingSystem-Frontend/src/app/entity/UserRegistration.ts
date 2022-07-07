@@ -5,7 +5,7 @@ export interface UserRegistration {
   password: string
   role: string
   university: string
-  year: number
-  groupNumber: number
+  year: number|null
+  groupNumber: number|null
   email: string
 }
