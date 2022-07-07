@@ -19,7 +19,7 @@ export class TestComponent implements OnInit {
   @Input() test?: FullTest;
   private userId!: number;
   private token!: string;
-  private buttonDisabled: boolean = false;
+  buttonDisabled: boolean = false;
 
   constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
               private router: Router) {
@@ -53,7 +53,7 @@ export class TestComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  private goToHomePage() {
+  goToHomePage() {
     this.router.navigate(['/']);
   }
 
@@ -64,7 +64,7 @@ export class TestComponent implements OnInit {
   }
 
   private getTestFromServer(value: number) {
-    this.testService.getTest(value, this.token)
+    this.testService.getShuffledTest(value, this.token)
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => {

@@ -1,0 +1,33 @@
+<div *ngIf="test!=null; else elseBlock" class="mb-0">
+  <div class="info">
+    <div class="flex">
+      <input class="form-control me-5" value="{{test.testInfoDto.name}}" placeholder="Title"
+             (change)="nameChanged($event)">
+      <input class="form-control ms-5" value="{{test.testInfoDto.programmingLang}}" placeholder="Language"
+             (change)="langChanged($event)">
+    </div>
+    <div class="container">
+      <div class="p-text me-3">Question count for students:</div>
+      <input type="number" class="form-control count-inp text-center" value="{{test.testInfoDto.questionsCount}}"
+             (change)="questionsCountChanged($event)">
+    </div>
+  </div>
+  <div>
+    <app-editor-question
+      *ngFor="let iterQuestion of test.questionList; index as i"
+      [question]="iterQuestion"
+      [test]="test"
+      [index]="i"
+    ></app-editor-question>
+  </div>
+  <div class="text-center mb-4 mt-0">
+    <a class="button" (click)="newQuestion()">+</a>
+  </div>
+  <div class="text-center">
+    <button class="btn btn-primary m-1" (click)="goToHomePage()">Cancel</button>
+    <button class="btn btn-primary m-1" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
+  </div>
+</div>
+<ng-template #elseBlock>
+  <h1>Loading...</h1>
+</ng-template>

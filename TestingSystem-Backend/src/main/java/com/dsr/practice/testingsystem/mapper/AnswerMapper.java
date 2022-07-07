@@ -8,7 +8,12 @@ public class AnswerMapper {
         return new Answer(dto.getId(), dto.getText(), dto.getIsSelected(), null);
     }
 
-    public static AnswerDto toDto(Answer answer) {
+    public static AnswerDto toDtoWithoutRight(Answer answer) {
         return new AnswerDto(answer.getId(), answer.getText(), false);
     }
+
+    public static AnswerDto toDtoWithRight(Answer answer) {
+        return new AnswerDto(answer.getId(), answer.getText(), answer.getIsRight());
+    }
+
 }

@@ -1,5 +1,5 @@
 export interface TestCard {
-  id: number
+  id: number|null
   programmingLang: string
   name: string
   questionsCount: number

@@ -1,5 +1,5 @@
 export interface Answer {
-  id: number
+  id: number|null
   text: string
   isSelected: boolean
 }

@@ -43,10 +43,8 @@ public class TestService {
             throw new IllegalArgumentException("Invalid questions count");
         }
         Optional<Test> oldTest = testRepository.findById(id);
-        if (oldTest.isPresent()) {
-            test.setId(oldTest.get().getId());
-            testRepository.delete(oldTest.get());
-        }
+        oldTest.ifPresent(testRepository::delete);
+        test.setId(id);
         testRepository.save(test);
     }
 

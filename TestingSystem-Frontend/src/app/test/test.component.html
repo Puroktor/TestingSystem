@@ -14,7 +14,8 @@
     ></app-question>
   </div>
   <div class="text-center">
-    <button class="btn btn-primary m-1" (click)="submit()"> Submit</button>
+    <button class="btn btn-primary m-1" (click)="goToHomePage()">Cancel</button>
+    <button class="btn btn-primary m-1" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
   </div>
 </div>
 <ng-template #elseBlock>

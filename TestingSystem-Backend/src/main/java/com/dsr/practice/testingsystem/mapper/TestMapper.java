@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TestMapper {
 
@@ -19,20 +21,34 @@ public class TestMapper {
         return new TestInfoDto(test.getId(), test.getProgrammingLang(), test.getName(), test.getQuestionsCount());
     }
 
-    public static FullTestDto toFullDto(Test test) {
+    public static FullTestDto toFullDtoWithoutRightAnswers(Test test) {
         TestInfoDto infoDto = tooInfoDto(test);
-        List<QuestionDto> shuffledDtoList = new ArrayList<>();
         Collections.shuffle(test.getQuestionsBank());
-        for (Question question : test.getQuestionsBank().subList(0, test.getQuestionsCount())) {
-            List<AnswerDto> answerDtos = new ArrayList<>();
-            for (Answer answer : question.getAnswers()) {
-                answerDtos.add(AnswerMapper.toDto(answer));
+        List<QuestionDto> questionDtos = getQuestionListDto(test.getQuestionsBank().subList(0, test.getQuestionsCount()),
+                false);
+        return new FullTestDto(infoDto, questionDtos);
+    }
+
+    public static FullTestDto toFullDtoWithRightAnswers(Test test) {
+        TestInfoDto infoDto = tooInfoDto(test);
+        List<QuestionDto> questionDtos = getQuestionListDto(test.getQuestionsBank(), true);
+        return new FullTestDto(infoDto, questionDtos);
+    }
+
+    private static List<QuestionDto> getQuestionListDto(List<Question> questions, boolean needAnswers) {
+        List<QuestionDto> dtoList = new ArrayList<>();
+        for (Question question : questions) {
+            Function<Answer, AnswerDto> mapperFunc = needAnswers ? AnswerMapper::toDtoWithRight :
+                    AnswerMapper::toDtoWithoutRight;
+            List<AnswerDto> answerDtos = question.getAnswers().stream().map(mapperFunc).collect(Collectors.toList());
+            if (!needAnswers) {
+                Collections.shuffle(answerDtos);
             }
-            Collections.shuffle(answerDtos);
-            QuestionDto questionDto = new QuestionDto(question.getId(), question.getText(), question.getMaxScore(), answerDtos);
-            shuffledDtoList.add(questionDto);
+            QuestionDto questionDto = new QuestionDto(question.getId(), question.getText(), question.getMaxScore(),
+                    answerDtos);
+            dtoList.add(questionDto);
         }
-        return new FullTestDto(infoDto, shuffledDtoList);
+        return dtoList;
     }
 
     public static Test toEntity(FullTestDto testDto) {

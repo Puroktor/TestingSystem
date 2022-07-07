@@ -8,15 +8,20 @@ import { HeaderComponent } from './header/header.component';
 import { HttpClientModule } from '@angular/common/http';
 import {QuestionComponent} from "./test/question/question.component";
 import {AnswerComponent} from "./test/answer/answer.component";
+import {EditorAnswerComponent} from "./editor/editor-answer/editor-answer.component";
+import {EditorQuestionComponent} from "./editor/editor-question/editor-question.component";
+
 
 @NgModule({
   declarations: [
     AppComponent,
     TestCardComponent,
     HeaderComponent,
-    routingComponents,
     QuestionComponent,
     AnswerComponent,
+    EditorQuestionComponent,
+    EditorAnswerComponent,
+    routingComponents,
   ],
   imports: [
     BrowserModule,

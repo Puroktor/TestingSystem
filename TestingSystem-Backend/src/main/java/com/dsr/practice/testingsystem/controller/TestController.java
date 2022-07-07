@@ -33,7 +33,7 @@ public class TestController {
         Test savedTest = testService.createTest(test);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(TestMapper.toFullDto(savedTest));
+                .body(TestMapper.toFullDtoWithRightAnswers(savedTest));
     }
 
     @ApiOperation(value = "Returns page of tests")
@@ -48,20 +48,30 @@ public class TestController {
                 .body(testService.fetchTestPage(programmingLang, index, size).map(TestMapper::tooInfoDto));
     }
 
-    @ApiOperation(value = "Returns single test by id")
+    @ApiOperation(value = "Returns full test with right answers by id")
     @GetMapping("test/{id}")
     @Transactional
-    @PreAuthorize("hasAuthority('USER_SUBMIT')")
-    public ResponseEntity<FullTestDto> getTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id) {
+    @PreAuthorize("hasAuthority('USER_EDIT')")
+    public ResponseEntity<FullTestDto> getTest(@PathVariable @ApiParam(value = "Id of the test", example = "1") int id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(TestMapper.toFullDto(testService.getTest(id)));
+                .body(TestMapper.toFullDtoWithRightAnswers(testService.getTest(id)));
+    }
+
+    @ApiOperation(value = "Returns shuffled test without right answers by id")
+    @GetMapping("test/shuffled/{id}")
+    @Transactional
+    @PreAuthorize("hasAuthority('USER_SUBMIT')")
+    public ResponseEntity<FullTestDto> getShuffledTest(@PathVariable @ApiParam(value = "Id of the test", example = "1") int id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(TestMapper.toFullDtoWithoutRightAnswers(testService.getTest(id)));
     }
 
     @ApiOperation(value = "Changes test by id")
     @PutMapping("test/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")
-    public ResponseEntity<Void> updateTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id,
+    public ResponseEntity<Void> updateTest(@PathVariable @ApiParam(value = "Id of the test", example = "1") int id,
                                            @RequestBody @ApiParam(value = "New test") FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
         testService.updateTest(id, test);
@@ -73,7 +83,7 @@ public class TestController {
     @ApiOperation(value = "Deletes test by id")
     @DeleteMapping("test/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")
-    public ResponseEntity<Void> deleteTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id) {
+    public ResponseEntity<Void> deleteTest(@PathVariable @ApiParam(value = "Id of the test", example = "1") int id) {
         testService.deleteTest(id);
         return ResponseEntity
                 .status(HttpStatus.OK)

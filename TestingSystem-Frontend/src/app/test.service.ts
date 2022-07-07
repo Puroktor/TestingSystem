@@ -19,6 +19,11 @@ export class TestService {
     return this.http.post<FullTest>(`${this.apiServerUrl}/test`, test, {headers:headers});
   }
 
+  public getShuffledTest(id: number, token: string): Observable<FullTest> {
+    let headers = new HttpHeaders().set('Authorization', token);
+    return this.http.get<FullTest>(`${this.apiServerUrl}/test/shuffled/${id}`, {headers:headers});
+  }
+
   public getTest(id: number, token: string): Observable<FullTest> {
     let headers = new HttpHeaders().set('Authorization', token);
     return this.http.get<FullTest>(`${this.apiServerUrl}/test/${id}`, {headers:headers});

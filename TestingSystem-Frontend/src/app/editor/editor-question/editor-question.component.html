@@ -1,0 +1,24 @@
+<div class="question">
+  <div class="head">
+    <h5>Question {{index + 1}}</h5>
+    <div>
+      <i>Max score:</i>
+      <input type="number" class="form-control score-inp text-center" value="{{question.maxScore}}"
+             (change)="scoreChanged($event)">
+      <a class="button ms-4" (click)="deleteQuestion()">❌</a>
+    </div>
+  </div>
+  <div class="p-2">
+    <input class="form-control text-center" placeholder="Question text" value="{{question.text}}"
+           (change)="questionChanged($event)">
+  </div>
+  <app-editor-answer
+    *ngFor="let iterAnswer of question.answers; index as i"
+    [answer]="iterAnswer"
+    [question]="question"
+    [index]="i"
+  ></app-editor-answer>
+  <div class="text-center">
+    <a class="button" (click)="newAnswer()">+</a>
+  </div>
+</div>

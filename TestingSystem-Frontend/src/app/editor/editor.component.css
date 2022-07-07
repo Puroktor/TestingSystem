@@ -1,0 +1,33 @@
+.info {
+  padding: 1.5rem 2rem .5rem 2rem;
+  margin: .5rem 2rem;
+  background: #eee;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  align-self: center
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.button {
+  font-size: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.count-inp {
+  width: 5rem;
+}
+
+.p-text{
+  line-height: 20px;
+}
