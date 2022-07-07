@@ -99,6 +99,9 @@ export class EditorComponent implements OnInit {
   }
 
   submit() {
+    if (!this.validateTest()) {
+      return;
+    }
     if (this.test != null) {
       this.hasSent = true;
       if (this.testId == null) {
@@ -117,12 +120,45 @@ export class EditorComponent implements OnInit {
   }
 
   deleteTest() {
-    if(this.testId!=null){
+    if (this.testId != null) {
       this.hasSent = true;
       this.testService.deleteTest(this.testId, this.token).subscribe({
         next: () => this.goToHomePage(),
         error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
       });
+    }
+  }
+
+  validateTest(): boolean {
+    if (this.test == null) {
+      return false;
+    } else if (this.test.testInfoDto.name.length == 0 || this.test.testInfoDto.name.length > 50) {
+      Swal.fire("Test name must be between 1 and 50 characters");
+      return false;
+    } else if (this.test.testInfoDto.programmingLang.length == 0 || this.test.testInfoDto.programmingLang.length > 20) {
+      Swal.fire("Programming language must be between 1 and 20 characters");
+      return false;
+    } else if (this.test.testInfoDto.questionsCount < 1 || this.test.testInfoDto.questionsCount > 50) {
+      Swal.fire("Questions count must be between 1 and 50");
+      return false;
+    } else {
+      for (let question of this.test.questionList) {
+        if (question.maxScore < 1) {
+          Swal.fire("Question score must be >= 1");
+          return false;
+        } else if (question.text.length == 0 || question.text.length > 200) {
+          Swal.fire("Question must be between 1 and 200 characters");
+          return false;
+        } else {
+          for (let answer of question.answers) {
+            if (question.text.length == 0 || question.text.length > 100) {
+              Swal.fire("Your answer must be between 1 and 100 characters");
+              return false;
+            }
+          }
+        }
+      }
+      return true;
     }
   }
 }
