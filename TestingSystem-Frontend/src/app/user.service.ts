@@ -6,6 +6,7 @@ import {UserRegistration} from "./entity/UserRegistration";
 import {UserLogin} from "./entity/UserLogin";
 import {Answer} from "./entity/Answer";
 import {Leaderboard} from "./entity/Leaderboard";
+import {JwtToken} from "./entity/JwtToken";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class UserService {
     return this.http.post<UserRegistration>(`${this.apiServerUrl}/user`, user);
   }
 
-  public loginUser(user: UserLogin): Observable<UserLogin> {
-    return this.http.post<UserLogin>(`${this.apiServerUrl}/login`, user);
+  public loginUser(user: UserLogin): Observable<JwtToken> {
+    return this.http.post<JwtToken>(`${this.apiServerUrl}/login`, user);
   }
 
   public submitAttempt(answers: Answer[], userId: number, token: string): Observable<void> {
@@ -32,10 +33,5 @@ export class UserService {
 
   public getLeaderboard(): Observable<Leaderboard> {
     return this.http.get<Leaderboard>(`${this.apiServerUrl}/leaderboard`);
-  }
-
-  public logout(token: string): Observable<void> {
-    let headers = new HttpHeaders().set('Authorization', token);
-    return this.http.post<void>(`${this.apiServerUrl}/logout`, {headers: headers});
   }
 }

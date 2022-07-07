@@ -1,6 +1,5 @@
 package com.dsr.practice.testingsystem.entity;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,17 +9,17 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public enum Role {
-    TEACHER(new HashSet<>(Arrays.asList(Permission.USERS_PASS))),
-    STUDENT(new HashSet<>(Arrays.asList(Permission.USERS_PASS, Permission.USERS_EDIT)));
+    TEACHER(new HashSet<>(Arrays.asList(Authorities.USER_SUBMIT, Authorities.USER_EDIT))),
+    STUDENT(new HashSet<>(Arrays.asList(Authorities.USER_SUBMIT)));
 
-    private final Set<Permission> permissions;
+    private final Set<Authorities> myAuthorities;
 
     public Set<SimpleGrantedAuthority> getAuthorities() {
-        return getPermissions().stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.name()))
+        return getMyAuthorities().stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.name()))
                 .collect(Collectors.toSet());
     }
 }

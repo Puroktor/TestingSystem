@@ -3,6 +3,7 @@ import {UserService} from "../user.service";
 import {Leaderboard} from "../entity/Leaderboard";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-leaderboard',
@@ -18,11 +19,17 @@ export class LeaderboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.nickName = localStorage.getItem("nickname");
+    let token = localStorage.getItem("jwt")
+    if (token == null) {
+      this.nickName = null;
+    } else {
+      let decoded: any = jwt_decode(token);
+      this.nickName = decoded.sub;
+    }
     this.getBoardFromServer();
   }
 
-  getBoardFromServer() {
+  private getBoardFromServer() {
     this.userService.getLeaderboard()
       .subscribe({
         next: value => {

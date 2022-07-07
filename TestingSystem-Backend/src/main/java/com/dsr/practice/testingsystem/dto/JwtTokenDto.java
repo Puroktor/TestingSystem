@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserLoginDto {
-    private String nickname;
-    private String password;
+public class JwtTokenDto {
+    private String token;
 }

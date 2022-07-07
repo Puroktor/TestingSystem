@@ -20,14 +20,13 @@ import javax.transaction.Transactional;
 @RestController
 @RequestMapping("/api/")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200/")
 @Api(tags = "Tests API")
 public class TestController {
     private final TestService testService;
 
     @ApiOperation(value = "Creates new test")
     @PostMapping("test")
-    @PreAuthorize("hasAuthority('USERS_EDIT')")
+    @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<FullTestDto> createTest(
             @RequestBody @ApiParam(value = "Test you want to save") FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
@@ -52,7 +51,7 @@ public class TestController {
     @ApiOperation(value = "Returns single test by id")
     @GetMapping("test/{id}")
     @Transactional
-    @PreAuthorize("hasAuthority('USERS_PASS')")
+    @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<FullTestDto> getTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -61,7 +60,7 @@ public class TestController {
 
     @ApiOperation(value = "Changes test by id")
     @PutMapping("test/{id}")
-    @PreAuthorize("hasAuthority('USERS_EDIT')")
+    @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<Void> updateTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id,
                                            @RequestBody @ApiParam(value = "New test") FullTestDto testDto) {
         Test test = TestMapper.toEntity(testDto);
@@ -73,7 +72,7 @@ public class TestController {
 
     @ApiOperation(value = "Deletes test by id")
     @DeleteMapping("test/{id}")
-    @PreAuthorize("hasAuthority('USERS_EDIT')")
+    @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<Void> deleteTest(@PathVariable @ApiParam(value = "Id of the page", example = "1") int id) {
         testService.deleteTest(id);
         return ResponseEntity

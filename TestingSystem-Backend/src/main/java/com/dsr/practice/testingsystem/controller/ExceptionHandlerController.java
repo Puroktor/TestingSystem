@@ -1,8 +1,8 @@
 package com.dsr.practice.testingsystem.controller;
 
 import com.dsr.practice.testingsystem.dto.ErrorDto;
-import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,11 +34,11 @@ public class ExceptionHandlerController {
         return new ErrorDto(e.getMessage());
     }
 
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
-    public ErrorDto handleIllegalStateException(IllegalStateException e) {
-        return new ErrorDto(e.getMessage());
+    public ErrorDto handleAuthenticationException(AuthenticationException e) {
+        return new ErrorDto("Invalid username or password!");
     }
 
     @ExceptionHandler(NoSuchElementException.class)

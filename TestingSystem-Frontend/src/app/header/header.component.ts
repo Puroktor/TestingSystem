@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-header',
@@ -13,16 +14,24 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getLocalStorageId() {
-    return localStorage.getItem("id");
+  checkJwt() {
+    return localStorage.getItem("jwt");
   }
 
   getLocalStorageNickname() {
-    return localStorage.getItem("nickname");
+    let token = localStorage.getItem("jwt");
+    if (token == null) {
+      return null;
+    }
+    let decoded: any = jwt_decode(token);
+    if (decoded.exp * 1000 < Date.now()) {
+      localStorage.removeItem("jwt");
+    }
+    return decoded.sub;
   }
+
   logout() {
-    localStorage.removeItem("id");
-    localStorage.removeItem("nickname");
+    localStorage.removeItem("jwt");
   }
 
 }

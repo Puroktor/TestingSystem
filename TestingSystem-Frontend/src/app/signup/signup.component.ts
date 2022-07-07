@@ -35,8 +35,8 @@ export class SignupComponent implements OnInit {
       Swal.fire('Email must be between 1 and 320 characters');
     } else if (!email.match(/^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/)) {
       Swal.fire('Not valid email!');
-    } else if (password.length == 0 || password.length > 100) {
-      Swal.fire('Your password must be between 1 and 100 characters');
+    } else if (password.length == 0 || password.length > 256) {
+      Swal.fire('Your password must be between 1 and 256 characters');
     } else if (university.length == 0 || university.length > 100) {
       Swal.fire('University name must be between 1 and 100 characters');
     } else if (isNaN(year)) {

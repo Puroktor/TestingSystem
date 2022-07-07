@@ -22,19 +22,17 @@ export class LoginComponent implements OnInit {
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     if (name.length == 0 || name.length > 50) {
       Swal.fire('Your nickname must be between 1 and 50 characters');
-    } else if (password.length == 0 || password.length > 100) {
-      Swal.fire('Your password must be between 1 and 100 characters');
+    } else if (password.length == 0 || password.length > 256) {
+      Swal.fire('Your password must be between 1 and 256 characters');
     } else {
       this.buttonDisabled = true;
-      this.userService.loginUser({nickname: name, password: password, id:null})
+      this.userService.loginUser({nickname: name, password: password})
         .subscribe({
           next: response => {
-            localStorage.setItem('nickname', name);
-            localStorage.setItem('id', String(response));
-            localStorage.setItem('token', response.password);
+            localStorage.setItem('jwt', response.token);
             this.router.navigate(['/']);
           },
-          error: () => Swal.fire('Wrong nickname or password').then(() => this.buttonDisabled = false)
+          error: (error) => Swal.fire(JSON.stringify(error)).then(() => this.buttonDisabled = false)
         });
     }
   }

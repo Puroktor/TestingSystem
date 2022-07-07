@@ -19,7 +19,7 @@ export class TestCardComponent implements OnInit {
   }
 
   goToTest() {
-    if (localStorage.getItem('id') == null) {
+    if (localStorage.getItem('jwt') == null) {
       Swal.fire('Login to see the test!');
     } else {
       this.router.navigate([`test`], {

@@ -7,6 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import {UserService} from "../user.service";
 import {Answer} from "../entity/Answer";
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-test',
@@ -16,18 +17,23 @@ import {Answer} from "../entity/Answer";
 export class TestComponent implements OnInit {
 
   @Input() test?: FullTest;
-  userId!: number;
-  token!: string
-  buttonDisabled: boolean = false;
+  private userId!: number;
+  private token!: string;
+  private buttonDisabled: boolean = false;
 
   constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
               private router: Router) {
-    let userId = localStorage.getItem("id");
-    if (userId == null) {
-      this.goToHomePage();
+    let token = localStorage.getItem("jwt")
+    if (token == null) {
+      this.goToLoginPage();
     } else {
-      this.userId = +userId;
-      this.token = localStorage.getItem('token') ?? '';
+      let decoded: any = jwt_decode(token);
+      if (!decoded.authorities.includes("USER_SUBMIT")) {
+        this.goToHomePage();
+      } else {
+        this.token = token;
+        this.userId = decoded.id;
+      }
     }
   }
 
@@ -43,21 +49,27 @@ export class TestComponent implements OnInit {
     });
   }
 
-  goToHomePage() {
+  private goToLoginPage() {
+    this.router.navigate(['/login']);
+  }
+
+  private goToHomePage() {
     this.router.navigate(['/']);
   }
 
-  getTestId() {
+  private getTestId() {
     return this.route.queryParamMap.pipe(
       map((params: ParamMap) => params.get('id')),
     );
   }
 
-  getTestFromServer(value: number) {
+  private getTestFromServer(value: number) {
     this.testService.getTest(value, this.token)
       .subscribe({
         next: value => this.test = value,
-        error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.goToHomePage())
+        error: (err: HttpErrorResponse) => {
+          Swal.fire(err.error.message).then(() => this.goToLoginPage())
+        }
       })
   }
 
@@ -71,9 +83,8 @@ export class TestComponent implements OnInit {
       this.userService.submitAttempt(answers, this.userId, this.token)
         .subscribe({
           next: () => this.goToHomePage(),
-          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
+          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.goToLoginPage())
         })
     }
   }
-
 }

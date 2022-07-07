@@ -1,9 +1,7 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.dto.AnswerDto;
-import com.dsr.practice.testingsystem.dto.LeaderboardDto;
-import com.dsr.practice.testingsystem.dto.UserLoginDto;
-import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
+import com.auth0.jwt.JWT;
+import com.dsr.practice.testingsystem.dto.*;
 import com.dsr.practice.testingsystem.entity.Answer;
 import com.dsr.practice.testingsystem.entity.User;
 import com.dsr.practice.testingsystem.mapper.AnswerMapper;
@@ -16,11 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +23,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200/")
 @Api(tags = "User API")
 public class UserController {
     private final UserService userService;
@@ -45,9 +39,9 @@ public class UserController {
                 .body(userRegistrationDto);
     }
 
-    @ApiOperation(value = "Logins and returns your id if OK")
+    @ApiOperation(value = "Returns JWT tokens if OK")
     @PostMapping("login")
-    public ResponseEntity<UserLoginDto> loginUser(@RequestBody @ApiParam(value = "Your login info") UserLoginDto userLoginDto) {
+    public ResponseEntity<JwtTokenDto> loginUser(@RequestBody @ApiParam(value = "Your login info") UserLoginDto userLoginDto) {
         User user = UserMapper.toEntity(userLoginDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -56,7 +50,7 @@ public class UserController {
 
     @ApiOperation(value = "Checks your test")
     @PostMapping("submit")
-    @PreAuthorize("hasAuthority('USERS_PASS')")
+    @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<Void> submitAttempt(@RequestBody @ApiParam(value = "Your answers") AnswerDto[] answerDtos,
                                               @RequestParam("userId") @ApiParam(value = "Your user id", example = "1")
                                                       int userId) {
@@ -73,12 +67,5 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getLeaderboard());
-    }
-
-    @ApiOperation(value = "Logs out user")
-    @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response){
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request, response, null);
     }
 }
