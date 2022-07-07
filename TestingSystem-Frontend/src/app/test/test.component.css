@@ -17,10 +17,6 @@ p{
   margin: 1rem;
 }
 
-h1 {
-  margin: 5rem;
-  text-align:center;
-}
 .flex{
   display: flex;
   justify-content: space-between;

@@ -1,4 +1,4 @@
-<div class="h-100 row align-items-center pt-5 m-0">
+<div class="h-100 row align-items-center pt-5 m-0" *ngIf="!hasSent; else waitingBlock">
   <div class="col text-center">
     <h2>Login</h2>
     <h4 class="mb-4">(or <a class="link-primary" routerLink="/signup">register</a>)</h4>
@@ -6,6 +6,9 @@
     <br>
     <input class="m-3 p-1" type="password" placeholder="Password" id="password">
     <br>
-    <button class="btn btn-primary m-3" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
+    <button class="btn btn-primary m-3"  (click)="submit()">Submit</button>
   </div>
 </div>
+<ng-template #waitingBlock>
+  <h1>Waiting for response...</h1>
+</ng-template>

@@ -1,12 +1,19 @@
-<div class="search">
-  <input type="text" class="form-control" placeholder="Enter language:" id="filterInput"
-         [readonly]="page==null" (input)="filterPage()">
+<div class="row m-0">
+  <div class="col-2"></div>
+  <div class="search col-8">
+    <input type="text" class="form-control" placeholder="Enter language:" id="filterInput"
+           [readonly]="page==null" (input)="filterPage()">
+  </div>
+  <div class="col-2 button-cont">
+    <a *ngIf="canEdit" routerLink="/editor" class="btn btn-secondary">New Test</a>
+  </div>
 </div>
 <div *ngIf="page != null; else loadingBlock">
   <div *ngIf="page.content.length > 0; else nothingBlock">
     <app-test-card
       *ngFor="let iterCard of page.content"
       [card]="iterCard"
+      [canEdit]="canEdit"
     ></app-test-card>
   </div>
   <ng-template #nothingBlock>

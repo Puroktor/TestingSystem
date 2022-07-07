@@ -1,4 +1,5 @@
 <div *ngIf="test!=null; else elseBlock">
+  <div *ngIf="!hasSent; else waitingBlock">
   <div class="info">
     <div class="flex">
       <h2>{{test.testInfoDto.name}}</h2>
@@ -15,9 +16,13 @@
   </div>
   <div class="text-center">
     <button class="btn btn-primary m-1" (click)="goToHomePage()">Cancel</button>
-    <button class="btn btn-primary m-1" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
+    <button class="btn btn-primary m-1" (click)="submit()">Submit</button>
   </div>
 </div>
+</div>
+<ng-template #waitingBlock>
+  <h1>Waiting for response...</h1>
+</ng-template>
 <ng-template #elseBlock>
   <h1>Loading...</h1>
 </ng-template>

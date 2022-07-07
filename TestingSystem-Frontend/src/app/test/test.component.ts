@@ -19,7 +19,7 @@ export class TestComponent implements OnInit {
   @Input() test?: FullTest;
   private userId!: number;
   private token!: string;
-  buttonDisabled: boolean = false;
+  hasSent: boolean = false;
 
   constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
               private router: Router) {
@@ -75,7 +75,7 @@ export class TestComponent implements OnInit {
 
   submit() {
     if (this.test != null) {
-      this.buttonDisabled = true;
+      this.hasSent = true;
       let answers: Answer[] = [];
       this.test.questionList.forEach((question) =>
         question.answers.forEach((answer) => answers.push(answer))

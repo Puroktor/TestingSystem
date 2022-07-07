@@ -10,7 +10,8 @@ import Swal from 'sweetalert2'
 })
 export class TestCardComponent implements OnInit {
 
-  @Input() card!: TestCard
+  @Input() card!: TestCard;
+  @Input() canEdit!: boolean;
 
   constructor(private router: Router) {
   }

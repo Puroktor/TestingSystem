@@ -1,17 +1,28 @@
-.card{
+.card {
   padding: .5rem 1rem;
-  margin: 2rem 5rem;
+  margin: 1rem 0;
   border: 1px dashed #ccc;
 }
-.card:hover{
+
+.card:hover {
   background: #eee;
+  cursor: pointer;
 }
-.card:active{
-  margin: 2.25rem 5.25rem
-}
-.card h2{
+
+.card h2 {
   margin-bottom: 1rem;
 }
-b{
+
+b {
   text-align: right;
+}
+
+.button{
+  font-size: 2rem;
+  cursor: pointer;
+  text-decoration:none;
+}
+.cont{
+  display: flex;
+  align-items: center;
 }

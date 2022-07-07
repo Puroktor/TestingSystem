@@ -10,7 +10,7 @@ import {HttpErrorResponse} from "@angular/common/http";
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  buttonDisabled: boolean = false;
+  hasSent: boolean = false;
   isVisible: boolean = true;
 
   constructor(private userService: UserService, private router: Router) {
@@ -65,7 +65,7 @@ export class SignupComponent implements OnInit {
 
   private sendRequest(name: string, nickname: string, email: string, password: string, role: string, university: string,
                       year: number | null, groupNumber: number | null) {
-    this.buttonDisabled = true;
+    this.hasSent = true;
     this.userService.createUser({
       name: name, nickname: nickname, email: email, password: password, role: role,
       university: university, year: year, groupNumber: groupNumber, id: null
@@ -73,7 +73,7 @@ export class SignupComponent implements OnInit {
       next: () => {
         this.router.navigate(['/login']);
       },
-      error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
+      error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
     });
   }
 

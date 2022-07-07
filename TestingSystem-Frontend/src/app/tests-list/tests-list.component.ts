@@ -5,6 +5,7 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {map} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-tests-list',
@@ -15,13 +16,19 @@ export class TestsListComponent implements OnInit {
 
   pageSize: number = 5;
   pageNumb: number = 0;
+  canEdit: boolean = false;
   lang: string = '';
   page?: Page;
 
   constructor(private testService: TestService, private route: ActivatedRoute, private router: Router) {
+    let token = localStorage.getItem("jwt")
+    if (token != null) {
+      let decoded: any = jwt_decode(token);
+      this.canEdit = decoded.authorities.includes("USER_EDIT");
+    }
   }
 
-  ngOnInit() : void {
+  ngOnInit(): void {
     this.getPageNumber()
       .subscribe({
         next: value => {

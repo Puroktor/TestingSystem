@@ -1,4 +1,4 @@
-<div class="h-100 row align-items-center pt-5 m-0">
+<div class="h-100 row align-items-center pt-5 m-0" *ngIf="!hasSent; else waitingBlock">
   <div class="col text-center">
     <h2>Register</h2>
     <h4 class="mb-4">(or <a class="link-primary" routerLink="/login">login</a>)</h4>
@@ -30,6 +30,9 @@
       <input type="number" class="inp m-3 p-1" placeholder="Your group number" id="groupNumber">
       <br>
     </div>
-    <button class="btn btn-primary m-3" [disabled]="buttonDisabled" (click)="submit()">Submit</button>
+    <button class="btn btn-primary m-3" (click)="submit()">Submit</button>
   </div>
 </div>
+<ng-template #waitingBlock>
+  <h1>Waiting for response...</h1>
+</ng-template>

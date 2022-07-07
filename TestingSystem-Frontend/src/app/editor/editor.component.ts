@@ -16,9 +16,9 @@ export class EditorComponent implements OnInit {
 
   @Input() test?: FullTest;
   private userId!: number;
-  private testId: number | null = null;
   private token!: string;
-  buttonDisabled: boolean = false;
+  testId: number | null = null;
+  hasSent: boolean = false;
 
   constructor(private testService: TestService, private route: ActivatedRoute, private router: Router) {
     let token = localStorage.getItem("jwt")
@@ -100,24 +100,29 @@ export class EditorComponent implements OnInit {
 
   submit() {
     if (this.test != null) {
-      this.buttonDisabled = true;
+      this.hasSent = true;
       if (this.testId == null) {
         this.testService.createTest(this.test, this.token).subscribe({
           next: () => this.goToHomePage(),
-          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
+          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
         });
       } else {
-        this.test.testInfoDto.id = null;
-        this.test.questionList.forEach(question => {
-          question.answers.forEach((answer) => answer.id = null);
-          question.id = null;
-        })
         this.testService.updateTest(this.testId, this.test, this.token)
           .subscribe({
             next: () => this.goToHomePage(),
-            error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.buttonDisabled = false)
+            error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
           });
       }
+    }
+  }
+
+  deleteTest() {
+    if(this.testId!=null){
+      this.hasSent = true;
+      this.testService.deleteTest(this.testId, this.token).subscribe({
+        next: () => this.goToHomePage(),
+        error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
+      });
     }
   }
 }

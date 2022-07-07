@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  buttonDisabled: boolean = false;
+  hasSent: boolean = false;
 
   constructor(private userService: UserService, private router: Router) {
   }
@@ -25,14 +25,14 @@ export class LoginComponent implements OnInit {
     } else if (password.length == 0 || password.length > 256) {
       Swal.fire('Your password must be between 1 and 256 characters');
     } else {
-      this.buttonDisabled = true;
+      this.hasSent = true;
       this.userService.loginUser({nickname: name, password: password})
         .subscribe({
           next: response => {
             localStorage.setItem('jwt', response.token);
             this.router.navigate(['/']);
           },
-          error: (error) => Swal.fire(JSON.stringify(error)).then(() => this.buttonDisabled = false)
+          error: (err) => Swal.fire(err.error.message).then(() => this.hasSent = false)
         });
     }
   }
