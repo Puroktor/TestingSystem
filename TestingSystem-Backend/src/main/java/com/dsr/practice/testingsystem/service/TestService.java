@@ -56,15 +56,14 @@ public class TestService {
             oldTest.getAttempts().addAll(newTest.getAttempts());
             oldTest.getQuestionsBank().clear();
             for (Question newQuestion : newTest.getQuestionsBank()) {
-                Optional<Question> optionalQuestion = questionRepository.findById(newQuestion.getId());
-                if (optionalQuestion.isPresent()) {
-                    Question oldQuestion = optionalQuestion.get();
-                    BeanUtils.copyProperties(newQuestion, oldQuestion, "answers");
-                    oldQuestion.getAnswers().clear();
-                    oldQuestion.getAnswers().addAll(newQuestion.getAnswers());
+                Optional<Question> optionalQuestion;
+                Integer qId = newQuestion.getId();
+                if (qId != null && (optionalQuestion = questionRepository.findById(qId)).isPresent()) {
+                    Question oldQuestion = copyQuestion(newQuestion, optionalQuestion.get());
                     oldTest.getQuestionsBank().add(oldQuestion);
                 } else {
-                    oldTest.getQuestionsBank().add(newQuestion);
+                    Question savedQuestion = questionRepository.save(newQuestion);
+                    oldTest.getQuestionsBank().add(savedQuestion);
                 }
             }
             testRepository.save(oldTest);
@@ -72,6 +71,13 @@ public class TestService {
             newTest.setId(id);
             testRepository.save(newTest);
         }
+    }
+
+    private Question copyQuestion(Question from, Question to) {
+        BeanUtils.copyProperties(from, to, "answers");
+        to.getAnswers().clear();
+        to.getAnswers().addAll(from.getAnswers());
+        return to;
     }
 
     public void deleteTest(int id) {

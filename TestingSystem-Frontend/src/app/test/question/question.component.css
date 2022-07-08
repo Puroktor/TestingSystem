@@ -9,7 +9,8 @@
   justify-content: space-between;
 }
 
-p {
+.question-text {
+  font-size: 1.05rem;
   margin: 1rem 0;
   text-align: center;
 }

@@ -3,7 +3,7 @@
     <h5>Question {{index + 1}}</h5>
     <i>Max score: {{question.maxScore}}</i>
   </div>
-  <p>{{question.text}}</p>
+  <p class="question-text">{{question.text}}</p>
   <app-answer
     *ngFor="let iterAnswer of question.answers; index as i"
     [answer]="iterAnswer"
