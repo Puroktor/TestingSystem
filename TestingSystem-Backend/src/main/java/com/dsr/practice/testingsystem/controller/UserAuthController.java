@@ -45,7 +45,7 @@ public class UserAuthController {
                 .body(userAuthService.loginUser(user));
     }
 
-    @ApiOperation(value = "Returns JWT tokens if OK")
+    @ApiOperation(value = "Returns JWT access and refresh tokens if OK")
     @PostMapping("token/refresh")
     public ResponseEntity<JwtTokensDto> refreshToken(@RequestBody @ApiParam(value = "Your login info") String refreshToken) {
         return ResponseEntity

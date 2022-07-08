@@ -10,6 +10,7 @@ import {QuestionComponent} from "./test/question/question.component";
 import {AnswerComponent} from "./test/answer/answer.component";
 import {EditorAnswerComponent} from "./editor/editor-answer/editor-answer.component";
 import {EditorQuestionComponent} from "./editor/editor-question/editor-question.component";
+import { LoadingComponent } from './loading/loading.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {EditorQuestionComponent} from "./editor/editor-question/editor-question.
     EditorQuestionComponent,
     EditorAnswerComponent,
     routingComponents,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

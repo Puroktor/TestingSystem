@@ -1,28 +1,26 @@
 <div *ngIf="test!=null; else elseBlock">
-  <div *ngIf="!hasSent; else waitingBlock">
-  <div class="info">
-    <div class="flex">
-      <h2>{{test.testInfoDto.name}}</h2>
-      <b>{{test.testInfoDto.programmingLang}}</b>
+  <div [style.display]="!hasSent ? 'block' : 'none'">
+    <div class="info">
+      <div class="flex">
+        <h2>{{test.testInfoDto.name}}</h2>
+        <b>{{test.testInfoDto.programmingLang}}</b>
+      </div>
+      <p>Questions: {{test.testInfoDto.questionsCount}}</p>
     </div>
-    <p>Questions: {{test.testInfoDto.questionsCount}}</p>
-  </div>
-  <div>
-    <app-question
-      *ngFor="let iterQuestion of test.questionList; index as i"
-      [question]="iterQuestion"
-      [index]="i"
-    ></app-question>
-  </div>
-  <div class="text-center">
-    <button class="btn btn-primary m-1" (click)="goToHomePage()">Cancel</button>
-    <button class="btn btn-primary m-1" (click)="submit()">Submit</button>
+    <div>
+      <app-question
+        *ngFor="let iterQuestion of test.questionList; index as i"
+        [question]="iterQuestion"
+        [index]="i"
+      ></app-question>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-primary m-1" (click)="goToHomePage()">Cancel</button>
+      <button class="btn btn-primary m-1" (click)="submit()">Submit</button>
+    </div>
   </div>
 </div>
-</div>
-<ng-template #waitingBlock>
-  <h1>Waiting for response...</h1>
-</ng-template>
+<app-loading [style.display]="hasSent ? 'block' : 'none'" [text]="'Waiting for response...'"></app-loading>
 <ng-template #elseBlock>
-  <h1>Loading...</h1>
+  <app-loading [text]="'Loading...'"></app-loading>
 </ng-template>

@@ -44,7 +44,6 @@ export class SignupComponent implements OnInit {
     } else {
       if (this.isVisible) {
         let year = +((document.getElementById('year') as HTMLSelectElement).value.trim());
-        console.log(year);
         let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
         if (isNaN(year)) {
           Swal.fire('Enter student year in numeric format');

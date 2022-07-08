@@ -1,5 +1,5 @@
 <div *ngIf="test!=null; else elseBlock">
-  <div *ngIf="!hasSent; else waitingBlock">
+  <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
       <div class="flex">
         <input class="form-control" value="{{test.testInfoDto.name}}" placeholder="Title"
@@ -31,9 +31,7 @@
     </div>
   </div>
 </div>
-<ng-template #waitingBlock>
-  <h1>Waiting for response...</h1>
-</ng-template>
+<app-loading [style.display]="hasSent ? 'block' : 'none'" [text]="'Waiting for response...'"></app-loading>
 <ng-template #elseBlock>
-  <h1>Loading...</h1>
+  <app-loading [text]="'Loading...'"></app-loading>
 </ng-template>
