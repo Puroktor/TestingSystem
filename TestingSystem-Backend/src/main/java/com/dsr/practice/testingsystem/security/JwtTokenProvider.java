@@ -21,28 +21,47 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     @Value("${jwt.secret-key}")
     private String secretKey;
-    @Value("${jwt.validity}")
-    private long validity;
+    @Value("${jwt.access-validity}")
+    private long accessValidity;
+    @Value("${jwt.refresh-validity}")
+    private long refreshValidity;
 
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
                 .withSubject(user.getNickname())
-                .withExpiresAt(new Date(System.currentTimeMillis() + validity))
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessValidity))
                 .withClaim("id", user.getId())
                 .withClaim("authorities", user.getRole().getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
     }
 
-    public UsernamePasswordAuthenticationToken getAuthTokenFromJwt(String jwtToken) {
+    public String generateRefreshToken(User user) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(jwtToken);
+        return JWT.create()
+                .withSubject(user.getNickname())
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshValidity))
+                .sign(algorithm);
+    }
+
+    public UsernamePasswordAuthenticationToken getAuthTokenFromJwt(String jwtToken) {
+        DecodedJWT decodedJWT = decodeJWT(jwtToken);
         String username = decodedJWT.getSubject();
         List<String> list = decodedJWT.getClaim("authorities").asList(String.class);
         List<SimpleGrantedAuthority> authorities = list.stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
+    }
+
+    public String getUsernameFromJwt(String jwtToken) {
+        DecodedJWT decodedJWT = decodeJWT(jwtToken);
+        return decodedJWT.getSubject();
+    }
+
+    private DecodedJWT decodeJWT(String jwtToken) {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        return verifier.verify(jwtToken);
     }
 }

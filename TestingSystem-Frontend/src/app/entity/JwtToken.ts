@@ -1,3 +1,4 @@
 export interface JwtToken {
-  token: string
+  accessToken: string
+  refreshToken: string
 }

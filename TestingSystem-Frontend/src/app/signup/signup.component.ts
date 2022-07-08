@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../user.service';
+import {UserAuthService} from '../service/user-auth.service';
 import {Router} from '@angular/router';
 import Swal from 'sweetalert2';
 import {HttpErrorResponse} from "@angular/common/http";
@@ -13,7 +13,7 @@ export class SignupComponent implements OnInit {
   hasSent: boolean = false;
   isVisible: boolean = true;
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserAuthService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -55,10 +55,10 @@ export class SignupComponent implements OnInit {
         } else if (groupNumber < 1) {
           Swal.fire('Group number must be >=1');
         } else {
-          this.sendRequest(name, nickname, email, password, "STUDENT", university, year, groupNumber);
+          this.sendRequest(name, nickname, email, password, 'STUDENT', university, year, groupNumber);
         }
       } else {
-        this.sendRequest(name, nickname, email, password, "TEACHER", university, null, null);
+        this.sendRequest(name, nickname, email, password, 'TEACHER', university, null, null);
       }
     }
   }

@@ -1,13 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FullTest} from "../entity/FullTest";
-import {TestService} from "../test.service";
+import {TestService} from "../service/test.service";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
-import {UserService} from "../user.service";
 import {Answer} from "../entity/Answer";
 import jwt_decode from 'jwt-decode';
+import {ActionsService} from "../service/actions.service";
 
 @Component({
   selector: 'app-test',
@@ -18,26 +18,26 @@ export class TestComponent implements OnInit {
 
   @Input() test?: FullTest;
   private userId!: number;
-  private token!: string;
   hasSent: boolean = false;
 
-  constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
+  constructor(private testService: TestService, private actionService: ActionsService, private route: ActivatedRoute,
               private router: Router) {
-    let token = localStorage.getItem("jwt")
-    if (token == null) {
-      this.goToLoginPage();
-    } else {
-      let decoded: any = jwt_decode(token);
-      if (!decoded.authorities.includes("USER_SUBMIT")) {
-        this.goToHomePage();
-      } else {
-        this.token = token;
-        this.userId = decoded.id;
-      }
-    }
   }
 
   ngOnInit(): void {
+    let token = localStorage.getItem('access-jwt');
+    if (token == null) {
+      this.goToHomePage();
+      return;
+    } else {
+      let decoded: any = jwt_decode(token);
+      if (!decoded.authorities.includes('USER_SUBMIT')) {
+        this.goToHomePage();
+        return;
+      } else {
+        this.userId = decoded.id;
+      }
+    }
     this.getTestId().subscribe({
       next: value => {
         if (value == null) {
@@ -47,10 +47,6 @@ export class TestComponent implements OnInit {
         }
       }
     });
-  }
-
-  private goToLoginPage() {
-    this.router.navigate(['/login']);
   }
 
   goToHomePage() {
@@ -64,11 +60,11 @@ export class TestComponent implements OnInit {
   }
 
   private getTestFromServer(value: number) {
-    this.testService.getShuffledTest(value, this.token)
+    this.testService.getShuffledTest(value, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => {
-          Swal.fire(err.error.message).then(() => this.goToLoginPage())
+          Swal.fire(err.error.message).then(() => this.goToHomePage())
         }
       })
   }
@@ -80,10 +76,10 @@ export class TestComponent implements OnInit {
       this.test.questionList.forEach((question) =>
         question.answers.forEach((answer) => answers.push(answer))
       )
-      this.userService.submitAttempt(answers, this.userId, this.token)
+      this.actionService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
         .subscribe({
           next: () => this.goToHomePage(),
-          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.goToLoginPage())
+          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
         })
     }
   }

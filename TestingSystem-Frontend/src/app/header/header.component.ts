@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import jwt_decode from "jwt-decode";
+import {UserAuthService} from "../service/user-auth.service";
+import Swal from "sweetalert2";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-header',
@@ -8,30 +11,49 @@ import jwt_decode from "jwt-decode";
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() {
+  nickname: string | null = null;
+  timer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(private userService: UserAuthService) {
   }
 
   ngOnInit(): void {
+    let accessToken = localStorage.getItem('access-jwt');
+    if (accessToken == null) {
+      return;
+    }
+    let decodedAccess: any = jwt_decode(accessToken);
+    this.nickname = decodedAccess.sub;
+    this.timer = setTimeout(() => this.refreshToken(), Math.max(decodedAccess.exp * 1000 - Date.now(), 0));
   }
 
-  checkJwt() {
-    return localStorage.getItem("jwt");
-  }
-
-  getLocalStorageNickname() {
-    let token = localStorage.getItem("jwt");
-    if (token == null) {
-      return null;
+  private refreshToken() {
+    let refreshToken = localStorage.getItem('refresh-jwt');
+    if (refreshToken == null) {
+      this.logout();
+      return;
     }
-    let decoded: any = jwt_decode(token);
-    if (decoded.exp * 1000 < Date.now()) {
-      localStorage.removeItem("jwt");
+    let decodedRefresh: any = jwt_decode(refreshToken);
+    if (decodedRefresh.exp * 1000 > Date.now()) {
+      this.userService.refreshToken(refreshToken).subscribe({
+        next: (response) => {
+          localStorage.setItem('access-jwt', response.accessToken);
+          localStorage.setItem('refresh-jwt', response.refreshToken);
+          let decodedAccess: any = jwt_decode(response.accessToken);
+          this.timer = setTimeout(() => this.refreshToken(), Math.max(decodedAccess.exp * 1000 - Date.now(), 0));
+        }, error: (err: HttpErrorResponse) => {
+          Swal.fire(err.error.message);
+          this.logout();
+        }
+      });
+    } else {
+      this.logout();
     }
-    return decoded.sub;
   }
 
   logout() {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem('access-jwt');
+    localStorage.removeItem('refresh-jwt');
+    window.location.reload();
   }
-
 }

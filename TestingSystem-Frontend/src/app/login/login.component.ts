@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from "../user.service";
+import {UserAuthService} from "../service/user-auth.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
 
@@ -11,10 +11,13 @@ import {Router} from "@angular/router";
 export class LoginComponent implements OnInit {
   hasSent: boolean = false;
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserAuthService, private router: Router) {
   }
 
   ngOnInit(): void {
+    if (localStorage.getItem('access-jwt') != null) {
+      this.router.navigate(['/']);
+    }
   }
 
   submit() {
@@ -29,8 +32,9 @@ export class LoginComponent implements OnInit {
       this.userService.loginUser({nickname: name, password: password})
         .subscribe({
           next: response => {
-            localStorage.setItem('jwt', response.token);
-            this.router.navigate(['/']);
+            localStorage.setItem('access-jwt', response.accessToken);
+            localStorage.setItem('refresh-jwt', response.refreshToken);
+            window.location.href = '/';
           },
           error: (err) => Swal.fire(err.error.message).then(() => this.hasSent = false)
         });

@@ -37,8 +37,10 @@ public class SecurityConfig implements WebMvcConfigurer {
         http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/v2/api-docs/**",  "/swagger-ui/**", "/swagger-resources/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/login", "/api/leaderboard", "/api/user").permitAll();
+        http.authorizeRequests().antMatchers("/v2/api-docs/**",  "/swagger-ui/**",
+                "/swagger-resources/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login", "/api/leaderboard", "/api/user",
+                "/api/token/refresh").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/test").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

@@ -16,9 +16,9 @@
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a *ngIf="checkJwt() == null; else elseBlock" class="nav-link" routerLink="login">Login</a>
+          <a *ngIf="nickname == null; else elseBlock" class="nav-link" routerLink="login">Login</a>
           <ng-template #elseBlock>
-            <a class="nav-link" routerLink="" (click)="logout()">{{getLocalStorageNickname()}}, Logout</a>
+            <a role="button" class="nav-link" (click)="logout()">{{nickname}}, Logout</a>
           </ng-template>
         </li>
       </ul>

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Page} from "../entity/Page";
-import {TestService} from "../test.service";
+import {TestService} from "../service/test.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {map} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -21,14 +21,14 @@ export class TestsListComponent implements OnInit {
   page?: Page;
 
   constructor(private testService: TestService, private route: ActivatedRoute, private router: Router) {
-    let token = localStorage.getItem("jwt")
-    if (token != null) {
-      let decoded: any = jwt_decode(token);
-      this.canEdit = decoded.authorities.includes("USER_EDIT");
-    }
   }
 
   ngOnInit(): void {
+    let token = localStorage.getItem('access-jwt')
+    if (token != null) {
+      let decoded: any = jwt_decode(token);
+      this.canEdit = decoded.authorities.includes('USER_EDIT');
+    }
     this.getPageNumber()
       .subscribe({
         next: value => {

@@ -29,7 +29,7 @@ export class EditorQuestionComponent implements OnInit {
   }
 
   newAnswer() {
-    this.question.answers.push({id: null, text: "", isSelected: false});
+    this.question.answers.push({id: null, text: '', isSelected: false});
   }
 
   deleteQuestion() {

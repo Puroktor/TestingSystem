@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from "../user.service";
 import {Leaderboard} from "../entity/Leaderboard";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import jwt_decode from "jwt-decode";
+import {ActionsService} from "../service/actions.service";
 
 @Component({
   selector: 'app-leaderboard',
@@ -15,11 +15,11 @@ export class LeaderboardComponent implements OnInit {
   leaderBoard?: Leaderboard;
   nickName: string | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(private actionService: ActionsService) {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem("jwt")
+    let token = localStorage.getItem('access-jwt')
     if (token == null) {
       this.nickName = null;
     } else {
@@ -30,7 +30,7 @@ export class LeaderboardComponent implements OnInit {
   }
 
   private getBoardFromServer() {
-    this.userService.getLeaderboard()
+    this.actionService.getLeaderboard()
       .subscribe({
         next: value => {
           value.userRecords.forEach((userRecord) => {
