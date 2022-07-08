@@ -54,6 +54,24 @@ public class TestService {
     }
 
     @Transactional
+    public TestDto getTest(int id) {
+        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
+        return testMapper.toDto(test);
+    }
+
+    @Transactional
+    public TestDto getShuffledTest(int id) {
+        TestDto testDto = getTest(id);
+        Collections.shuffle(testDto.getQuestions());
+        List<QuestionDto> questions = testDto.getQuestions().subList(0, testDto.getTestInfo().getQuestionsCount());
+        for (QuestionDto questionDto : questions) {
+            questionDto.getAnswers().forEach((answerDto -> answerDto.setIsRight(false)));
+        }
+        testDto.setQuestions(questions);
+        return testDto;
+    }
+
+    @Transactional
     public void updateTest(int id, TestDto newTestDto) {
         if (newTestDto.getTestInfo().getQuestionsCount() > newTestDto.getQuestions().size()) {
             throw new IllegalArgumentException("Invalid questions count");
@@ -94,22 +112,5 @@ public class TestService {
     public void deleteTest(int id) {
         Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
         testRepository.delete(test);
-    }
-
-    public TestDto getTest(int id) {
-        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
-        return testMapper.toDto(test);
-    }
-
-    public TestDto getShuffledTest(int id) {
-        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
-        TestDto testDto = testMapper.toDto(test);
-        Collections.shuffle(testDto.getQuestions());
-        List<QuestionDto> questions = testDto.getQuestions().subList(0, testDto.getTestInfo().getQuestionsCount());
-        for (QuestionDto questionDto : questions) {
-            questionDto.getAnswers().forEach((answerDto -> answerDto.setIsRight(false)));
-        }
-        testDto.setQuestions(questions);
-        return testDto;
     }
 }

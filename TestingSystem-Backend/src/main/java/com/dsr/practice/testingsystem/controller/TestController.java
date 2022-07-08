@@ -14,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
@@ -52,7 +51,6 @@ public class TestController {
 
     @ApiOperation(value = "Returns full test with right answers by id")
     @GetMapping("test/{id}")
-    @Transactional
     @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<TestDto> getTest(@PathVariable @ApiParam(value = "Id of the test", example = "1") int id) {
         return ResponseEntity
@@ -62,7 +60,6 @@ public class TestController {
 
     @ApiOperation(value = "Returns shuffled test without right answers by id")
     @GetMapping("test/shuffled/{id}")
-    @Transactional
     @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<TestDto> getShuffledTest(@PathVariable @ApiParam(value = "Id of the test", example = "1") int id) {
         return ResponseEntity
