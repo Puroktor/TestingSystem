@@ -54,7 +54,7 @@ public class TestMapper {
     public static Test toEntity(FullTestDto testDto) {
         Test test = new Test(testDto.getTestInfoDto().getId(), testDto.getTestInfoDto().getProgrammingLang(),
                 testDto.getTestInfoDto().getName(), testDto.getTestInfoDto().getQuestionsCount(),
-                null, new ArrayList<>());
+                new ArrayList<>(), new ArrayList<>());
         for (QuestionDto questionDto : testDto.getQuestionList()) {
             Question question = new Question(questionDto.getId(), test, questionDto.getText(),
                     questionDto.getMaxScore(), new ArrayList<>());

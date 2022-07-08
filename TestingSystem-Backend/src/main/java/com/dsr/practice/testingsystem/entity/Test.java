@@ -38,6 +38,7 @@ public class Test {
 
     @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @NotNull
     @Valid
     private List<Attempt> attempts;
 
