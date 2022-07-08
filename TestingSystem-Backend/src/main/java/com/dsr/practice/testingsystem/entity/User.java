@@ -1,13 +1,13 @@
 package com.dsr.practice.testingsystem.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,30 +17,29 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "Enter your name")
-    @Size(min = 1, max = 100, message = "Your name must be between 1 and 100 characters")
+    @NotBlank(message = "Enter your name")
+    @Size(max = 100, message = "Your name length must be <= 100 characters")
     private String name;
 
-    @NotNull(message = "Enter your nickname")
-    @Size(min = 1, max = 50, message = "Your nickname must be between 1 and 50 characters")
+    @NotBlank(message = "Enter your nickname")
+    @Size(max = 50, message = "Your nickname length must be <= 50 characters")
     @Column(unique = true)
     private String nickname;
 
-    @NotNull(message = "Enter your password")
-    @Size(min = 1, max = 256, message = "Your password must be between 1 and 256 characters")
+    @NotBlank(message = "Enter your password")
+    @Size(max = 256, message = "Your password length must be <= 256 characters")
     private String password;
 
     @NotNull(message = "Enter your role")
     private Role role;
 
-    @NotNull(message = "Enter your university")
-    @Size(min = 1, max = 100, message = "University name must be between 1 and 100 characters")
+    @NotBlank(message = "Enter your university")
+    @Size(max = 100, message = "University name length must be <= 100 characters")
     private String university;
 
     @Min(value = 1, message = "Year must be >= 1")
@@ -50,8 +49,10 @@ public class User {
     @Min(value = 1, message = "Group number must be >= 1")
     private Integer groupNumber;
 
-    @NotNull(message = "Enter your email")
-    @Size(min = 1, max = 320, message = "Email must be between 1 and 320 characters")
+    @NotBlank(message = "Enter your email")
+    @Size(max = 320, message = "Email length must be <= 320 characters")
+    @Email(message = "Not valid email", regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

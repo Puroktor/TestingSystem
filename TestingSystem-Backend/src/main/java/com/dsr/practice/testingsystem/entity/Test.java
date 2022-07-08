@@ -1,14 +1,14 @@
 package com.dsr.practice.testingsystem.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,18 +17,17 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "Enter programming language")
-    @Size(min = 1, max = 20, message = "Programming language must be between 1 and 20 characters")
+    @NotBlank(message = "Enter programming language")
+    @Size(max = 50, message = "Programming language length must be <= 50 characters")
     private String programmingLang;
 
-    @NotNull(message = "Enter test name")
-    @Size(min = 1, max = 50, message = "Test name must be between 1 and 50 characters")
+    @NotBlank(message = "Enter test name")
+    @Size(max = 50, message = "Test name length must be <= 50 characters")
     private String name;
 
     @NotNull(message = "Enter questions count!")
@@ -44,10 +43,10 @@ public class Test {
 
     @OneToMany(mappedBy = "test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @NotNull(message = "Enter at least 1 question!")
-    @Size(min = 1, message = "Enter at least 1 question!")
+    @NotNull(message = "Enter at least 1 question")
+    @Size(min = 1, message = "Enter at least 1 question")
     @Valid
-    private List<Question> questionsBank;
+    private List<Question> questions;
 
     @Override
     public boolean equals(Object o) {

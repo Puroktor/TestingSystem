@@ -7,7 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import {Answer} from "../entity/Answer";
 import jwt_decode from 'jwt-decode';
-import {ActionsService} from "../service/actions.service";
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-test',
@@ -20,7 +20,7 @@ export class TestComponent implements OnInit {
   hasSent: boolean = false;
   private userId!: number;
 
-  constructor(private testService: TestService, private actionService: ActionsService, private route: ActivatedRoute,
+  constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
               private router: Router) {
   }
 
@@ -57,10 +57,10 @@ export class TestComponent implements OnInit {
     if (this.test != null) {
       this.hasSent = true;
       let answers: Answer[] = [];
-      this.test.questionList.forEach((question) =>
+      this.test.questions.forEach((question) =>
         question.answers.forEach((answer) => answers.push(answer))
       )
-      this.actionService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
+      this.userService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
         .subscribe({
           next: () => this.goToHomePage(),
           error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)

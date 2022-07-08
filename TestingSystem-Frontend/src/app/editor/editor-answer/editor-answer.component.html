@@ -2,5 +2,5 @@
   <a (click)="delete()" class="delete">❌</a>
   <div class="m-1">{{index + 1}}.</div>
   <input (change)="onChanged($event)" class="form-control me-2 mt-2 mb-2" placeholder="Answer" value="{{answer.text}}">
-  <input (change)="onChecked($event)" [checked]="answer.isSelected" class="form-check-input" type="checkbox" value="">
+  <input (change)="onChecked($event)" [checked]="answer.isRight" class="form-check-input" type="checkbox" value="">
 </div>

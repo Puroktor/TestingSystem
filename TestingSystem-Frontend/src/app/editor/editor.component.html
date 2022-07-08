@@ -3,20 +3,20 @@
     <div class="info">
       <div class="flex">
         <input (change)="nameChanged($event)" class="form-control" placeholder="Title"
-               value="{{test.testInfoDto.name}}">
+               value="{{test.testInfo.name}}">
         <input (change)="langChanged($event)" class="form-control ms-5" placeholder="Language"
-               value="{{test.testInfoDto.programmingLang}}">
+               value="{{test.testInfo.programmingLang}}">
         <a (click)="deleteTest()" *ngIf="testId!=null" class="button">❌</a>
       </div>
       <div class="container">
         <div class="p-text me-3">Question count for students:</div>
         <input (change)="questionsCountChanged($event)" class="form-control count-inp text-center" type="number"
-               value="{{test.testInfoDto.questionsCount}}">
+               value="{{test.testInfo.questionsCount}}">
       </div>
     </div>
     <div>
       <app-editor-question
-        *ngFor="let iterQuestion of test.questionList; index as i"
+        *ngFor="let iterQuestion of test.questions; index as i"
         [index]="i"
         [question]="iterQuestion"
         [test]="test"

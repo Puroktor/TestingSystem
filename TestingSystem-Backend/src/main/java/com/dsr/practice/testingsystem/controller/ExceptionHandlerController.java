@@ -3,12 +3,12 @@ package com.dsr.practice.testingsystem.controller;
 import com.dsr.practice.testingsystem.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.ValidationException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -20,11 +20,13 @@ public class ExceptionHandlerController {
         return new ErrorDto(e.getMessage());
     }
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorDto handleValidationException(ValidationException e) {
-        return new ErrorDto(e.getMessage());
+    public ErrorDto handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        StringBuilder builder = new StringBuilder();
+        ex.getBindingResult().getAllErrors().forEach((error) -> builder.append(error.getDefaultMessage()).append("\n"));
+        return new ErrorDto(builder.toString());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

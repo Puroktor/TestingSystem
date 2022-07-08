@@ -1,5 +1,6 @@
 package com.dsr.practice.testingsystem.service;
 
+import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.LeaderboardDto;
 import com.dsr.practice.testingsystem.entity.*;
 import com.dsr.practice.testingsystem.repository.AnswerRepository;
@@ -8,21 +9,18 @@ import com.dsr.practice.testingsystem.repository.TestRepository;
 import com.dsr.practice.testingsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.Size;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Validated
 public class ActionsService {
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
     private final TestRepository testRepository;
     private final AttemptRepository attemptRepository;
 
-    public void submitAttempt(@Size(min = 1, message = "Provide at least one answer!") List<Answer> answers, int userId) {
+    public void submitAttempt(List<AnswerDto> answers, int userId) {
         class Score {
             private int correct;
             private int all;
@@ -30,7 +28,7 @@ public class ActionsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Invalid user Id:" + userId));
         HashMap<Question, Score> questionIdToScoreMap = new HashMap<>();
-        for (Answer submittedAnswer : answers) {
+        for (AnswerDto submittedAnswer : answers) {
             Answer dbAnswer = answerRepository.findById(submittedAnswer.getId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid answer Id:" + submittedAnswer.getId()));
             Question question = dbAnswer.getQuestion();

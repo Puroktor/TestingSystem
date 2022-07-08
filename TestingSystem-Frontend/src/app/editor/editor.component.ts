@@ -6,7 +6,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import Swal from 'sweetalert2';
 import {TestService} from '../service/test.service';
 import jwt_decode from 'jwt-decode';
-import {UserAuthService} from '../service/user-auth.service';
+import {UserService} from '../service/user.service';
 
 @Component({
   selector: 'app-editor',
@@ -20,7 +20,7 @@ export class EditorComponent implements OnInit {
   hasSent: boolean = false;
   private userId!: number;
 
-  constructor(private testService: TestService, private userService: UserAuthService, private route: ActivatedRoute,
+  constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
               private router: Router) {
   }
 
@@ -52,19 +52,19 @@ export class EditorComponent implements OnInit {
 
   questionsCountChanged(event: any) {
     if (this.test != undefined) {
-      this.test.testInfoDto.questionsCount = +((event.target as HTMLInputElement).value);
+      this.test.testInfo.questionsCount = +((event.target as HTMLInputElement).value);
     }
   }
 
   nameChanged(event: any) {
     if (this.test != undefined) {
-      this.test.testInfoDto.name = (event.target as HTMLInputElement).value;
+      this.test.testInfo.name = (event.target as HTMLInputElement).value;
     }
   }
 
   langChanged(event: any) {
     if (this.test != undefined) {
-      this.test.testInfoDto.programmingLang = (event.target as HTMLInputElement).value;
+      this.test.testInfo.programmingLang = (event.target as HTMLInputElement).value;
     }
   }
 
@@ -73,7 +73,7 @@ export class EditorComponent implements OnInit {
   }
 
   newQuestion() {
-    this.test?.questionList.push({id: null, text: '', maxScore: 0, answers: []});
+    this.test?.questions.push({id: null, text: '', maxScore: 0, answers: []});
   }
 
   submit() {
@@ -110,22 +110,28 @@ export class EditorComponent implements OnInit {
   private validateTest(): boolean {
     if (this.test == null) {
       return false;
-    } else if (this.test.testInfoDto.name.length == 0 || this.test.testInfoDto.name.length > 50) {
+    } else if (this.test.testInfo.name.length == 0 || this.test.testInfo.name.length > 50) {
       Swal.fire('Test name must be between 1 and 50 characters');
       return false;
-    } else if (this.test.testInfoDto.programmingLang.length == 0 || this.test.testInfoDto.programmingLang.length > 20) {
-      Swal.fire('Programming language must be between 1 and 20 characters');
+    } else if (this.test.testInfo.programmingLang.length == 0 || this.test.testInfo.programmingLang.length > 50) {
+      Swal.fire('Programming language must be between 1 and 50 characters');
       return false;
-    } else if (this.test.testInfoDto.questionsCount < 1 || this.test.testInfoDto.questionsCount > 50) {
+    } else if (this.test.testInfo.questionsCount < 1 || this.test.testInfo.questionsCount > 50) {
       Swal.fire('Questions count must be between 1 and 50');
       return false;
+    } else if (this.test.questions.length == 0) {
+      Swal.fire('Enter at least one question');
+      return false;
     } else {
-      for (let question of this.test.questionList) {
+      for (let question of this.test.questions) {
         if (question.maxScore < 1) {
           Swal.fire('Question score must be >= 1');
           return false;
         } else if (question.text.length == 0 || question.text.length > 200) {
           Swal.fire('Question must be between 1 and 200 characters');
+          return false;
+        } else if (question.answers.length == 0) {
+          Swal.fire('Enter at least one answer');
           return false;
         } else {
           for (let answer of question.answers) {
@@ -147,7 +153,7 @@ export class EditorComponent implements OnInit {
   }
 
   private generateSampleTest() {
-    this.test = {testInfoDto: {id: null, name: '', programmingLang: '', questionsCount: 0}, questionList: []};
+    this.test = {testInfo: {id: null, name: '', programmingLang: '', questionsCount: 0}, questions: []};
   }
 
   private getTestFromServer(value: number) {

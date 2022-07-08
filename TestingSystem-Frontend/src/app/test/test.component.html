@@ -2,14 +2,14 @@
   <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
       <div class="flex">
-        <h2>{{test.testInfoDto.name}}</h2>
-        <b>{{test.testInfoDto.programmingLang}}</b>
+        <h2>{{test.testInfo.name}}</h2>
+        <b>{{test.testInfo.programmingLang}}</b>
       </div>
-      <p>Questions: {{test.testInfoDto.questionsCount}}</p>
+      <p>Questions: {{test.testInfo.questionsCount}}</p>
     </div>
     <div>
       <app-question
-        *ngFor="let iterQuestion of test.questionList; index as i"
+        *ngFor="let iterQuestion of test.questions; index as i"
         [index]="i"
         [question]="iterQuestion"
       ></app-question>

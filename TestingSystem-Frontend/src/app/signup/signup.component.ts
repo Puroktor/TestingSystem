@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserAuthService} from '../service/user-auth.service';
+import {UserService} from '../service/user.service';
 import {Router} from '@angular/router';
 import Swal from 'sweetalert2';
 import {HttpErrorResponse} from "@angular/common/http";
@@ -13,7 +13,7 @@ export class SignupComponent implements OnInit {
   hasSent: boolean = false;
   isVisible: boolean = true;
 
-  constructor(private userService: UserAuthService, private router: Router) {
+  constructor(private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {

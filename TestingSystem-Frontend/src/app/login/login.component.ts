@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserAuthService} from "../service/user-auth.service";
+import {UserService} from "../service/user.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
 
@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 export class LoginComponent implements OnInit {
   hasSent: boolean = false;
 
-  constructor(private userService: UserAuthService, private router: Router) {
+  constructor(private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {

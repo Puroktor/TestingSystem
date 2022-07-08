@@ -3,7 +3,7 @@ import {Leaderboard} from "../entity/Leaderboard";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import jwt_decode from "jwt-decode";
-import {ActionsService} from "../service/actions.service";
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-leaderboard',
@@ -15,7 +15,7 @@ export class LeaderboardComponent implements OnInit {
   leaderBoard?: Leaderboard;
   nickName: string | null = null;
 
-  constructor(private actionService: ActionsService) {
+  constructor(private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -30,7 +30,7 @@ export class LeaderboardComponent implements OnInit {
   }
 
   private getBoardFromServer() {
-    this.actionService.getLeaderboard()
+    this.userService.getLeaderboard()
       .subscribe({
         next: value => {
           value.userRecords.forEach((userRecord) => {

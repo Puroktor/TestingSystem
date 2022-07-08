@@ -1,11 +1,15 @@
 package com.dsr.practice.testingsystem.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -16,7 +20,6 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +29,8 @@ public class Question {
     @JoinColumn(name = "test_id", nullable = false)
     private Test test;
 
-    @NotNull(message = "Enter your question")
-    @Size(min = 1, max = 200, message = "Question must be between 1 and 200 characters")
+    @NotBlank(message = "Enter your question")
+    @Size(max = 200, message = "Question length must be <= 200 characters")
     private String text;
 
     @NotNull(message = "Enter question score")

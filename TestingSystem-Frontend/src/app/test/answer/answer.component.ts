@@ -18,7 +18,7 @@ export class AnswerComponent implements OnInit {
   }
 
   onChecked(event: any) {
-    this.answer.isSelected = (event.target as HTMLInputElement).checked;
+    this.answer.isRight = (event.target as HTMLInputElement).checked;
   }
 
 }

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import jwt_decode from "jwt-decode";
-import {UserAuthService} from "../service/user-auth.service";
+import {UserService} from "../service/user.service";
 import Swal from "sweetalert2";
 import {HttpErrorResponse} from "@angular/common/http";
 
@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   nickname: string | null = null;
   timer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private userService: UserAuthService) {
+  constructor(private userService: UserService) {
   }
 
   ngOnInit(): void {

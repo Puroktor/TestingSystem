@@ -1,9 +1,13 @@
 package com.dsr.practice.testingsystem.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -13,14 +17,13 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "Enter your answer")
-    @Size(min = 1, max = 100, message = "Your answer must be between 1 and 100 characters")
+    @NotBlank(message = "Enter your answer")
+    @Size(max = 100, message = "Your answer length must be <= 100 characters")
     private String text;
 
     @NotNull(message = "Select right answer")
