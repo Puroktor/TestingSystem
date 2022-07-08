@@ -1,24 +1,24 @@
-<div class="h-100 row align-items-center pt-5 m-0" [style.display]="!hasSent ? 'block' : 'none'">
+<div [style.display]="!hasSent ? 'block' : 'none'" class="h-100 row align-items-center pt-5 m-0">
   <div class="col text-center">
     <h2>Register</h2>
     <h4 class="mb-4">(or <a class="link-primary" routerLink="/login">login</a>)</h4>
     <b>Teacher</b>
-    <input type="range" class="form-range" min="0" max="1" step="1" (input)="changeRole($event)">
+    <input (input)="changeRole($event)" class="form-range" max="1" min="0" step="1" type="range">
     <b>Student</b>
     <br>
-    <input type="text" class="inp m-3 p-1" placeholder="Full name" id="name">
+    <input class="inp m-3 p-1" id="name" placeholder="Full name" type="text">
     <br>
-    <input type="text" class="inp m-3 p-1" placeholder="Nickname" id="nickname">
+    <input class="inp m-3 p-1" id="nickname" placeholder="Nickname" type="text">
     <br>
-    <input type="text" class="inp m-3 p-1" placeholder="Email" id="email">
+    <input class="inp m-3 p-1" id="email" placeholder="Email" type="text">
     <br>
-    <input class="inp m-3 p-1" type="password" placeholder="Password" id="password">
+    <input class="inp m-3 p-1" id="password" placeholder="Password" type="password">
     <br>
-    <input type="text" class="inp m-3 p-1" placeholder="University" id="university">
+    <input class="inp m-3 p-1" id="university" placeholder="University" type="text">
     <br>
     <div [style.display]="isVisible ? 'inline' : 'none'">
       <select class="inp m-3 p-1" id="year" required>
-        <option class="text-muted" value="" selected disabled>University year</option>
+        <option class="text-muted" disabled selected value="">University year</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -27,10 +27,10 @@
         <option value="6">6 (mag. - 2)</option>
       </select>
       <br>
-      <input type="number" class="inp m-3 p-1" placeholder="Your group number" id="groupNumber">
+      <input class="inp m-3 p-1" id="groupNumber" placeholder="Your group number" type="number">
       <br>
     </div>
-    <button class="btn btn-primary m-3" (click)="submit()">Submit</button>
+    <button (click)="submit()" class="btn btn-primary m-3">Submit</button>
   </div>
 </div>
 <app-loading [style.display]="hasSent ? 'block' : 'none'" [text]="'Waiting for response...'"></app-loading>

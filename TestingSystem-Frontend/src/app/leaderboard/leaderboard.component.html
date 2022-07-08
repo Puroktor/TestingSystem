@@ -1,8 +1,8 @@
-<table class="table table-bordered mt-3" *ngIf="leaderBoard!=null; else elseBlock">
+<table *ngIf="leaderBoard!=null; else elseBlock" class="table table-bordered mt-3">
   <thead>
   <tr class="table-secondary">
-    <th style="width: 10%" scope="col">&nbsp;</th>
-    <th style="width: 2.5%" class="text-center align-middle" scope="col">Total</th>
+    <th scope="col" style="width: 10%">&nbsp;</th>
+    <th class="text-center align-middle" scope="col" style="width: 2.5%">Total</th>
     <th
       *ngFor="let iterTestRecord of leaderBoard.testRecords"
       [style.width.%]="87.5 / leaderBoard.testRecords.length"

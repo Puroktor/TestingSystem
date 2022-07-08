@@ -51,10 +51,10 @@ public class User {
     private Integer groupNumber;
 
     @NotNull(message = "Enter your email")
-    @Size(min = 1, max = 320 , message = "Email must be between 1 and 320 characters")
+    @Size(min = 1, max = 320, message = "Email must be between 1 and 320 characters")
     private String email;
 
-    @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Attempt> attempts;
 

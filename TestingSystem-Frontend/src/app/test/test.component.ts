@@ -17,8 +17,8 @@ import {ActionsService} from "../service/actions.service";
 export class TestComponent implements OnInit {
 
   @Input() test?: FullTest;
-  private userId!: number;
   hasSent: boolean = false;
+  private userId!: number;
 
   constructor(private testService: TestService, private actionService: ActionsService, private route: ActivatedRoute,
               private router: Router) {
@@ -53,6 +53,21 @@ export class TestComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  submit() {
+    if (this.test != null) {
+      this.hasSent = true;
+      let answers: Answer[] = [];
+      this.test.questionList.forEach((question) =>
+        question.answers.forEach((answer) => answers.push(answer))
+      )
+      this.actionService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
+        .subscribe({
+          next: () => this.goToHomePage(),
+          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
+        })
+    }
+  }
+
   private getTestId() {
     return this.route.queryParamMap.pipe(
       map((params: ParamMap) => params.get('id')),
@@ -67,20 +82,5 @@ export class TestComponent implements OnInit {
           Swal.fire(err.error.message).then(() => this.goToHomePage())
         }
       })
-  }
-
-  submit() {
-    if (this.test != null) {
-      this.hasSent = true;
-      let answers: Answer[] = [];
-      this.test.questionList.forEach((question) =>
-        question.answers.forEach((answer) => answers.push(answer))
-      )
-      this.actionService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
-        .subscribe({
-          next: () => this.goToHomePage(),
-          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
-        })
-    }
   }
 }

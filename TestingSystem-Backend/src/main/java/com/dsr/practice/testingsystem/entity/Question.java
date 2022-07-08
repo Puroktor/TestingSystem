@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +23,7 @@ public class Question {
     private Integer id;
 
     @ManyToOne()
-    @JoinColumn(name="test_id", nullable=false)
+    @JoinColumn(name = "test_id", nullable = false)
     private Test test;
 
     @NotNull(message = "Enter your question")
@@ -35,7 +34,7 @@ public class Question {
     @Min(value = 1, message = "Question score must be >= 1")
     private Integer maxScore;
 
-    @OneToMany(mappedBy="question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @NotNull(message = "Enter at least 1 answer!")
     @Size(min = 1, message = "Enter at least 1 answer!")

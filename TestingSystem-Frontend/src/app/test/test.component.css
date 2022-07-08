@@ -12,12 +12,12 @@ b {
   text-align: right;
 }
 
-p{
-  text-align:center;
+p {
+  text-align: center;
   margin: 1rem;
 }
 
-.flex{
+.flex {
   display: flex;
   justify-content: space-between;
 }

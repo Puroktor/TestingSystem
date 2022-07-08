@@ -17,12 +17,13 @@ b {
   text-align: right;
 }
 
-.button{
+.button {
   font-size: 2rem;
   cursor: pointer;
-  text-decoration:none;
+  text-decoration: none;
 }
-.cont{
+
+.cont {
   display: flex;
   align-items: center;
 }

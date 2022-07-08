@@ -1,9 +1,10 @@
-.answer{
+.answer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.delete{
+
+.delete {
   cursor: pointer;
-  text-decoration:none;
+  text-decoration: none;
 }

@@ -11,17 +11,19 @@ import java.util.Map;
 public class LeaderboardDto {
     @Data
     @AllArgsConstructor
-    public static class UserRecord{
+    public static class UserRecord {
         private String nickname;
         private Double total;
         private Map<Integer, Double> testToScoreMap;
     }
+
     @Data
     @AllArgsConstructor
-    public static class TestRecord{
+    public static class TestRecord {
         private Integer id;
         private String name;
     }
+
     private List<TestRecord> testRecords;
     private List<UserRecord> userRecords;
 }

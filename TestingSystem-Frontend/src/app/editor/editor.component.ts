@@ -16,9 +16,9 @@ import {UserAuthService} from '../service/user-auth.service';
 export class EditorComponent implements OnInit {
 
   @Input() test?: FullTest;
-  private userId!: number;
   testId: number | null = null;
   hasSent: boolean = false;
+  private userId!: number;
 
   constructor(private testService: TestService, private userService: UserAuthService, private route: ActivatedRoute,
               private router: Router) {
@@ -48,26 +48,6 @@ export class EditorComponent implements OnInit {
         }
       }
     });
-  }
-
-  generateSampleTest() {
-    this.test = {testInfoDto: {id: null, name: '', programmingLang: '', questionsCount: 0}, questionList: []};
-  }
-
-  private getTestId() {
-    return this.route.queryParamMap.pipe(
-      map((params: ParamMap) => params.get('id')),
-    );
-  }
-
-  private getTestFromServer(value: number) {
-    this.testService.getTest(value, localStorage.getItem('access-jwt') ?? '')
-      .subscribe({
-        next: value => this.test = value,
-        error: (err: HttpErrorResponse) => {
-          Swal.fire(err.error.message).then(() => this.goToHomePage())
-        }
-      })
   }
 
   questionsCountChanged(event: any) {
@@ -108,7 +88,7 @@ export class EditorComponent implements OnInit {
           error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
         });
       } else {
-        this.testService.updateTest(this.testId, this.test, localStorage.getItem('access-jwt')??'')
+        this.testService.updateTest(this.testId, this.test, localStorage.getItem('access-jwt') ?? '')
           .subscribe({
             next: () => this.goToHomePage(),
             error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
@@ -127,7 +107,7 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  validateTest(): boolean {
+  private validateTest(): boolean {
     if (this.test == null) {
       return false;
     } else if (this.test.testInfoDto.name.length == 0 || this.test.testInfoDto.name.length > 50) {
@@ -158,5 +138,25 @@ export class EditorComponent implements OnInit {
       }
       return true;
     }
+  }
+
+  private getTestId() {
+    return this.route.queryParamMap.pipe(
+      map((params: ParamMap) => params.get('id')),
+    );
+  }
+
+  private generateSampleTest() {
+    this.test = {testInfoDto: {id: null, name: '', programmingLang: '', questionsCount: 0}, questionList: []};
+  }
+
+  private getTestFromServer(value: number) {
+    this.testService.getTest(value, localStorage.getItem('access-jwt') ?? '')
+      .subscribe({
+        next: value => this.test = value,
+        error: (err: HttpErrorResponse) => {
+          Swal.fire(err.error.message).then(() => this.goToHomePage())
+        }
+      })
   }
 }

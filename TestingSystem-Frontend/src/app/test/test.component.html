@@ -10,13 +10,13 @@
     <div>
       <app-question
         *ngFor="let iterQuestion of test.questionList; index as i"
-        [question]="iterQuestion"
         [index]="i"
+        [question]="iterQuestion"
       ></app-question>
     </div>
     <div class="text-center">
-      <button class="btn btn-primary m-1" (click)="goToHomePage()">Cancel</button>
-      <button class="btn btn-primary m-1" (click)="submit()">Submit</button>
+      <button (click)="goToHomePage()" class="btn btn-primary m-1">Cancel</button>
+      <button (click)="submit()" class="btn btn-primary m-1">Submit</button>
     </div>
   </div>
 </div>

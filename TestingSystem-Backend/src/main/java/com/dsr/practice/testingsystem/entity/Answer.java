@@ -27,7 +27,7 @@ public class Answer {
     private Boolean isRight;
 
     @ManyToOne
-    @JoinColumn(name="question_id", nullable=false)
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
     @Override

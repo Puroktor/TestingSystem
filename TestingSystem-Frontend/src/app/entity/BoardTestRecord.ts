@@ -1,4 +1,4 @@
 export interface BoardTestRecord {
-  id : number
-  name : string
+  id: number
+  name: string
 }

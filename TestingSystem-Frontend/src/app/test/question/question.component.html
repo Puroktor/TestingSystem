@@ -4,9 +4,9 @@
     <i>Max score: {{question.maxScore}}</i>
   </div>
   <p>{{question.text}}</p>
-    <app-answer
-      *ngFor="let iterAnswer of question.answers; index as i"
-      [answer]="iterAnswer"
-      [index]="i"
-    ></app-answer>
+  <app-answer
+    *ngFor="let iterAnswer of question.answers; index as i"
+    [answer]="iterAnswer"
+    [index]="i"
+  ></app-answer>
 </div>

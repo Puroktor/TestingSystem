@@ -37,7 +37,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
-    public ErrorDto handleAuthenticationException(AuthenticationException e) {
+    public ErrorDto handleAuthenticationException() {
         return new ErrorDto("Invalid username or password!");
     }
 

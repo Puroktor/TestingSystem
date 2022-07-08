@@ -36,13 +36,13 @@ public class Test {
     @Max(value = 50, message = "Questions count must be <= 50")
     private Integer questionsCount;
 
-    @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @NotNull
     @Valid
     private List<Attempt> attempts;
 
-    @OneToMany(mappedBy="test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @NotNull(message = "Enter at least 1 question!")
     @Size(min = 1, message = "Enter at least 1 question!")

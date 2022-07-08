@@ -11,12 +11,13 @@ export class AnswerComponent implements OnInit {
   @Input() answer!: Answer;
   @Input() index!: number;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
 
-  onChecked(event : any){
+  onChecked(event: any) {
     this.answer.isSelected = (event.target as HTMLInputElement).checked;
   }
 

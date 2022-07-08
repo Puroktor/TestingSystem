@@ -27,6 +27,12 @@ export class HeaderComponent implements OnInit {
     this.timer = setTimeout(() => this.refreshToken(), Math.max(decodedAccess.exp * 1000 - Date.now(), 0));
   }
 
+  logout() {
+    localStorage.removeItem('access-jwt');
+    localStorage.removeItem('refresh-jwt');
+    window.location.reload();
+  }
+
   private refreshToken() {
     let refreshToken = localStorage.getItem('refresh-jwt');
     if (refreshToken == null) {
@@ -49,11 +55,5 @@ export class HeaderComponent implements OnInit {
     } else {
       this.logout();
     }
-  }
-
-  logout() {
-    localStorage.removeItem('access-jwt');
-    localStorage.removeItem('refresh-jwt');
-    window.location.reload();
   }
 }
