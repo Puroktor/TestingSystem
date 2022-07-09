@@ -26,6 +26,7 @@ public class TestController {
     private final TestService testService;
 
     @ApiOperation(value = "Creates new test")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("test")
     @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<TestDto> createTest(

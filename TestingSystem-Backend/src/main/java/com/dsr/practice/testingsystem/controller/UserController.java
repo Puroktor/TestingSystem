@@ -29,6 +29,7 @@ public class UserController {
     private final ActionsService actionsService;
 
     @ApiOperation(value = "Creates new user if absent")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("user")
     public ResponseEntity<UserRegistrationDto> createUser(@RequestBody @Valid @ApiParam(value = "Your registration info")
                                                                   UserRegistrationDto userRegistrationDto) {
@@ -65,7 +66,7 @@ public class UserController {
                                                       int userId) {
         actionsService.submitAttempt(answers, userId);
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .build();
     }
 

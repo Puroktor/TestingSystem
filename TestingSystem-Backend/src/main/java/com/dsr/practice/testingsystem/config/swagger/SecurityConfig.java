@@ -1,4 +1,4 @@
-package com.dsr.practice.testingsystem.config;
+package com.dsr.practice.testingsystem.config.swagger;
 
 import com.dsr.practice.testingsystem.security.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
