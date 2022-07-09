@@ -1,13 +1,16 @@
 package com.dsr.practice.testingsystem.service;
 
 import com.dsr.practice.testingsystem.dto.AnswerDto;
-import com.dsr.practice.testingsystem.dto.LeaderboardDto;
+import com.dsr.practice.testingsystem.dto.LeaderboardPageDto;
 import com.dsr.practice.testingsystem.entity.*;
 import com.dsr.practice.testingsystem.repository.AnswerRepository;
 import com.dsr.practice.testingsystem.repository.AttemptRepository;
 import com.dsr.practice.testingsystem.repository.TestRepository;
 import com.dsr.practice.testingsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -46,10 +49,15 @@ public class ActionsService {
                 score / maxScore * 100));
     }
 
-    public LeaderboardDto getLeaderboard() {
+    public LeaderboardPageDto getLeaderboardPage(int index, int size) {
+        Pageable pageable = PageRequest.of(index, size);
+        Page<User> userPage = userRepository.findPageOfTopByRole(Role.STUDENT, pageable);
+        if (userPage.isEmpty()) {
+            return new LeaderboardPageDto(null, userPage.map(user -> null));
+        }
         Iterable<Test> testList = testRepository.findAll();
-        Iterable<User> userList = userRepository.findAllByRole(Role.STUDENT);
-        List<LeaderboardDto.UserRecord> userRecordList = new ArrayList<>();
+        List<User> userList = userPage.getContent();
+        Map<User, LeaderboardPageDto.UserRecord> userToRecordMap = new HashMap<>();
         for (User user : userList) {
             List<Attempt> attempts = attemptRepository.findAllByUser(user);
             Map<Integer, Double> testIdToScoreMap = new HashMap<>();
@@ -58,13 +66,12 @@ public class ActionsService {
                 total += attempt.getScore();
                 testIdToScoreMap.put(attempt.getTest().getId(), attempt.getScore());
             }
-            userRecordList.add(new LeaderboardDto.UserRecord(user.getNickname(), total, testIdToScoreMap));
+            userToRecordMap.put(user, new LeaderboardPageDto.UserRecord(user.getNickname(), total, testIdToScoreMap));
         }
-        List<LeaderboardDto.TestRecord> testRecordList = new ArrayList<>();
+        List<LeaderboardPageDto.TestRecord> testRecordList = new ArrayList<>();
         for (Test test : testList) {
-            testRecordList.add(new LeaderboardDto.TestRecord(test.getId(), test.getName()));
+            testRecordList.add(new LeaderboardPageDto.TestRecord(test.getId(), test.getName()));
         }
-        userRecordList.sort(Comparator.comparing(LeaderboardDto.UserRecord::getTotal).reversed());
-        return new LeaderboardDto(testRecordList, userRecordList);
+        return new LeaderboardPageDto(testRecordList, userPage.map(userToRecordMap::get));
     }
 }

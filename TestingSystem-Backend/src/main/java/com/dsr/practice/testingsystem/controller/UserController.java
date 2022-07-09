@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -70,11 +72,15 @@ public class UserController {
                 .build();
     }
 
-    @ApiOperation(value = "Returns current leaderboard")
+    @ApiOperation(value = "Returns requested page of leaderboard")
     @GetMapping("leaderboard")
-    public ResponseEntity<LeaderboardDto> getLeaderboard() {
+    public ResponseEntity<LeaderboardPageDto> getLeaderboardPage(
+            @RequestParam("index") @Min(value = 0, message = "Index must be >=0")
+            @ApiParam(value = "Index of desired page", example = "1") int index,
+            @RequestParam("size") @Min(value = 1, message = "Page size must be >=1")
+            @ApiParam(value = "Size of pages", example = "1") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(actionsService.getLeaderboard());
+                .body(actionsService.getLeaderboardPage(index, size));
     }
 }

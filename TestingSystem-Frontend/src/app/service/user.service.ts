@@ -6,7 +6,7 @@ import {UserRegistration} from "../entity/UserRegistration";
 import {UserLogin} from "../entity/UserLogin";
 import {JwtToken} from "../entity/JwtToken";
 import {Answer} from "../entity/Answer";
-import {Leaderboard} from "../entity/Leaderboard";
+import {LeaderboardPage} from "../entity/LeaderboardPage";
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,8 @@ export class UserService {
     return this.http.post<void>(`${this.apiServerUrl}/submit`, answers, {params: params, headers: headers});
   }
 
-  public getLeaderboard(): Observable<Leaderboard> {
-    return this.http.get<Leaderboard>(`${this.apiServerUrl}/leaderboard`);
+  public getLeaderboard(index: number, size: number): Observable<LeaderboardPage> {
+    let params = new HttpParams().set('index', index).set('size', size);
+    return this.http.get<LeaderboardPage>(`${this.apiServerUrl}/leaderboard`, {params: params});
   }
 }

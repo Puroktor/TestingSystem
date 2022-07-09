@@ -1,30 +1,38 @@
-<table *ngIf="leaderBoard!=null; else elseBlock" class="table table-bordered mt-3">
-  <thead>
-  <tr class="table-secondary">
-    <th scope="col" style="width: 10%">&nbsp;</th>
-    <th class="text-center align-middle" scope="col" style="width: 2.5%">Total</th>
-    <th
-      *ngFor="let iterTestRecord of leaderBoard.testRecords"
-      [style.width.%]="87.5 / leaderBoard.testRecords.length"
-      class="text-center align-middle" scope="col">
-      <a href="/test?id={{iterTestRecord.id}}">{{iterTestRecord.name}}</a>
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr
-    *ngFor="let userRecord of leaderBoard.userRecords"
-    [ngClass]="{'table-info': userRecord.nickname == nickName}">
-    <th class="text-center align-middle" scope="row">{{userRecord.nickname}}</th>
-    <td class="text-center align-middle">{{userRecord.total.toFixed(2)}}</td>
-    <td
-      *ngFor="let testRecord of leaderBoard.testRecords"
-      class="text-center align-middle">
-      {{userRecord.testToScoreMap.get(testRecord.id.toString())?.toFixed(2) }}
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div class="m-0 mt-3" *ngIf="leaderboard!=null; else elseBlock">
+  <table *ngIf="!leaderboard.userRecords.empty; else emptyBlock" class="table table-bordered">
+    <thead>
+    <tr class="table-secondary">
+      <th class="text-center align-middle" scope="col" style="width: 2.5%">№</th>
+      <th class="text-center align-middle" scope="col" style="width: 10%">Student</th>
+      <th class="text-center align-middle" scope="col" style="width: 2.5%">Total</th>
+      <th
+        *ngFor="let iterTestRecord of leaderboard.testRecords"
+        [style.width.%]="85 / leaderboard.testRecords.length"
+        class="text-center align-middle" scope="col">
+        <a href="/test?id={{iterTestRecord.id}}">{{iterTestRecord.name}}</a>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      *ngFor="let userRecord of leaderboard.userRecords.content; index as i"
+      [ngClass]="{'table-info': userRecord.nickname == nickName}">
+      <td class="text-center align-middle">{{leaderboard.userRecords.number * pageSize + i + 1}}</td>
+      <th class="text-center align-middle" scope="row">{{userRecord.nickname}}</th>
+      <td class="text-center align-middle">{{userRecord.total.toFixed(2)}}</td>
+      <td
+        *ngFor="let testRecord of leaderboard.testRecords"
+        class="text-center align-middle">
+        {{userRecord.testToScoreMap.get(testRecord.id.toString())?.toFixed(2) }}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <app-pagination [page]="leaderboard.userRecords" [queryParams]="''" [baseUrl]="'/leaderboard'"></app-pagination>
+</div>
+<ng-template #emptyBlock>
+  <h1 class="text-center m-5 p-5">Nobody is here!</h1>
+</ng-template>
 <ng-template #elseBlock>
   <app-loading [text]="'Loading...'"></app-loading>
 </ng-template>

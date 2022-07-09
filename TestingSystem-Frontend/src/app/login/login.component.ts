@@ -25,10 +25,10 @@ export class LoginComponent implements OnInit {
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     let violations = '';
     if (name.length == 0 || name.length > 50) {
-      violations = violations.concat('Nickname must be 1-50 char.\n');
+      violations = violations.concat('Nickname must be 1-50 chars\n');
     }
     if (password.length == 0 || password.length > 256) {
-      violations = violations.concat('Password must be 1-256 char.\n');
+      violations = violations.concat('Password must be 1-256 chars\n');
     }
     if (violations.length != 0) {
       Swal.fire(violations);

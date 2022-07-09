@@ -6,6 +6,7 @@ import {map} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import jwt_decode from "jwt-decode";
+import {TestCard} from "../entity/TestCard";
 
 @Component({
   selector: 'app-tests-list',
@@ -18,7 +19,7 @@ export class TestsListComponent implements OnInit {
   pageNumb: number = 0;
   canEdit: boolean = false;
   lang: string = '';
-  page?: Page;
+  page?: Page<TestCard>;
 
   constructor(private testService: TestService, private route: ActivatedRoute, private router: Router) {
   }

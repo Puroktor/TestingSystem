@@ -11,6 +11,7 @@ import {AnswerComponent} from "./test/answer/answer.component";
 import {EditorAnswerComponent} from "./editor/editor-answer/editor-answer.component";
 import {EditorQuestionComponent} from "./editor/editor-question/editor-question.component";
 import {LoadingComponent} from './loading/loading.component';
+import { PaginationComponent } from './pagination/pagination.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {LoadingComponent} from './loading/loading.component';
     EditorAnswerComponent,
     LoadingComponent,
     routingComponents,
+    PaginationComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,5 @@
-import {TestCard} from "./TestCard";
-
-export interface Page {
-  content: TestCard[]
+export interface Page<T> {
+  content: T[]
   pageable: any
   last: boolean
   totalPages: number

@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {FullTest} from "../entity/FullTest";
 import {environment} from "../../environments/environment";
 import {Page} from "../entity/Page";
+import {TestCard} from "../entity/TestCard";
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +30,9 @@ export class TestService {
     return this.http.get<FullTest>(`${this.apiServerUrl}/test/${id}`, {headers: headers});
   }
 
-  public fetchPage(programmingLang: string, index: number, size: number): Observable<Page> {
+  public fetchPage(programmingLang: string, index: number, size: number): Observable<Page<TestCard>> {
     let params = new HttpParams().set('programmingLang', programmingLang).set('index', index).set('size', size);
-    return this.http.get<Page>(`${this.apiServerUrl}/test`, {params: params});
+    return this.http.get<Page<TestCard>>(`${this.apiServerUrl}/test`, {params: params});
   }
 
   public updateTest(id: number, test: FullTest, token: string): Observable<void> {

@@ -29,28 +29,30 @@ export class SignupComponent implements OnInit {
     let email = (document.getElementById('email') as HTMLInputElement).value.trim();
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     let university = (document.getElementById('university') as HTMLInputElement).value.trim();
+    let year =null;
+    let groupNumber =null;
     let violations = '';
     if (name.length == 0 || name.length > 100) {
-      violations = violations = violations.concat('Full name must be 1-100 char.\n');
+      violations = violations = violations.concat('Full name must be 1-100 chars\n');
     }
     if (nickname.length == 0 || nickname.length > 50) {
-      violations = violations.concat('Nickname must be 1-50 char.\n');
+      violations = violations.concat('Nickname must be 1-50 chars\n');
     }
     if (email.length == 0 || email.length > 320) {
-      violations = violations.concat('Email must be 1-320 char.\n');
+      violations = violations.concat('Email must be 1-320 chars\n');
     }
     if (!email.match(/^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/)) {
       violations = violations.concat('Not valid email!\n');
     }
     if (password.length == 0 || password.length > 256) {
-      violations = violations.concat('Password must be 1-256 char.\n');
+      violations = violations.concat('Password must be 1-256 chars\n');
     }
     if (university.length == 0 || university.length > 100) {
-      violations = violations.concat('University must be 1-100 char.\n');
+      violations = violations.concat('University must be 1-100 chars\n');
     }
     if (this.isVisible) {
-      let year = +((document.getElementById('year') as HTMLSelectElement).value.trim());
-      let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
+      year = +((document.getElementById('year') as HTMLSelectElement).value.trim());
+      groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
       if (isNaN(year)) {
         violations = violations.concat('Enter student year in numeric format\n');
       }
@@ -68,7 +70,7 @@ export class SignupComponent implements OnInit {
       Swal.fire(violations);
     } else {
       this.sendRequest(name, nickname, email, password, this.isVisible ? 'STUDENT' : 'TEACHER', university,
-        null, null);
+        year, groupNumber);
     }
   }
 

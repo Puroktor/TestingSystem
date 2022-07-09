@@ -2,13 +2,14 @@ package com.dsr.practice.testingsystem.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
-public class LeaderboardDto {
+public class LeaderboardPageDto {
     @Data
     @AllArgsConstructor
     public static class UserRecord {
@@ -25,5 +26,5 @@ public class LeaderboardDto {
     }
 
     private List<TestRecord> testRecords;
-    private List<UserRecord> userRecords;
+    private Page<UserRecord> userRecords;
 }
