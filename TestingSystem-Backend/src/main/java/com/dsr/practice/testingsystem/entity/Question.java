@@ -37,6 +37,9 @@ public class Question {
     @Min(value = 1, message = "Question score must be >= 1")
     private Integer maxScore;
 
+    @Min(value = 0, message = "Question template index must be >= 0")
+    private Integer questionTemplateIndex;
+
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @NotNull(message = "Enter at least 1 answer!")

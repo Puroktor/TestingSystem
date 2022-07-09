@@ -30,10 +30,13 @@ public class Test {
     @Size(max = 50, message = "Test name length must be <= 50 characters")
     private String name;
 
-    @NotNull(message = "Enter questions count!")
+    @NotNull(message = "Enter questions count")
     @Min(value = 1, message = "Questions count must be >= 1")
     @Max(value = 50, message = "Questions count must be <= 50")
     private Integer questionsCount;
+
+    @NotNull(message = "Enter test type")
+    private TestType testType;
 
     @OneToMany(mappedBy = "test", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

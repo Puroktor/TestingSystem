@@ -24,6 +24,10 @@ export class EditorQuestionComponent implements OnInit {
 
   }
 
+  indexChanged(event: any) {
+    this.question.questionTemplateIndex = +((event.target as HTMLInputElement).value) - 1;
+  }
+
   questionChanged(event: any) {
     this.question.text = (event.target as HTMLInputElement).value;
   }

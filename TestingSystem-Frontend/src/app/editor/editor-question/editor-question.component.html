@@ -1,9 +1,16 @@
 <div class="question">
   <div class="head">
-    <h5>Question {{index + 1}}</h5>
+    <div>
+      <h5 class="d-inline">Question </h5>
+      <h5 class="d-inline" *ngIf="question.questionTemplateIndex==null; else inputBlock">{{index + 1}}</h5>
+      <ng-template #inputBlock>
+        <input (change)="indexChanged($event)" class="form-control inp text-center" type="number"
+               value="{{(question.questionTemplateIndex ?? 0) + 1}}">
+      </ng-template>
+    </div>
     <div>
       <i>Max score:</i>
-      <input (change)="scoreChanged($event)" class="form-control score-inp text-center" type="number"
+      <input (change)="scoreChanged($event)" class="form-control inp score-inp text-center" type="number"
              value="{{question.maxScore}}">
       <a (click)="deleteQuestion()" class="button ms-4">❌</a>
     </div>

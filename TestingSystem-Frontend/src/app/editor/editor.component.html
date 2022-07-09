@@ -3,15 +3,21 @@
     <div class="info">
       <div class="flex">
         <input (change)="nameChanged($event)" class="form-control" placeholder="Title"
-               value="{{test.testInfo.name}}">
+               value="{{test.name}}">
         <input (change)="langChanged($event)" class="form-control ms-5" placeholder="Language"
-               value="{{test.testInfo.programmingLang}}">
+               value="{{test.programmingLang}}">
         <a (click)="deleteTest()" *ngIf="testId!=null" class="button">❌</a>
       </div>
       <div class="container">
-        <div class="p-text me-3">Question count for students:</div>
+        <div class="p-text me-2">Type:</div>
+        <select class="form-select type-select me-3" (change)="testTypeChanged($event)">
+          <option value="WITH_BANK" [selected]="test.testType=='WITH_BANK'">With question bank</option>
+          <option value="WITH_QUESTION_OPTIONS" [selected]="test.testType!='WITH_BANK'">With question options
+          </option>
+        </select>
+        <div class="p-text me-2 ms-3">Question count for students:</div>
         <input (change)="questionsCountChanged($event)" class="form-control count-inp text-center" type="number"
-               value="{{test.testInfo.questionsCount}}">
+               value="{{test.questionsCount}}">
       </div>
     </div>
     <div>

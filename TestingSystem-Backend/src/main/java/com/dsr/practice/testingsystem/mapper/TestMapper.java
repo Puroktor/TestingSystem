@@ -21,7 +21,7 @@ public class TestMapper {
     private final ModelMapper modelMapper;
 
     public TestDto toDto(Test test) {
-        TestInfoDto infoDto = modelMapper.map(test, TestInfoDto.class);
+        TestDto testDto = modelMapper.map(test, TestDto.class);
         List<QuestionDto> questionsDtoList = new ArrayList<>();
         for (Question question : test.getQuestions()) {
             List<AnswerDto> answersDtoList = question.getAnswers().stream()
@@ -31,11 +31,12 @@ public class TestMapper {
             questionDto.setAnswers(answersDtoList);
             questionsDtoList.add(questionDto);
         }
-        return new TestDto(infoDto, questionsDtoList);
+        testDto.setQuestions(questionsDtoList);
+        return testDto;
     }
 
     public Test toEntity(TestDto testDto) {
-        Test test = modelMapper.map(testDto.getTestInfo(), Test.class);
+        Test test = modelMapper.map(testDto, Test.class);
         test.setAttempts(new ArrayList<>());
         test.setQuestions(new ArrayList<>());
         for (QuestionDto questionDto : testDto.getQuestions()) {

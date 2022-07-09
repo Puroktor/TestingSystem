@@ -38,3 +38,7 @@
   cursor: pointer;
   text-decoration: none;
 }
+
+.type-select{
+  width: 13rem;
+}

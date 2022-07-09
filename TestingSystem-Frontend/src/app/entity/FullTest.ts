@@ -1,7 +1,10 @@
-import {TestCard} from "./TestCard";
 import {Question} from "./Question";
 
 export interface FullTest {
-  testInfo: TestCard
+  id: number|null
+  programmingLang: string
+  name: string
+  questionsCount: number
+  testType: string
   questions: Question[]
 }

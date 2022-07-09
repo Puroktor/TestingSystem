@@ -16,7 +16,7 @@ public class TestInfoDto {
     @Size(max = 50, message = "Test name length must be <= 50 characters")
     private String name;
 
-    @NotNull(message = "Enter questions count!")
+    @NotNull(message = "Enter questions count")
     @Min(value = 1, message = "Questions count must be >= 1")
     @Max(value = 50, message = "Questions count must be <= 50")
     private Integer questionsCount;

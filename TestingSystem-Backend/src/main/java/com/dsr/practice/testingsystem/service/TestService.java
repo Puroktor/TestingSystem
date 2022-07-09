@@ -5,6 +5,7 @@ import com.dsr.practice.testingsystem.dto.TestDto;
 import com.dsr.practice.testingsystem.dto.TestInfoDto;
 import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;
+import com.dsr.practice.testingsystem.entity.TestType;
 import com.dsr.practice.testingsystem.mapper.TestMapper;
 import com.dsr.practice.testingsystem.repository.QuestionRepository;
 import com.dsr.practice.testingsystem.repository.TestRepository;
@@ -18,10 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +30,10 @@ public class TestService {
     private final TestMapper testMapper;
 
     public TestDto createTest(TestDto testDto) {
-        if (testDto.getTestInfo().getQuestionsCount() > testDto.getQuestions().size()) {
-            throw new IllegalArgumentException("Invalid questions count");
-        } else if (testDto.getTestInfo().getId() != null) {
+        validateTestDto(testDto).ifPresent(violations -> {
+            throw new IllegalArgumentException(violations);
+        });
+        if (testDto.getId() != null) {
             throw new IllegalArgumentException("Test must not have id");
         }
         Test test = testMapper.toEntity(testDto);
@@ -62,20 +61,40 @@ public class TestService {
     @Transactional
     public TestDto getShuffledTest(int id) {
         TestDto testDto = getTest(id);
-        Collections.shuffle(testDto.getQuestions());
-        List<QuestionDto> questions = testDto.getQuestions().subList(0, testDto.getTestInfo().getQuestionsCount());
-        for (QuestionDto questionDto : questions) {
-            questionDto.getAnswers().forEach((answerDto -> answerDto.setIsRight(false)));
+        if (testDto.getTestType() == TestType.WITH_BANK) {
+            Collections.shuffle(testDto.getQuestions());
+            List<QuestionDto> questions = testDto.getQuestions().subList(0, testDto.getQuestionsCount());
+            for (QuestionDto questionDto : questions) {
+                questionDto.getAnswers().forEach((answerDto -> answerDto.setIsRight(false)));
+            }
+            testDto.setQuestions(questions);
+        } else if (testDto.getTestType() == TestType.WITH_QUESTION_OPTIONS) {
+            List<List<QuestionDto>> questionTemplates = new ArrayList<>();
+            for (int i = 0; i < testDto.getQuestionsCount(); i++) {
+                questionTemplates.add(new ArrayList<>());
+            }
+            for (QuestionDto questionDto : testDto.getQuestions()) {
+                int index = questionDto.getQuestionTemplateIndex();
+                List<QuestionDto> questionOptions = questionTemplates.get(index);
+                questionOptions.add(questionDto);
+            }
+            Random rand = new Random();
+            List<QuestionDto> questions = new ArrayList<>();
+            for (List<QuestionDto> questionOptions : questionTemplates) {
+                QuestionDto questionDto = questionOptions.get(rand.nextInt(questionOptions.size()));
+                questionDto.getAnswers().forEach((answerDto -> answerDto.setIsRight(false)));
+                questions.add(questionDto);
+            }
+            testDto.setQuestions(questions);
         }
-        testDto.setQuestions(questions);
         return testDto;
     }
 
     @Transactional
     public void updateTest(int id, TestDto newTestDto) {
-        if (newTestDto.getTestInfo().getQuestionsCount() > newTestDto.getQuestions().size()) {
-            throw new IllegalArgumentException("Invalid questions count");
-        }
+        validateTestDto(newTestDto).ifPresent(violations -> {
+            throw new IllegalArgumentException(violations);
+        });
         Test newTest = testMapper.toEntity(newTestDto);
         Optional<Test> optionalTest = testRepository.findById(id);
         if (optionalTest.isPresent()) {
@@ -113,4 +132,42 @@ public class TestService {
         Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
         testRepository.delete(test);
     }
+
+    private Optional<String> validateTestDto(TestDto testDto) {
+        Set<String> violations = new HashSet<>();
+        if (testDto.getTestType() == TestType.WITH_BANK) {
+            if (testDto.getQuestionsCount() > testDto.getQuestions().size()) {
+                violations.add("Question count for student must be <= question bank size");
+            }
+            for (QuestionDto questionDto : testDto.getQuestions()) {
+                if (questionDto.getQuestionTemplateIndex() != null) {
+                    violations.add("Question must not have template index");
+                    break;
+                }
+            }
+        } else if (testDto.getTestType() == TestType.WITH_QUESTION_OPTIONS) {
+            boolean[] questionTemplatesPresence = new boolean[testDto.getQuestionsCount()];
+            for (QuestionDto questionDto : testDto.getQuestions()) {
+                Integer index = questionDto.getQuestionTemplateIndex();
+                if (index == null) {
+                    violations.add("Enter question template index");
+                } else if (questionDto.getQuestionTemplateIndex() >= testDto.getQuestionsCount()) {
+                    violations.add("Question template index must be < question count for students");
+                } else {
+                    questionTemplatesPresence[index] = true;
+                }
+            }
+            for (boolean isPresent : questionTemplatesPresence) {
+                if (!isPresent) {
+                    violations.add("All question templates must have at least 1 question option");
+                    break;
+                }
+            }
+        }
+        StringBuilder violationsBuilder = new StringBuilder();
+        violations.forEach(violation -> violationsBuilder.append(violation).append('\n'));
+        String violationsMessage = violationsBuilder.toString();
+        return Optional.ofNullable(violationsMessage.equals("") ? null : violationsMessage);
+    }
+
 }

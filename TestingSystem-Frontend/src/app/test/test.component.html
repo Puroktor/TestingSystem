@@ -2,10 +2,10 @@
   <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
       <div class="flex">
-        <h2>{{test.testInfo.name}}</h2>
-        <b>{{test.testInfo.programmingLang}}</b>
+        <h2>{{test.name}}</h2>
+        <b>{{test.programmingLang}}</b>
       </div>
-      <p>Questions: {{test.testInfo.questionsCount}}</p>
+      <p>Questions: {{test.questionsCount}}</p>
     </div>
     <div>
       <app-question

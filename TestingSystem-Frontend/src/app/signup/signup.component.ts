@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '../service/user.service';
 import {Router} from '@angular/router';
-import Swal from 'sweetalert2';
 import {HttpErrorResponse} from "@angular/common/http";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-signup',
@@ -29,36 +29,46 @@ export class SignupComponent implements OnInit {
     let email = (document.getElementById('email') as HTMLInputElement).value.trim();
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     let university = (document.getElementById('university') as HTMLInputElement).value.trim();
+    let violations = '';
     if (name.length == 0 || name.length > 100) {
-      Swal.fire('Your full name must be between 1 and 100 characters');
-    } else if (nickname.length == 0 || nickname.length > 50) {
-      Swal.fire('Your nickname must be between 1 and 50 characters');
-    } else if (email.length == 0 || email.length > 320) {
-      Swal.fire('Email must be between 1 and 320 characters');
-    } else if (!email.match(/^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/)) {
-      Swal.fire('Not valid email!');
-    } else if (password.length == 0 || password.length > 256) {
-      Swal.fire('Your password must be between 1 and 256 characters');
-    } else if (university.length == 0 || university.length > 100) {
-      Swal.fire('University name must be between 1 and 100 characters');
-    } else {
-      if (this.isVisible) {
-        let year = +((document.getElementById('year') as HTMLSelectElement).value.trim());
-        let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
-        if (isNaN(year)) {
-          Swal.fire('Enter student year in numeric format');
-        } else if (year < 1 || year > 6) {
-          Swal.fire('Student year must be between 1 and 6');
-        } else if (isNaN(groupNumber)) {
-          Swal.fire('Enter group number in numeric format');
-        } else if (groupNumber < 1) {
-          Swal.fire('Group number must be >=1');
-        } else {
-          this.sendRequest(name, nickname, email, password, 'STUDENT', university, year, groupNumber);
-        }
-      } else {
-        this.sendRequest(name, nickname, email, password, 'TEACHER', university, null, null);
+      violations = violations = violations.concat('Full name must be 1-100 char.\n');
+    }
+    if (nickname.length == 0 || nickname.length > 50) {
+      violations = violations.concat('Nickname must be 1-50 char.\n');
+    }
+    if (email.length == 0 || email.length > 320) {
+      violations = violations.concat('Email must be 1-320 char.\n');
+    }
+    if (!email.match(/^(?=.{1,64}@)[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/)) {
+      violations = violations.concat('Not valid email!\n');
+    }
+    if (password.length == 0 || password.length > 256) {
+      violations = violations.concat('Password must be 1-256 char.\n');
+    }
+    if (university.length == 0 || university.length > 100) {
+      violations = violations.concat('University must be 1-100 char.\n');
+    }
+    if (this.isVisible) {
+      let year = +((document.getElementById('year') as HTMLSelectElement).value.trim());
+      let groupNumber = +((document.getElementById('groupNumber') as HTMLInputElement).value.trim());
+      if (isNaN(year)) {
+        violations = violations.concat('Enter student year in numeric format\n');
       }
+      if (year < 1 || year > 6) {
+        violations = violations.concat('Student year must be 1 - 6\n');
+      }
+      if (isNaN(groupNumber)) {
+        violations = violations.concat('Enter group number in numeric format\n');
+      }
+      if (groupNumber < 1) {
+        violations = violations.concat('Group number must be >=1\n');
+      }
+    }
+    if (violations.length != 0) {
+      Swal.fire(violations);
+    } else {
+      this.sendRequest(name, nickname, email, password, this.isVisible ? 'STUDENT' : 'TEACHER', university,
+        null, null);
     }
   }
 

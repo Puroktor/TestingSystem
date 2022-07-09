@@ -23,10 +23,15 @@ export class LoginComponent implements OnInit {
   submit() {
     let name = (document.getElementById('name') as HTMLInputElement).value.trim();
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
+    let violations = '';
     if (name.length == 0 || name.length > 50) {
-      Swal.fire('Your nickname must be between 1 and 50 characters');
-    } else if (password.length == 0 || password.length > 256) {
-      Swal.fire('Your password must be between 1 and 256 characters');
+      violations = violations.concat('Nickname must be 1-50 char.\n');
+    }
+    if (password.length == 0 || password.length > 256) {
+      violations = violations.concat('Password must be 1-256 char.\n');
+    }
+    if (violations.length != 0) {
+      Swal.fire(violations);
     } else {
       this.hasSent = true;
       this.userService.loginUser({nickname: name, password: password})
