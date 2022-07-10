@@ -130,53 +130,55 @@ export class EditorComponent implements OnInit {
     }
     let violations = new Set<string>;
     if (this.test.name.length == 0 || this.test.name.length > 50) {
-      violations.add('Test name must be between 1-50 characters\n');
+      violations.add('Test name must be between 1-50 characters');
     }
     if (this.test.programmingLang.length == 0 || this.test.programmingLang.length > 50) {
-      violations.add('Programming language must be 1-50 characters\n');
+      violations.add('Programming language must be 1-50 characters');
     }
     if (this.test.questionsCount < 1 || this.test.questionsCount > 50) {
-      violations.add('Questions count must be 1-50\n');
+      violations.add('Questions count must be 1-50');
     }
     if (this.test.questions.length < this.test.questionsCount) {
-      violations.add('Number of questions must be >= question count\n');
+      violations.add('Number of questions must be >= question count');
     }
     let questionTemplatesPresence = new Array(this.test.questionsCount).fill(false)
     for (let question of this.test.questions) {
       if (question.maxScore < 1) {
-        violations.add('Question score must be >= 1\n');
+        violations.add('Question score must be >= 1');
       }
       if (question.text.length == 0 || question.text.length > 200) {
-        violations.add('Question must be 1-200 characters\n');
+        violations.add('Question must be 1-200 characters');
       }
       if (this.test.testType == 'WITH_BANK') {
         if (question.questionTemplateIndex != null) {
-          violations.add('Template index must be absent\n');
+          violations.add('Template index must be absent');
         }
       } else if (this.test.testType == 'WITH_QUESTION_OPTIONS') {
         if (question.questionTemplateIndex == null) {
-          violations.add('Enter question template index\n');
+          violations.add('Enter question template index');
         } else if (question.questionTemplateIndex >= this.test.questionsCount) {
-          violations.add('Question template index must be <= question count\n');
+          violations.add('Question template index must be <= question count');
         } else {
           questionTemplatesPresence[question.questionTemplateIndex] = true;
         }
       }
       if (question.answers.length == 0) {
-        violations.add('Enter at least one answer\n');
-      } else {
+        violations.add('Enter at least one answer');
+      }else if(question.answers.length > 10){
+        violations.add('Answer count must be 1-10');
+      }
         for (let answer of question.answers) {
           if (question.text.length == 0 || question.text.length > 100) {
-            violations.add('Answer must be 1-100 characters\n');
+            violations.add('Answer must be 1-100 characters');
             break;
           }
         }
-      }
+
     }
     if (this.test.testType == 'WITH_QUESTION_OPTIONS') {
       for (let isPresent of questionTemplatesPresence) {
         if (!isPresent) {
-          violations.add("All question templates must have at least 1 question option\n");
+          violations.add("All question templates must have at least 1 question option");
           break;
         }
       }
@@ -184,7 +186,7 @@ export class EditorComponent implements OnInit {
     if (violations.size != 0) {
       let violationsStr = '';
       violations.forEach(value => {
-        violationsStr = violationsStr.concat(value);
+        violationsStr = violationsStr.concat(value).concat('\n');
       });
       Swal.fire(violationsStr);
       return false;

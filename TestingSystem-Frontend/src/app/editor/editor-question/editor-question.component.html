@@ -25,7 +25,7 @@
     [index]="i"
     [question]="question"
   ></app-editor-answer>
-  <div class="text-center">
+  <div class="text-center" *ngIf="question.answers.length<10">
     <a (click)="newAnswer()" class="button">+</a>
   </div>
 </div>

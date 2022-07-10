@@ -42,8 +42,8 @@ public class Question {
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @NotNull(message = "Enter at least 1 answer!")
-    @Size(min = 1, message = "Enter at least 1 answer!")
+    @NotNull(message = "Enter at least 1 answer")
+    @Size(min = 1, max = 10, message = "Answer count must be 1-10")
     @Valid
     private List<Answer> answers;
 

@@ -24,7 +24,7 @@ public class QuestionDto {
     @Min(value = 0, message = "Question template index must be >= 0")
     private Integer questionTemplateIndex;
 
-    @NotNull(message = "Enter at least 1 answer!")
-    @Size(min = 1, message = "Enter at least 1 answer!")
+    @NotNull(message = "Enter at least 1 answer")
+    @Size(min = 1, max = 10, message = "Answer count must be 1-10")
     private List<AnswerDto> answers;
 }

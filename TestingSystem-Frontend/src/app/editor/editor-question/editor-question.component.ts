@@ -33,7 +33,9 @@ export class EditorQuestionComponent implements OnInit {
   }
 
   newAnswer() {
-    this.question.answers.push({id: null, text: '', isRight: false});
+    if (this.question.answers.length < 10) {
+      this.question.answers.push({id: null, text: '', isRight: false});
+    }
   }
 
   deleteQuestion() {
