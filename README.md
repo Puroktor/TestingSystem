@@ -2,6 +2,8 @@
 My practice project at DSR Corporation.
 
 ### This application allows you:
-* register and login using jwt token (2 roles provided: teacher and student)
-* create, edit, pass, delete tests (pagination implimented)
-* get a leaderboard
+* Register and login using JWT token (2 roles provided: teacher and student)
+* Create, read (pagination implemented), update, delete tests and pass tests of 2 types:
+  * with question bank
+  * with question options
+* Get a leaderboard (also with pagination)
