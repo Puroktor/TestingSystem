@@ -6,6 +6,7 @@ import {UserService} from "../service/user.service";
 import {LeaderboardPage} from "../entity/LeaderboardPage";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap} from "@angular/router";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-leaderboard',
@@ -17,7 +18,7 @@ export class LeaderboardComponent implements OnInit {
   leaderboard?: LeaderboardPage;
 
   nickName: string | null = null;
-  pageSize: number = 5;
+  pageSize: number = 3;
 
   constructor(private userService: UserService, private route: ActivatedRoute) {
   }
@@ -55,7 +56,13 @@ export class LeaderboardComponent implements OnInit {
           })
           this.leaderboard = value
         },
-        error: (err: HttpErrorResponse) => Swal.fire(err.error.message)
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.getBoardFromServer(pageNumb), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message);
+          }
+        }
       })
   }
 }

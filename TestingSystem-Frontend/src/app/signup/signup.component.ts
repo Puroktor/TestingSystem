@@ -3,6 +3,7 @@ import {UserService} from '../service/user.service';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-signup',
@@ -29,8 +30,8 @@ export class SignupComponent implements OnInit {
     let email = (document.getElementById('email') as HTMLInputElement).value.trim();
     let password = (document.getElementById('password') as HTMLInputElement).value.trim();
     let university = (document.getElementById('university') as HTMLInputElement).value.trim();
-    let year =null;
-    let groupNumber =null;
+    let year = null;
+    let groupNumber = null;
     let violations = '';
     if (name.length == 0 || name.length > 100) {
       violations = violations = violations.concat('Full name must be 1-100 chars\n');
@@ -84,7 +85,14 @@ export class SignupComponent implements OnInit {
       next: () => {
         this.router.navigate(['/login']);
       },
-      error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
+      error: (err: HttpErrorResponse) => {
+        if (err.status == 0) {
+          setTimeout(() => this.sendRequest(name, nickname, email, password, role, university, year, groupNumber),
+            environment.retryDelay);
+        } else {
+          Swal.fire(err.error.message).then(() => this.hasSent = false)
+        }
+      }
     });
   }
 

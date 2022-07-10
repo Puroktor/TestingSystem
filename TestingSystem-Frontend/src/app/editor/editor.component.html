@@ -3,9 +3,9 @@
     <div class="info">
       <div class="flex">
         <input (change)="nameChanged($event)" class="form-control" placeholder="Title"
-               value="{{test.name}}">
+               value="{{test.name}}" maxlength="50">
         <input (change)="langChanged($event)" class="form-control ms-5" placeholder="Language"
-               value="{{test.programmingLang}}">
+               value="{{test.programmingLang}}" maxlength="50">
         <a (click)="deleteTest()" *ngIf="testId!=null" class="button">❌</a>
       </div>
       <div class="container">
@@ -17,7 +17,7 @@
         </select>
         <div class="p-text me-2 ms-3">Question count for students:</div>
         <input (change)="questionsCountChanged($event)" class="form-control count-inp text-center" type="number"
-               value="{{test.questionsCount}}">
+               value="{{test.questionsCount}}" min="1" max="50">
       </div>
     </div>
     <div>

@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import {TestService} from '../service/test.service';
 import jwt_decode from 'jwt-decode';
 import {UserService} from '../service/user.service';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-editor',
@@ -98,20 +99,41 @@ export class EditorComponent implements OnInit {
       return;
     }
     if (this.test != null) {
-      this.hasSent = true;
       if (this.testId == null) {
-        this.testService.createTest(this.test, localStorage.getItem('access-jwt') ?? '').subscribe({
-          next: () => this.goToHomePage(),
-          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
-        });
+        this.createTest(this.test);
       } else {
-        this.testService.updateTest(this.testId, this.test, localStorage.getItem('access-jwt') ?? '')
-          .subscribe({
-            next: () => this.goToHomePage(),
-            error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
-          });
+        this.updateTest(this.testId, this.test);
       }
     }
+  }
+
+  private createTest(test: FullTest) {
+    this.hasSent = true;
+    this.testService.createTest(test, localStorage.getItem('access-jwt') ?? '').subscribe({
+      next: () => this.goToHomePage(),
+      error: (err: HttpErrorResponse) => {
+        if (err.status == 0) {
+          setTimeout(() => this.createTest(test), environment.retryDelay);
+        } else {
+          Swal.fire(err.error.message).then(() => this.hasSent = false)
+        }
+      }
+    });
+  }
+
+  private updateTest(testId: number, test: FullTest) {
+    this.hasSent = true;
+    this.testService.updateTest(testId, test, localStorage.getItem('access-jwt') ?? '')
+      .subscribe({
+        next: () => this.goToHomePage(),
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.updateTest(testId, test), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.hasSent = false)
+          }
+        }
+      });
   }
 
   deleteTest() {
@@ -119,7 +141,13 @@ export class EditorComponent implements OnInit {
       this.hasSent = true;
       this.testService.deleteTest(this.testId, localStorage.getItem('access-jwt') ?? '').subscribe({
         next: () => this.goToHomePage(),
-        error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.deleteTest(), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.hasSent = false)
+          }
+        }
       });
     }
   }
@@ -146,8 +174,8 @@ export class EditorComponent implements OnInit {
       if (question.maxScore < 1) {
         violations.add('Question score must be >= 1');
       }
-      if (question.text.length == 0 || question.text.length > 200) {
-        violations.add('Question must be 1-200 characters');
+      if (question.text.length == 0 || question.text.length > 500) {
+        violations.add('Question must be 1-500 characters');
       }
       if (this.test.testType == 'WITH_BANK') {
         if (question.questionTemplateIndex != null) {
@@ -164,15 +192,15 @@ export class EditorComponent implements OnInit {
       }
       if (question.answers.length == 0) {
         violations.add('Enter at least one answer');
-      }else if(question.answers.length > 10){
+      } else if (question.answers.length > 10) {
         violations.add('Answer count must be 1-10');
       }
-        for (let answer of question.answers) {
-          if (question.text.length == 0 || question.text.length > 100) {
-            violations.add('Answer must be 1-100 characters');
-            break;
-          }
+      for (let answer of question.answers) {
+        if (answer.text.length == 0 || answer.text.length > 200) {
+          violations.add('Answer must be 1-200 characters');
+          break;
         }
+      }
 
     }
     if (this.test.testType == 'WITH_QUESTION_OPTIONS') {
@@ -210,7 +238,11 @@ export class EditorComponent implements OnInit {
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => {
-          Swal.fire(err.error.message).then(() => this.goToHomePage())
+          if (err.status == 0) {
+            setTimeout(() => this.getTestFromServer(value), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.goToHomePage());
+          }
         }
       })
   }

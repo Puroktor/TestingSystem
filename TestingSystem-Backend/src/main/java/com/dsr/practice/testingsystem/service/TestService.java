@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,7 +42,7 @@ public class TestService {
     }
 
     public Page<TestInfoDto> fetchTestPage(String filter, int index, int size) {
-        Pageable pageable = PageRequest.of(index, size);
+        Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
         Page<Test> page;
         if (filter == null || filter.trim().isEmpty()) {
             page = testRepository.findAll(pageable);

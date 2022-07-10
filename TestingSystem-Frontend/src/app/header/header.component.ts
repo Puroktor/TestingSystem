@@ -3,6 +3,7 @@ import jwt_decode from "jwt-decode";
 import {UserService} from "../service/user.service";
 import Swal from "sweetalert2";
 import {HttpErrorResponse} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-header',
@@ -41,19 +42,27 @@ export class HeaderComponent implements OnInit {
     }
     let decodedRefresh: any = jwt_decode(refreshToken);
     if (decodedRefresh.exp * 1000 > Date.now()) {
-      this.userService.refreshToken(refreshToken).subscribe({
-        next: (response) => {
-          localStorage.setItem('access-jwt', response.accessToken);
-          localStorage.setItem('refresh-jwt', response.refreshToken);
-          let decodedAccess: any = jwt_decode(response.accessToken);
-          this.timer = setTimeout(() => this.refreshToken(), Math.max(decodedAccess.exp * 1000 - Date.now(), 0));
-        }, error: (err: HttpErrorResponse) => {
-          Swal.fire(err.error.message);
-          this.logout();
-        }
-      });
+      this.sendRequest(refreshToken);
     } else {
       this.logout();
     }
+  }
+
+  private sendRequest(refreshToken: string) {
+    this.userService.refreshToken(refreshToken).subscribe({
+      next: (response) => {
+        localStorage.setItem('access-jwt', response.accessToken);
+        localStorage.setItem('refresh-jwt', response.refreshToken);
+        let decodedAccess: any = jwt_decode(response.accessToken);
+        this.timer = setTimeout(() => this.refreshToken(), Math.max(decodedAccess.exp * 1000 - Date.now(), 0));
+      }, error: (err: HttpErrorResponse) => {
+        if (err.status == 0) {
+          setTimeout(() => this.sendRequest(refreshToken), environment.retryDelay);
+        } else {
+          Swal.fire(err.error.message);
+          this.logout();
+        }
+      }
+    });
   }
 }

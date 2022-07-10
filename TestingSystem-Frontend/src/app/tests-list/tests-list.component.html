@@ -2,7 +2,7 @@
   <div class="col-2"></div>
   <div class="search col-8">
     <input (input)="filterPage()" [readonly]="page==null" class="form-control" id="filterInput"
-           placeholder="Enter language:" type="text">
+           placeholder="Enter language:" maxlength="50" type="text">
   </div>
   <div class="col-2 button-cont">
     <a *ngIf="canEdit" class="btn btn-secondary" routerLink="/editor">New Test</a>

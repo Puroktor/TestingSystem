@@ -30,7 +30,7 @@ public class Question {
     private Test test;
 
     @NotBlank(message = "Enter your question")
-    @Size(max = 200, message = "Question length must be <= 200 characters")
+    @Size(max = 500, message = "Question length must be <= 500 characters")
     private String text;
 
     @NotNull(message = "Enter question score")

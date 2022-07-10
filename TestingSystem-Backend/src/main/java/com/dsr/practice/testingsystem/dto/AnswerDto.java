@@ -11,7 +11,7 @@ public class AnswerDto {
     private Integer id;
 
     @NotBlank(message = "Enter your answer")
-    @Size(max = 100, message = "Your answer length must be <= 100 characters")
+    @Size(max = 200, message = "Your answer length must be <= 200 characters")
     private String text;
 
     @NotNull(message = "Select right answer")

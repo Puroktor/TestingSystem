@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import {Answer} from "../entity/Answer";
 import jwt_decode from 'jwt-decode';
 import {UserService} from "../service/user.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-test',
@@ -55,17 +56,27 @@ export class TestComponent implements OnInit {
 
   submit() {
     if (this.test != null) {
-      this.hasSent = true;
       let answers: Answer[] = [];
       this.test.questions.forEach((question) =>
         question.answers.forEach((answer) => answers.push(answer))
-      )
-      this.userService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
-        .subscribe({
-          next: () => this.goToHomePage(),
-          error: (err: HttpErrorResponse) => Swal.fire(err.error.message).then(() => this.hasSent = false)
-        })
+      );
+      this.sendAttempt(answers);
     }
+  }
+
+  private sendAttempt(answers: Answer[]) {
+    this.hasSent = true;
+    this.userService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
+      .subscribe({
+        next: () => this.goToHomePage(),
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.sendAttempt(answers), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.hasSent = false)
+          }
+        }
+      });
   }
 
   private getTestId() {
@@ -79,7 +90,11 @@ export class TestComponent implements OnInit {
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => {
-          Swal.fire(err.error.message).then(() => this.goToHomePage())
+          if (err.status == 0) {
+            setTimeout(() => this.getTestFromServer(value), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.goToHomePage())
+          }
         }
       })
   }

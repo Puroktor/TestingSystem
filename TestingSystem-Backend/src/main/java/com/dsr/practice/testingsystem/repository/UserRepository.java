@@ -13,6 +13,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByNickname(String name);
 
     @Query(value = "SELECT u FROM User u LEFT JOIN Attempt a on u.id = a.user.id " +
-            "WHERE u.role = ?1 GROUP BY u.id ORDER BY sum(a.score)")
+            "WHERE u.role = ?1 GROUP BY u.id ORDER BY sum(a.score) DESC NULLS LAST, u.nickname")
     Page<User> findPageOfTopByRole(Role role, Pageable pageable);
 }

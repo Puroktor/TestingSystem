@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../service/user.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
+import {environment} from "../../environments/environment";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -33,16 +35,27 @@ export class LoginComponent implements OnInit {
     if (violations.length != 0) {
       Swal.fire(violations);
     } else {
-      this.hasSent = true;
-      this.userService.loginUser({nickname: name, password: password})
-        .subscribe({
-          next: response => {
-            localStorage.setItem('access-jwt', response.accessToken);
-            localStorage.setItem('refresh-jwt', response.refreshToken);
-            window.location.href = '/';
-          },
-          error: (err) => Swal.fire(err.error.message).then(() => this.hasSent = false)
-        });
+      this.sendRequest(name, password);
     }
   }
+
+  private sendRequest(name: string, password: string) {
+    this.hasSent = true;
+    this.userService.loginUser({nickname: name, password: password})
+      .subscribe({
+        next: response => {
+          localStorage.setItem('access-jwt', response.accessToken);
+          localStorage.setItem('refresh-jwt', response.refreshToken);
+          window.location.href = '/';
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.sendRequest(name, password), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.hasSent = false)
+          }
+        }
+      });
+  }
+
 }

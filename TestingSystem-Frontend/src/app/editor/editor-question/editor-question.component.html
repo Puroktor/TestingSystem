@@ -5,19 +5,19 @@
       <h5 class="d-inline" *ngIf="question.questionTemplateIndex==null; else inputBlock">{{index + 1}}</h5>
       <ng-template #inputBlock>
         <input (change)="indexChanged($event)" class="form-control inp text-center" type="number"
-               value="{{(question.questionTemplateIndex ?? 0) + 1}}">
+               value="{{(question.questionTemplateIndex ?? 0) + 1}}" min="1" max="{{test.questionsCount}}">
       </ng-template>
     </div>
     <div>
       <i>Max score:</i>
       <input (change)="scoreChanged($event)" class="form-control inp score-inp text-center" type="number"
-             value="{{question.maxScore}}">
+             value="{{question.maxScore}}" min="0">
       <a (click)="deleteQuestion()" class="button ms-4">❌</a>
     </div>
   </div>
   <div class="p-2">
     <input (change)="questionChanged($event)" class="form-control text-center" placeholder="Question text"
-           value="{{question.text}}">
+           value="{{question.text}}" maxlength="500">
   </div>
   <app-editor-answer
     *ngFor="let iterAnswer of question.answers; index as i"

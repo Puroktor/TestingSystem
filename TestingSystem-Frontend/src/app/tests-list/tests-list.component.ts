@@ -7,6 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import jwt_decode from "jwt-decode";
 import {TestCard} from "../entity/TestCard";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-tests-list',
@@ -15,7 +16,7 @@ import {TestCard} from "../entity/TestCard";
 })
 export class TestsListComponent implements OnInit {
 
-  pageSize: number = 5;
+  pageSize: number = 3;
   pageNumb: number = 0;
   canEdit: boolean = false;
   lang: string = '';
@@ -52,7 +53,13 @@ export class TestsListComponent implements OnInit {
     this.testService.fetchPage(programmingLang, pageNumber, this.pageSize)
       .subscribe({
         next: value => this.page = value,
-        error: (err: HttpErrorResponse) => Swal.fire(err.error.message)
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.getPageFromServer(pageNumber, programmingLang), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message)
+          }
+        }
       })
   }
 
