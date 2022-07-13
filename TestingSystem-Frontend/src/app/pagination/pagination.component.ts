@@ -10,7 +10,7 @@ export class PaginationComponent implements OnInit {
 
   @Input() page!: Page<any>;
   @Input() baseUrl!: string
-  @Input() queryParams!: string;
+  @Input() filter?: string;
 
   constructor() {
   }

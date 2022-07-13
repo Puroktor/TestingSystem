@@ -30,9 +30,10 @@ export class TestService {
     return this.http.get<FullTest>(`${this.apiServerUrl}/test/${id}`, {headers: headers});
   }
 
-  public fetchPage(programmingLang: string, index: number, size: number): Observable<Page<TestCard>> {
+  public fetchPage(programmingLang: string, index: number, size: number, token: string): Observable<Page<TestCard>> {
+    let headers = new HttpHeaders().set('Authorization', token);
     let params = new HttpParams().set('programmingLang', programmingLang).set('index', index).set('size', size);
-    return this.http.get<Page<TestCard>>(`${this.apiServerUrl}/test`, {params: params});
+    return this.http.get<Page<TestCard>>(`${this.apiServerUrl}/test`, {params: params, headers: headers});
   }
 
   public updateTest(id: number, test: FullTest, token: string): Observable<void> {

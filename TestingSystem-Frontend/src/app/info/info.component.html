@@ -1,0 +1,42 @@
+<div class="row pt-5 pb-3 m-0 text-center">
+  <h2>This is a testing system.</h2>
+  <h4>It was created for teachers and their students.</h4>
+  <h5>This system allows you to create, edit and pass different types of test.</h5>
+  <p *ngIf="isLoggedIn; else elseBlock">To get started please <a routerLink="/login">login</a>.</p>
+  <ng-template #elseBlock>
+    <p>Enjoy!</p>
+  </ng-template>
+</div>
+<div class="row m-0">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <svg viewBox="0 0 64 64">
+      <g>
+        <path
+          d="M40 1H2C1.448 1 1 1.448 1 2v60c0 .552.448 1 1 1h38c.552.0 1-.448 1-1V2C41 1.448 40.552 1 40 1zM39 61H3V3h36V61z"/>
+        <path
+          d="M8 19h4c.552.0 1-.448 1-1v-4c0-.552-.448-1-1-1H8c-.552.0-1 .448-1 1v4C7 18.552 7.448 19 8 19zm1-4h2v2H9V15z"/>
+        <path
+          d="M8 27h4c.552.0 1-.448 1-1v-4c0-.552-.448-1-1-1H8c-.552.0-1 .448-1 1v4C7 26.552 7.448 27 8 27zm1-4h2v2H9V23z"/>
+        <path
+          d="M8 35h4c.552.0 1-.448 1-1v-4c0-.552-.448-1-1-1H8c-.552.0-1 .448-1 1v4C7 34.552 7.448 35 8 35zm1-4h2v2H9V31z"/>
+        <path
+          d="M8 43h4c.552.0 1-.448 1-1v-4c0-.552-.448-1-1-1H8c-.552.0-1 .448-1 1v4C7 42.552 7.448 43 8 43zm1-4h2v2H9V39z"/>
+        <path
+          d="M8 51h4c.552.0 1-.448 1-1v-4c0-.552-.448-1-1-1H8c-.552.0-1 .448-1 1v4C7 50.552 7.448 51 8 51zm1-4h2v2H9V47z"/>
+        <path d="M11 5h20v2H11z"/>
+        <path d="M15 9h11v2H15z"/>
+        <path d="M17 15h18v2H17z"/>
+        <path d="M17 23h18v2H17z"/>
+        <path d="M17 31h18v2H17z"/>
+        <path d="M17 39h18v2H17z"/>
+        <path d="M17 47h18v2H17z"/>
+        <path
+          d="M49.958 7.713C49.831 7.29 49.441 7 49 7s-.831.29-.958.713l-3 10C45.014 17.806 45 17.903 45 18v44c0 .552.448 1 1 1h6c.552.0 1-.448 1-1V18c0-.097-.014-.194-.042-.287l-3-10zM49 11.48 50.656 17h-3.312L49 11.48zM51 19v36h-4V19h4zM47 61v-4h4v4H47z"/>
+        <path
+          d="M62 43V11c0-.127-.024-.253-.071-.372l-2-5C59.776 5.249 59.409 5 59 5s-.776.249-.929.628l-2 5C56.024 10.747 56 10.873 56 11v32c-.552.0-1 .448-1 1v12c0 .552.448 1 1 1v5c0 .552.448 1 1 1h4c.552.0 1-.448 1-1v-5c.552.0 1-.448 1-1V44C63 43.448 62.552 43 62 43zM59 8.692 59.923 11h-1.846L59 8.692zM58 13h2v30h-2V13zm3 42h-4V45h4V55zm-1 6h-2v-4h2v4z"/>
+      </g>
+    </svg>
+  </div>
+  <div class="col-4"></div>
+</div>

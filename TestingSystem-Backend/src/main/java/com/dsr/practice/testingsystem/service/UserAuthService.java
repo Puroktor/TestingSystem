@@ -1,6 +1,7 @@
 package com.dsr.practice.testingsystem.service;
 
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
+import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
 import com.dsr.practice.testingsystem.entity.Role;
@@ -25,7 +26,7 @@ public class UserAuthService {
     private final JwtTokenProvider tokenProvider;
     private final ModelMapper modelMapper;
 
-    public UserRegistrationDto createUser(UserRegistrationDto userDto) {
+    public RegistrationResponseDto createUser(UserRegistrationDto userDto) {
         if (userRepository.findByNickname(userDto.getNickname()).isPresent()) {
             throw new IllegalArgumentException("User with such nickname already exists");
         } else if (userDto.getRole() == Role.STUDENT && (userDto.getGroupNumber() == null || userDto.getYear() == null)) {
@@ -36,7 +37,7 @@ public class UserAuthService {
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
-        return modelMapper.map(user, UserRegistrationDto.class);
+        return modelMapper.map(user, RegistrationResponseDto.class);
     }
 
     public JwtTokensDto loginUser(UserLoginDto userDto) {

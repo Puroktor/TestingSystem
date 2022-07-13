@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TestCard} from "../../entity/TestCard";
 import {Router} from "@angular/router";
-import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-test-card',
@@ -20,15 +19,11 @@ export class TestCardComponent implements OnInit {
   }
 
   goToTest() {
-    if (localStorage.getItem('access-jwt') == null) {
-      Swal.fire('Login to see the test!');
-    } else {
-      this.router.navigate([`test`], {
-        queryParams: {
-          'id': this.card.id,
-        }
-      });
-    }
+    this.router.navigate([`test`], {
+      queryParams: {
+        'id': this.card.id,
+      }
+    });
   }
 
 }

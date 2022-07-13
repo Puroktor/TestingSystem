@@ -5,7 +5,7 @@ import jwt_decode from "jwt-decode";
 import {UserService} from "../service/user.service";
 import {LeaderboardPage} from "../entity/LeaderboardPage";
 import {map} from "rxjs/operators";
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 
 @Component({
@@ -20,17 +20,17 @@ export class LeaderboardComponent implements OnInit {
   nickName: string | null = null;
   pageSize: number = 3;
 
-  constructor(private userService: UserService, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem('access-jwt')
+    let token = localStorage.getItem('access-jwt');
     if (token == null) {
-      this.nickName = null;
-    } else {
-      let decoded: any = jwt_decode(token);
-      this.nickName = decoded.sub;
+      Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
+      return;
     }
+    let decoded: any = jwt_decode(token);
+    this.nickName = decoded.sub;
     this.getPageNumber()
       .subscribe({
         next: value => {
@@ -48,7 +48,7 @@ export class LeaderboardComponent implements OnInit {
   }
 
   private getBoardFromServer(pageNumb: number) {
-    this.userService.getLeaderboard(pageNumb, this.pageSize)
+    this.userService.getLeaderboard(pageNumb, this.pageSize, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: value => {
           value.userRecords.content.forEach((userRecord) => {

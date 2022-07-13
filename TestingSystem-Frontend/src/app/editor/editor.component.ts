@@ -28,12 +28,12 @@ export class EditorComponent implements OnInit {
   ngOnInit(): void {
     let token = localStorage.getItem('access-jwt')
     if (token == null) {
-      this.goToHomePage();
+      this.goToTestsPage();
       return;
     } else {
       let decoded: any = jwt_decode(token);
       if (!decoded.authorities.includes('USER_EDIT')) {
-        this.goToHomePage();
+        Swal.fire('You cannot browse this page').then(() => this.goToTestsPage());
         return;
       } else {
         this.userId = decoded.id;
@@ -80,8 +80,8 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  goToHomePage() {
-    this.router.navigate(['/']);
+  goToTestsPage() {
+    this.router.navigate(['/tests-list']);
   }
 
   newQuestion() {
@@ -110,7 +110,7 @@ export class EditorComponent implements OnInit {
   private createTest(test: FullTest) {
     this.hasSent = true;
     this.testService.createTest(test, localStorage.getItem('access-jwt') ?? '').subscribe({
-      next: () => this.goToHomePage(),
+      next: () => this.goToTestsPage(),
       error: (err: HttpErrorResponse) => {
         if (err.status == 0) {
           setTimeout(() => this.createTest(test), environment.retryDelay);
@@ -125,7 +125,7 @@ export class EditorComponent implements OnInit {
     this.hasSent = true;
     this.testService.updateTest(testId, test, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
-        next: () => this.goToHomePage(),
+        next: () => this.goToTestsPage(),
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
             setTimeout(() => this.updateTest(testId, test), environment.retryDelay);
@@ -140,7 +140,7 @@ export class EditorComponent implements OnInit {
     if (this.testId != null) {
       this.hasSent = true;
       this.testService.deleteTest(this.testId, localStorage.getItem('access-jwt') ?? '').subscribe({
-        next: () => this.goToHomePage(),
+        next: () => this.goToTestsPage(),
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
             setTimeout(() => this.deleteTest(), environment.retryDelay);
@@ -191,17 +191,21 @@ export class EditorComponent implements OnInit {
         }
       }
       if (question.answers.length == 0) {
-        violations.add('Enter at least one answer');
+        violations.add('Enter at least 1 answer');
       } else if (question.answers.length > 10) {
         violations.add('Answer count must be 1-10');
       }
+      let hasRight = false;
       for (let answer of question.answers) {
         if (answer.text.length == 0 || answer.text.length > 200) {
           violations.add('Answer must be 1-200 characters');
           break;
         }
+        hasRight = hasRight || answer.isRight;
       }
-
+      if(!hasRight){
+        violations.add('Question must have at least 1 right answer');
+      }
     }
     if (this.test.testType == 'WITH_QUESTION_OPTIONS') {
       for (let isPresent of questionTemplatesPresence) {
@@ -241,7 +245,7 @@ export class EditorComponent implements OnInit {
           if (err.status == 0) {
             setTimeout(() => this.getTestFromServer(value), environment.retryDelay);
           } else {
-            Swal.fire(err.error.message).then(() => this.goToHomePage());
+            Swal.fire(err.error.message).then(() => this.goToTestsPage());
           }
         }
       })

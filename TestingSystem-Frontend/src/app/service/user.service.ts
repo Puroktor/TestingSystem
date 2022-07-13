@@ -35,8 +35,9 @@ export class UserService {
     return this.http.post<void>(`${this.apiServerUrl}/submit`, answers, {params: params, headers: headers});
   }
 
-  public getLeaderboard(index: number, size: number): Observable<LeaderboardPage> {
+  public getLeaderboard(index: number, size: number, token: string): Observable<LeaderboardPage> {
+    let headers = new HttpHeaders().set('Authorization', token);
     let params = new HttpParams().set('index', index).set('size', size);
-    return this.http.get<LeaderboardPage>(`${this.apiServerUrl}/leaderboard`, {params: params});
+    return this.http.get<LeaderboardPage>(`${this.apiServerUrl}/leaderboard`, {params: params, headers: headers});
   }
 }

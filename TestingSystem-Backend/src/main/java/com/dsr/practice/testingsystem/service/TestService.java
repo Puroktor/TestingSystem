@@ -1,5 +1,6 @@
 package com.dsr.practice.testingsystem.service;
 
+import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.QuestionDto;
 import com.dsr.practice.testingsystem.dto.TestDto;
 import com.dsr.practice.testingsystem.dto.TestInfoDto;
@@ -135,39 +136,60 @@ public class TestService {
 
     private Optional<String> validateTestDto(TestDto testDto) {
         Set<String> violations = new HashSet<>();
+        findViolationsInCommon(testDto, violations);
         if (testDto.getTestType() == TestType.WITH_BANK) {
-            if (testDto.getQuestionsCount() > testDto.getQuestions().size()) {
-                violations.add("Question count for student must be <= question bank size");
-            }
-            for (QuestionDto questionDto : testDto.getQuestions()) {
-                if (questionDto.getQuestionTemplateIndex() != null) {
-                    violations.add("Question must not have template index");
-                    break;
-                }
-            }
+            findViolationsInBank(testDto, violations);
         } else if (testDto.getTestType() == TestType.WITH_QUESTION_OPTIONS) {
-            boolean[] questionTemplatesPresence = new boolean[testDto.getQuestionsCount()];
-            for (QuestionDto questionDto : testDto.getQuestions()) {
-                Integer index = questionDto.getQuestionTemplateIndex();
-                if (index == null) {
-                    violations.add("Enter question template index");
-                } else if (questionDto.getQuestionTemplateIndex() >= testDto.getQuestionsCount()) {
-                    violations.add("Question template index must be < question count for students");
-                } else {
-                    questionTemplatesPresence[index] = true;
-                }
-            }
-            for (boolean isPresent : questionTemplatesPresence) {
-                if (!isPresent) {
-                    violations.add("All question templates must have at least 1 question option");
-                    break;
-                }
-            }
+            findViolationsInOptions(testDto, violations);
         }
         StringBuilder violationsBuilder = new StringBuilder();
         violations.forEach(violation -> violationsBuilder.append(violation).append('\n'));
         String violationsMessage = violationsBuilder.toString();
         return Optional.ofNullable(violationsMessage.equals("") ? null : violationsMessage);
+    }
+
+    private void findViolationsInCommon(TestDto testDto, Set<String> violations) {
+        for (QuestionDto questionDto : testDto.getQuestions()) {
+            boolean hasRightAnswer = questionDto.getAnswers().stream()
+                    .map(AnswerDto::getIsRight)
+                    .reduce(false, (a, b) -> a || b);
+            if (!hasRightAnswer) {
+                violations.add("Question must have at least 1 right answer");
+                break;
+            }
+        }
+    }
+
+    private void findViolationsInBank(TestDto testDto, Set<String> violations) {
+        if (testDto.getQuestionsCount() > testDto.getQuestions().size()) {
+            violations.add("Question count for student must be <= question bank size");
+        }
+        for (QuestionDto questionDto : testDto.getQuestions()) {
+            if (questionDto.getQuestionTemplateIndex() != null) {
+                violations.add("Question must not have template index");
+                break;
+            }
+        }
+    }
+
+    private void findViolationsInOptions(TestDto testDto, Set<String> violations) {
+        boolean[] questionTemplatesPresence = new boolean[testDto.getQuestionsCount()];
+        for (QuestionDto questionDto : testDto.getQuestions()) {
+            Integer index = questionDto.getQuestionTemplateIndex();
+            if (index == null) {
+                violations.add("Enter question template index");
+            } else if (questionDto.getQuestionTemplateIndex() >= testDto.getQuestionsCount()) {
+                violations.add("Question template index must be < question count for students");
+            } else {
+                questionTemplatesPresence[index] = true;
+            }
+        }
+        for (boolean isPresent : questionTemplatesPresence) {
+            if (!isPresent) {
+                violations.add("All question templates must have at least 1 question option");
+                break;
+            }
+        }
     }
 
 }

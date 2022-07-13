@@ -6,9 +6,11 @@ import {SignupComponent} from "./signup/signup.component";
 import {LeaderboardComponent} from "./leaderboard/leaderboard.component";
 import {TestComponent} from "./test/test.component";
 import {EditorComponent} from "./editor/editor.component";
+import {InfoComponent} from "./info/info.component";
 
 const routes: Routes = [
-  {path: '', component: TestsListComponent},
+  {path: '', component: InfoComponent},
+  {path: 'tests-list', component: TestsListComponent},
   {path: 'leaderboard', component: LeaderboardComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
@@ -23,5 +25,5 @@ const routes: Routes = [
 export class AppRoutingModule {
 }
 
-export const routingComponents = [TestsListComponent, LoginComponent, SignupComponent, LeaderboardComponent,
-  TestComponent, EditorComponent]
+export const routingComponents = [InfoComponent, TestsListComponent, LoginComponent, SignupComponent,
+  LeaderboardComponent, TestComponent, EditorComponent]

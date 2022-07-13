@@ -1,10 +1,9 @@
-package com.dsr.practice.testingsystem.config.swagger;
+package com.dsr.practice.testingsystem.config;
 
 import com.dsr.practice.testingsystem.security.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -39,9 +38,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/v2/api-docs/**", "/swagger-ui/**",
                 "/swagger-resources/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/login", "/api/leaderboard", "/api/user",
-                "/api/token/refresh").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/test").permitAll();
+        http.authorizeRequests().antMatchers("/api/user", "/api/login", "/api/token/refresh").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

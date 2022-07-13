@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('access-jwt') != null) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/tests-list']);
     }
   }
 
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         next: response => {
           localStorage.setItem('access-jwt', response.accessToken);
           localStorage.setItem('refresh-jwt', response.refreshToken);
-          window.location.href = '/';
+          window.location.href = '/tests-list';
         },
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {

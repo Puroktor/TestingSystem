@@ -6,6 +6,6 @@
     <p>Questions: {{card.questionsCount}}</p>
   </div>
   <div class="col-1 cont">
-    <a *ngIf="canEdit" class="button" href="/editor?id={{card.id}}">🖉</a>
+    <a *ngIf="canEdit" class="button" [routerLink]="'/editor'" [queryParams]="{id: card.id}">🖉</a>
   </div>
 </div>

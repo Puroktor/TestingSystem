@@ -19,7 +19,7 @@
   <ng-template #nothingBlock>
     <h1 class="text-center m-5 p-5">Nothing is here!</h1>
   </ng-template>
-  <app-pagination [page]="page" [queryParams]="'&filter='+lang" [baseUrl]="''"></app-pagination>
+  <app-pagination [page]="page" [filter]="lang" [baseUrl]="'/tests-list'"></app-pagination>
 </div>
 <ng-template #loadingBlock>
   <app-loading [text]="'Loading...'"></app-loading>

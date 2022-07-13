@@ -38,6 +38,7 @@ public class TestController {
 
     @ApiOperation(value = "Returns page of tests")
     @GetMapping("test")
+    @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<Page<TestInfoDto>> fetchTestPage(
             @RequestParam(value = "programmingLang", required = false)
             @ApiParam(value = "String for filtering", example = "Java") String programmingLang,

@@ -3,6 +3,7 @@ package com.dsr.practice.testingsystem.controller;
 import com.dsr.practice.testingsystem.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,12 @@ public class ExceptionHandlerController {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ErrorDto handleAuthenticationException() {
         return new ErrorDto("Invalid username or password!");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorDto handleAccessDeniedException(AccessDeniedException e) {
+        return new ErrorDto(e.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)

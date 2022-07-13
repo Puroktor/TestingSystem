@@ -7,7 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +32,7 @@ public class UserController {
     @ApiOperation(value = "Creates new user if absent")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("user")
-    public ResponseEntity<UserRegistrationDto> createUser(@RequestBody @Valid @ApiParam(value = "Your registration info")
+    public ResponseEntity<RegistrationResponseDto> createUser(@RequestBody @Valid @ApiParam(value = "Your registration info")
                                                                   UserRegistrationDto userRegistrationDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -74,6 +73,7 @@ public class UserController {
 
     @ApiOperation(value = "Returns requested page of leaderboard")
     @GetMapping("leaderboard")
+    @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<LeaderboardPageDto> getLeaderboardPage(
             @RequestParam("index") @Min(value = 0, message = "Index must be >=0")
             @ApiParam(value = "Index of desired page", example = "1") int index,

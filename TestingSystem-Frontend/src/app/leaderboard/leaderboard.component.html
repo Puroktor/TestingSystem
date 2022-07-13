@@ -9,7 +9,7 @@
         *ngFor="let iterTestRecord of leaderboard.testRecords"
         [style.width.%]="85 / leaderboard.testRecords.length"
         class="text-center align-middle" scope="col">
-        <a href="/test?id={{iterTestRecord.id}}">{{iterTestRecord.name}}</a>
+        <a [routerLink]="['/test']" [queryParams]="{id: iterTestRecord.id}">{{iterTestRecord.name}}</a>
       </th>
     </tr>
     </thead>
@@ -28,7 +28,7 @@
     </tr>
     </tbody>
   </table>
-  <app-pagination [page]="leaderboard.userRecords" [queryParams]="''" [baseUrl]="'/leaderboard'"></app-pagination>
+  <app-pagination [page]="leaderboard.userRecords" [baseUrl]="'/leaderboard'"></app-pagination>
 </div>
 <ng-template #emptyBlock>
   <h1 class="text-center m-5 p-5">Nobody is here!</h1>

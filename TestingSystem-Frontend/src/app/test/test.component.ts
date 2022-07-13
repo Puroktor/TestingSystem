@@ -28,12 +28,12 @@ export class TestComponent implements OnInit {
   ngOnInit(): void {
     let token = localStorage.getItem('access-jwt');
     if (token == null) {
-      this.goToHomePage();
+      Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
       return;
     } else {
       let decoded: any = jwt_decode(token);
       if (!decoded.authorities.includes('USER_SUBMIT')) {
-        this.goToHomePage();
+        Swal.fire('You cannot browse this page').then(() => this.goToTestsPage());
         return;
       } else {
         this.userId = decoded.id;
@@ -42,7 +42,7 @@ export class TestComponent implements OnInit {
     this.getTestId().subscribe({
       next: value => {
         if (value == null) {
-          this.goToHomePage();
+          this.goToTestsPage();
         } else {
           this.getTestFromServer(+value);
         }
@@ -50,8 +50,8 @@ export class TestComponent implements OnInit {
     });
   }
 
-  goToHomePage() {
-    this.router.navigate(['/']);
+  goToTestsPage() {
+    this.router.navigate(['/tests-list']);
   }
 
   submit() {
@@ -68,7 +68,7 @@ export class TestComponent implements OnInit {
     this.hasSent = true;
     this.userService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
-        next: () => this.goToHomePage(),
+        next: () => this.goToTestsPage(),
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
             setTimeout(() => this.sendAttempt(answers), environment.retryDelay);
@@ -93,7 +93,7 @@ export class TestComponent implements OnInit {
           if (err.status == 0) {
             setTimeout(() => this.getTestFromServer(value), environment.retryDelay);
           } else {
-            Swal.fire(err.error.message).then(() => this.goToHomePage())
+            Swal.fire(err.error.message).then(() => this.goToTestsPage())
           }
         }
       })

@@ -27,10 +27,12 @@ export class TestsListComponent implements OnInit {
 
   ngOnInit(): void {
     let token = localStorage.getItem('access-jwt')
-    if (token != null) {
-      let decoded: any = jwt_decode(token);
-      this.canEdit = decoded.authorities.includes('USER_EDIT');
+    if (token == null) {
+      Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
+      return;
     }
+    let decoded: any = jwt_decode(token);
+    this.canEdit = decoded.authorities.includes('USER_EDIT');
     this.getPageNumber()
       .subscribe({
         next: value => {
@@ -50,7 +52,7 @@ export class TestsListComponent implements OnInit {
   }
 
   getPageFromServer(pageNumber: number, programmingLang: string) {
-    this.testService.fetchPage(programmingLang, pageNumber, this.pageSize)
+    this.testService.fetchPage(programmingLang, pageNumber, this.pageSize, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: value => this.page = value,
         error: (err: HttpErrorResponse) => {
@@ -65,7 +67,7 @@ export class TestsListComponent implements OnInit {
 
   filterPage() {
     let filterValue = (document.getElementById('filterInput') as HTMLInputElement).value;
-    this.router.navigate([''], {
+    this.router.navigate(['/tests-list'], {
       queryParams: {page: this.pageNumb, filter: filterValue}
     });
   }
