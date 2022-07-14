@@ -7,6 +7,8 @@ import {LeaderboardPage} from "../entity/LeaderboardPage";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {environment} from "../../environments/environment";
+import {BoardTestRecord} from "../entity/BoardTestRecord";
+import {IDropdownSettings} from "ng-multiselect-dropdown";
 
 @Component({
   selector: 'app-leaderboard',
@@ -16,11 +18,20 @@ import {environment} from "../../environments/environment";
 export class LeaderboardComponent implements OnInit {
 
   leaderboard?: LeaderboardPage;
-
+  chosenTestRecords: BoardTestRecord[] = [];
   nickName: string | null = null;
   pageSize: number = 3;
+  dropdownSettings:IDropdownSettings;
 
   constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      allowSearchFilter: true
+    };
   }
 
   ngOnInit(): void {
@@ -51,7 +62,7 @@ export class LeaderboardComponent implements OnInit {
     this.userService.getLeaderboard(pageNumb, this.pageSize, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: value => {
-          value.userRecords.content.forEach((userRecord) => {
+          value.userRecords.content.forEach(userRecord => {
             userRecord.testToScoreMap = new Map(Object.entries(userRecord.testToScoreMap));
           })
           this.leaderboard = value

@@ -12,6 +12,8 @@ import {EditorAnswerComponent} from "./editor/editor-answer/editor-answer.compon
 import {EditorQuestionComponent} from "./editor/editor-question/editor-question.component";
 import {LoadingComponent} from './loading/loading.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -31,6 +33,8 @@ import { PaginationComponent } from './pagination/pagination.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

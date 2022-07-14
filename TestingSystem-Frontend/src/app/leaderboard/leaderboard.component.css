@@ -1,1 +1,4 @@
-
+:host::ng-deep .selected-item {
+  max-width: 150px !important;
+  margin: 5px;
+}

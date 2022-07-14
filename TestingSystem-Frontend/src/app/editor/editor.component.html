@@ -2,10 +2,8 @@
   <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
       <div class="flex">
-        <input (change)="nameChanged($event)" class="form-control" placeholder="Title"
-               value="{{test.name}}" maxlength="50">
-        <input (change)="langChanged($event)" class="form-control ms-5" placeholder="Language"
-               value="{{test.programmingLang}}" maxlength="50">
+        <input [(ngModel)]="test.name" class="form-control" placeholder="Title" maxlength="50">
+        <input [(ngModel)]="test.programmingLang" class="form-control ms-5" placeholder="Language" maxlength="50">
         <a (click)="deleteTest()" *ngIf="testId!=null" class="button">❌</a>
       </div>
       <div class="container">
@@ -16,8 +14,8 @@
           </option>
         </select>
         <div class="p-text me-2 ms-3">Question count for students:</div>
-        <input (change)="questionsCountChanged($event)" class="form-control count-inp text-center" type="number"
-               value="{{test.questionsCount}}" min="1" max="50">
+        <input [(ngModel)]="test.questionsCount" class="form-control count-inp text-center" type="number" min="1"
+               max="50">
       </div>
     </div>
     <div>

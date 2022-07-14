@@ -31,14 +31,20 @@ public class ActionsService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Invalid user Id:" + userId));
         HashMap<Question, Score> questionIdToScoreMap = new HashMap<>();
+        Map<Answer, Boolean> submittedAnswers = new HashMap<>();
         for (AnswerDto submittedAnswer : answers) {
             Answer dbAnswer = answerRepository.findById(submittedAnswer.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid answer Id:" + submittedAnswer.getId()));
+                    .orElseThrow(() -> new NoSuchElementException("Invalid answer Id:" + submittedAnswer.getId()));
             Question question = dbAnswer.getQuestion();
             Score score = questionIdToScoreMap.getOrDefault(question, new Score());
-            score.correct += dbAnswer.getIsRight() == submittedAnswer.getIsRight() ? 1 : -1;
-            score.all++;
+            if (submittedAnswer.getIsRight()) {
+                score.correct += dbAnswer.getIsRight() == submittedAnswer.getIsRight() ? 1 : -1;
+            }
+            if (dbAnswer.getIsRight()) {
+                score.all++;
+            }
             questionIdToScoreMap.put(question, score);
+            submittedAnswers.put(dbAnswer, submittedAnswer.getIsRight());
         }
         double score = 0, maxScore = 0;
         for (Map.Entry<Question, Score> entry : questionIdToScoreMap.entrySet()) {
@@ -46,7 +52,7 @@ public class ActionsService {
             maxScore += entry.getKey().getMaxScore();
         }
         attemptRepository.save(new Attempt(user, questionIdToScoreMap.keySet().iterator().next().getTest(),
-                score / maxScore * 100));
+                score / maxScore * 100, submittedAnswers));
     }
 
     public LeaderboardPageDto getLeaderboardPage(int index, int size) {

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -36,6 +37,13 @@ public class Attempt {
     @NotNull(message = "Enter your score")
     @Min(value = 0, message = "Your score must be >= 0")
     private Double score;
+
+    @ElementCollection
+    @JoinTable(name = "submitted_answer", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            @JoinColumn(name = "test_id", referencedColumnName = "test_id")})
+    @Column(name = "submitted_value")
+    @MapKeyJoinColumn(name = "answer_id")
+    private Map<Answer, Boolean> submittedAnswers;
 
     @Override
     public boolean equals(Object o) {

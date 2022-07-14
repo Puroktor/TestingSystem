@@ -33,7 +33,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("user")
     public ResponseEntity<RegistrationResponseDto> createUser(@RequestBody @Valid @ApiParam(value = "Your registration info")
-                                                                  UserRegistrationDto userRegistrationDto) {
+                                                                      UserRegistrationDto userRegistrationDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userAuthService.createUser(userRegistrationDto));

@@ -19,10 +19,6 @@ export class EditorAnswerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onChanged(event: any) {
-    this.answer.text = (event.target as HTMLInputElement).value;
-  }
-
   onChecked(event: any) {
     this.answer.isRight = (event.target as HTMLInputElement).checked;
   }

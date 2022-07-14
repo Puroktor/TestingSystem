@@ -51,24 +51,6 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  questionsCountChanged(event: any) {
-    if (this.test != undefined) {
-      this.test.questionsCount = +((event.target as HTMLInputElement).value);
-    }
-  }
-
-  nameChanged(event: any) {
-    if (this.test != undefined) {
-      this.test.name = (event.target as HTMLInputElement).value;
-    }
-  }
-
-  langChanged(event: any) {
-    if (this.test != undefined) {
-      this.test.programmingLang = (event.target as HTMLInputElement).value;
-    }
-  }
-
   testTypeChanged(event: any) {
     if (this.test != undefined) {
       this.test.testType = (event.target as HTMLSelectElement).value;
