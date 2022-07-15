@@ -1,0 +1,28 @@
+<div *ngIf="attempt != null; else loadingBlock">
+  <div class="info">
+    <div class="flex mb-0">
+      <h2>{{attempt.test.name}}</h2>
+      <b>{{attempt.test.programmingLang}}</b>
+    </div>
+    <div class="text-center mb-4 mt-2">
+      <b class="me-4">User: {{attempt.nickname}}</b>
+      <b class="ms-4">Score: {{attempt.score.toFixed(2)}}</b>
+    </div>
+    <p class="mt-4 mb-2">Questions: {{attempt.test.questionsCount}}</p>
+  </div>
+  <div>
+    <app-question
+      *ngFor="let iterQuestion of attempt.test.questions; index as i"
+      [index]="i"
+      [question]="iterQuestion"
+      [viewing]="true"
+      [submittedValues]="attempt.answerToSubmittedValueMap"
+    ></app-question>
+  </div>
+  <div class="text-center">
+    <button (click)="goToLeaderboard()" class="btn btn-primary m-1">Go back</button>
+  </div>
+</div>
+<ng-template #loadingBlock>
+  <app-loading [text]="'Loading...'"></app-loading>
+</ng-template>

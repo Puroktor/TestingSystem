@@ -26,8 +26,8 @@ import {FormsModule} from "@angular/forms";
     EditorQuestionComponent,
     EditorAnswerComponent,
     LoadingComponent,
-    routingComponents,
     PaginationComponent,
+    routingComponents
   ],
   imports: [
     BrowserModule,

@@ -2,13 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import jwt_decode from "jwt-decode";
-import {UserService} from "../service/user.service";
 import {LeaderboardPage} from "../entity/LeaderboardPage";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {BoardTestRecord} from "../entity/BoardTestRecord";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
+import {AttemptService} from "../service/attempt.service";
 
 @Component({
   selector: 'app-leaderboard',
@@ -21,9 +21,10 @@ export class LeaderboardComponent implements OnInit {
   chosenTestRecords: BoardTestRecord[] = [];
   nickName: string | null = null;
   pageSize: number = 3;
+  isTeacher: boolean = false;
   dropdownSettings:IDropdownSettings;
 
-  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
+  constructor(private attemptService: AttemptService, private route: ActivatedRoute, private router: Router) {
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -42,6 +43,7 @@ export class LeaderboardComponent implements OnInit {
     }
     let decoded: any = jwt_decode(token);
     this.nickName = decoded.sub;
+    this.isTeacher = decoded.authorities.includes('USER_EDIT');
     this.getPageNumber()
       .subscribe({
         next: value => {
@@ -59,7 +61,7 @@ export class LeaderboardComponent implements OnInit {
   }
 
   private getBoardFromServer(pageNumb: number) {
-    this.userService.getLeaderboard(pageNumb, this.pageSize, localStorage.getItem('access-jwt') ?? '')
+    this.attemptService.getLeaderboard(pageNumb, this.pageSize, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: value => {
           value.userRecords.content.forEach(userRecord => {

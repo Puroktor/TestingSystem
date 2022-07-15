@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {UserRegistration} from "../entity/UserRegistration";
 import {UserLogin} from "../entity/UserLogin";
 import {JwtToken} from "../entity/JwtToken";
-import {Answer} from "../entity/Answer";
-import {LeaderboardPage} from "../entity/LeaderboardPage";
 
 @Injectable({
   providedIn: 'root'
@@ -27,17 +25,5 @@ export class UserService {
 
   public refreshToken(refreshToken: string): Observable<JwtToken> {
     return this.http.post<JwtToken>(`${this.apiServerUrl}/token/refresh`, refreshToken);
-  }
-
-  public submitAttempt(answers: Answer[], userId: number, token: string): Observable<void> {
-    let headers = new HttpHeaders().set('Authorization', token);
-    let params = new HttpParams().set('userId', userId);
-    return this.http.post<void>(`${this.apiServerUrl}/submit`, answers, {params: params, headers: headers});
-  }
-
-  public getLeaderboard(index: number, size: number, token: string): Observable<LeaderboardPage> {
-    let headers = new HttpHeaders().set('Authorization', token);
-    let params = new HttpParams().set('index', index).set('size', size);
-    return this.http.get<LeaderboardPage>(`${this.apiServerUrl}/leaderboard`, {params: params, headers: headers});
   }
 }

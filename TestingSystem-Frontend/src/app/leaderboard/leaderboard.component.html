@@ -31,7 +31,13 @@
       <td
         *ngFor="let testRecord of chosenTestRecords"
         class="text-center align-middle">
-        {{userRecord.testToScoreMap.get(testRecord.id.toString())?.toFixed(2) }}
+        <a *ngIf="isTeacher; else textBlock" [routerLink]="'/attempt'"
+           [queryParams]="{user: userRecord.id,test:testRecord.id}">
+          {{userRecord.testToScoreMap.get(testRecord.id.toString())?.toFixed(2) }}
+        </a>
+        <ng-template #textBlock>
+          {{userRecord.testToScoreMap.get(testRecord.id.toString())?.toFixed(2) }}
+        </ng-template>
       </td>
     </tr>
     </tbody>

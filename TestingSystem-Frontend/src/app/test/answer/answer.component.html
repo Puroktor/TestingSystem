@@ -1,4 +1,11 @@
 <div class="answer">
   <p>{{index + 1}}. {{answer.text}}</p>
-  <input (change)="onChecked($event)" class="form-check-input" type="checkbox" value="">
+  <div>
+    <div *ngIf="viewing" class="d-inline me-3">
+      <p *ngIf="submittedValue && answer.isRight">✔</p>
+      <p *ngIf="(submittedValue && !answer.isRight) || (!submittedValue && answer.isRight)">❌</p>
+    </div>
+    <input (change)="onChecked($event)" [checked]="submittedValue" [disabled]="viewing" class="form-check-input"
+           type="checkbox" value="">
+  </div>
 </div>

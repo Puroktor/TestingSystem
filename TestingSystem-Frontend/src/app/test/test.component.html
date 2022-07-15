@@ -12,6 +12,7 @@
         *ngFor="let iterQuestion of test.questions; index as i"
         [index]="i"
         [question]="iterQuestion"
+        [viewing]="false"
       ></app-question>
     </div>
     <div class="text-center">

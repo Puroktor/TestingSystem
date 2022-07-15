@@ -1,8 +1,11 @@
 package com.dsr.practice.testingsystem.service;
 
 import com.dsr.practice.testingsystem.dto.AnswerDto;
+import com.dsr.practice.testingsystem.dto.AttemptDto;
 import com.dsr.practice.testingsystem.dto.LeaderboardPageDto;
+import com.dsr.practice.testingsystem.dto.TestDto;
 import com.dsr.practice.testingsystem.entity.*;
+import com.dsr.practice.testingsystem.mapper.TestMapper;
 import com.dsr.practice.testingsystem.repository.AnswerRepository;
 import com.dsr.practice.testingsystem.repository.AttemptRepository;
 import com.dsr.practice.testingsystem.repository.TestRepository;
@@ -13,15 +16,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ActionsService {
+public class AttemptService {
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
     private final TestRepository testRepository;
     private final AttemptRepository attemptRepository;
+    private final TestMapper testMapper;
 
     public void submitAttempt(List<AnswerDto> answers, int userId) {
         class Score {
@@ -38,7 +44,7 @@ public class ActionsService {
             Question question = dbAnswer.getQuestion();
             Score score = questionIdToScoreMap.getOrDefault(question, new Score());
             if (submittedAnswer.getIsRight()) {
-                score.correct += dbAnswer.getIsRight() == submittedAnswer.getIsRight() ? 1 : -1;
+                score.correct += dbAnswer.getIsRight() ? 1 : -1;
             }
             if (dbAnswer.getIsRight()) {
                 score.all++;
@@ -72,12 +78,31 @@ public class ActionsService {
                 total += attempt.getScore();
                 testIdToScoreMap.put(attempt.getTest().getId(), attempt.getScore());
             }
-            userToRecordMap.put(user, new LeaderboardPageDto.UserRecord(user.getNickname(), total, testIdToScoreMap));
+            userToRecordMap.put(user, new LeaderboardPageDto.UserRecord(user.getId(), user.getNickname(), total,
+                    testIdToScoreMap));
         }
         List<LeaderboardPageDto.TestRecord> testRecordList = new ArrayList<>();
         for (Test test : testList) {
             testRecordList.add(new LeaderboardPageDto.TestRecord(test.getId(), test.getName()));
         }
         return new LeaderboardPageDto(testRecordList, userPage.map(userToRecordMap::get));
+    }
+
+    @Transactional
+    public AttemptDto getAttempt(int userId, int testId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Invalid user Id:" + userId));
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + testId));
+        Attempt attempt = attemptRepository.findByUserAndTest(user, test)
+                .orElseThrow(() -> new NoSuchElementException("No such attempt!"));
+        TestDto testDto = testMapper.toDto(test);
+        Map<Integer, Boolean> submittedAnswers = attempt.getSubmittedAnswers().entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().getId(), Map.Entry::getValue));
+        testDto.setQuestions(
+                testDto.getQuestions().stream()
+                        .filter(questionDto -> submittedAnswers.containsKey(questionDto.getAnswers().get(0).getId()))
+                        .collect(Collectors.toList()));
+        return new AttemptDto(user.getNickname(), attempt.getScore(), testDto, submittedAnswers);
     }
 }

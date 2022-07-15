@@ -13,6 +13,7 @@ public class LeaderboardPageDto {
     @Data
     @AllArgsConstructor
     public static class UserRecord {
+        private Integer id;
         private String nickname;
         private Double total;
         private Map<Integer, Double> testToScoreMap;

@@ -1,12 +1,17 @@
 <div class="question">
   <div class="head">
     <h5>Question {{index + 1}}</h5>
-    <i>Max score: {{question.maxScore}}</i>
+    <i *ngIf="!viewing; else scoreLabel">Max score: {{question.maxScore}}</i>
+    <ng-template #scoreLabel>
+      <i>Score: {{score.toFixed(2)}}/{{question.maxScore.toFixed(2)}}</i>
+    </ng-template>
   </div>
   <p class="question-text">{{question.text}}</p>
   <app-answer
     *ngFor="let iterAnswer of question.answers; index as i"
     [answer]="iterAnswer"
     [index]="i"
+    [viewing]="viewing"
+    [submittedValue]="submittedValues?.get(iterAnswer.id?.toString() ?? '')"
   ></app-answer>
 </div>

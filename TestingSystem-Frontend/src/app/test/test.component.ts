@@ -7,8 +7,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import {Answer} from "../entity/Answer";
 import jwt_decode from 'jwt-decode';
-import {UserService} from "../service/user.service";
 import {environment} from "../../environments/environment";
+import {AttemptService} from "../service/attempt.service";
 
 @Component({
   selector: 'app-test',
@@ -21,7 +21,7 @@ export class TestComponent implements OnInit {
   hasSent: boolean = false;
   private userId!: number;
 
-  constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
+  constructor(private testService: TestService, private attemptService: AttemptService, private route: ActivatedRoute,
               private router: Router) {
   }
 
@@ -66,7 +66,7 @@ export class TestComponent implements OnInit {
 
   private sendAttempt(answers: Answer[]) {
     this.hasSent = true;
-    this.userService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
+    this.attemptService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: () => this.goToTestsPage(),
         error: (err: HttpErrorResponse) => {

@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit {
   logout() {
     localStorage.removeItem('access-jwt');
     localStorage.removeItem('refresh-jwt');
-    window.location.reload();
+    window.location.href = '/login';
   }
 
   private refreshToken() {
