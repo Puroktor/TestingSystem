@@ -1,6 +1,5 @@
-package com.dsr.practice.testingsystem;
+package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.TestController;
 import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.QuestionDto;
 import com.dsr.practice.testingsystem.dto.TestDto;
@@ -30,14 +29,10 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class TestControllerTests {
-    private final TestController testController;
+    @Autowired
+    private TestController testController;
     @MockBean
     private TestService testService;
-
-    @Autowired
-    public TestControllerTests(TestController testController) {
-        this.testController = testController;
-    }
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
@@ -166,6 +161,14 @@ public class TestControllerTests {
         assertEquals(HttpStatus.OK, returned.getStatusCode());
         assertEquals(page, returned.getBody());
         verify(testService, times(1)).fetchTestPage(filter, index, size);
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_SUBMIT")
+    public void fetchTestPageWithTooBigFilter() {
+        String filter = new String(new char[51]).replace('\0', 'a');
+        int index = -1, size = 1;
+        assertThrows(ValidationException.class, () -> testController.fetchTestPage(filter, index, size));
     }
 
     @Test

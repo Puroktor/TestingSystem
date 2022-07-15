@@ -27,12 +27,12 @@ public class UserService {
     private final ModelMapper modelMapper;
 
     public RegistrationResponseDto createUser(UserRegistrationDto userDto) {
-        if (userRepository.findByNickname(userDto.getNickname()).isPresent()) {
-            throw new IllegalArgumentException("User with such nickname already exists");
-        } else if (userDto.getRole() == Role.STUDENT && (userDto.getGroupNumber() == null || userDto.getYear() == null)) {
+        if (userDto.getRole() == Role.STUDENT && (userDto.getGroupNumber() == null || userDto.getYear() == null)) {
             throw new IllegalArgumentException("Student must have university year and group number!");
         } else if (userDto.getRole() == Role.TEACHER && (userDto.getGroupNumber() != null || userDto.getYear() != null)) {
             throw new IllegalArgumentException("Student must not have university year or group number!");
+        } else if (userRepository.findByNickname(userDto.getNickname()).isPresent()) {
+            throw new IllegalArgumentException("User with such nickname already exists");
         }
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

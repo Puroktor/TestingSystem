@@ -1,6 +1,5 @@
-package com.dsr.practice.testingsystem;
+package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.AttemptController;
 import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.AttemptDto;
 import com.dsr.practice.testingsystem.dto.LeaderboardPageDto;
@@ -26,14 +25,10 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class AttemptControllerTests {
-    private final AttemptController attemptController;
+    @Autowired
+    private AttemptController attemptController;
     @MockBean
     private AttemptService attemptService;
-
-    @Autowired
-    public AttemptControllerTests(AttemptController attemptController) {
-        this.attemptController = attemptController;
-    }
 
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")

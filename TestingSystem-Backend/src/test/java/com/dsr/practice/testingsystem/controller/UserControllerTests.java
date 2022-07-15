@@ -1,6 +1,5 @@
-package com.dsr.practice.testingsystem;
+package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.controller.UserController;
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
 import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
@@ -22,14 +21,10 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class UserControllerTests {
-    private final UserController userController;
+    @Autowired
+    private UserController userController;
     @MockBean
     private UserService userService;
-
-    @Autowired
-    public UserControllerTests(UserController userController) {
-        this.userController = userController;
-    }
 
     @Test
     public void createValidUser() {

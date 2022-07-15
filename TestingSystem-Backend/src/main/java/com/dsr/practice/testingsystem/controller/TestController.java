@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/api/")
@@ -40,7 +41,7 @@ public class TestController {
     @GetMapping("test")
     @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<Page<TestInfoDto>> fetchTestPage(
-            @RequestParam(value = "programmingLang", required = false)
+            @RequestParam(value = "programmingLang", required = false) @Size(max = 50, message = "Filter length must be <=50")
             @ApiParam(value = "String for filtering", example = "Java") String programmingLang,
             @RequestParam("index") @Min(value = 0, message = "Index must be >=0")
             @ApiParam(value = "Index of desired page", example = "1") int index,
