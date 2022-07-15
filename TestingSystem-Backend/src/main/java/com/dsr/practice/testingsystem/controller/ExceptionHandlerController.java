@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ValidationException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -32,6 +33,12 @@ public class ExceptionHandlerController {
         StringBuilder builder = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach((error) -> builder.append(error.getDefaultMessage()).append("\n"));
         return new ErrorDto(builder.toString());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorDto handleValidationException(ValidationException e) {
+        return new ErrorDto(e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

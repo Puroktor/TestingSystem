@@ -1,15 +1,16 @@
 package com.dsr.practice.testingsystem.dto;
 
 import com.dsr.practice.testingsystem.entity.Role;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRegistrationDto {
-    @Null(message = "User must not have id")
-    private Integer id;
-
     @NotBlank(message = "Enter your name")
     @Size(max = 100, message = "Your name length must be <= 100 characters")
     private String name;

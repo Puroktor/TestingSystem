@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -31,7 +32,7 @@ public class AttemptController {
     @PostMapping("attempt")
     @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<Void> submitAttempt(@RequestBody @NotNull(message = "Provide answers")
-                                              @Size(min = 1, message = "Provide at least one answer")
+                                              @Size(min = 1, message = "Provide at least one answer") @Valid
                                               @ApiParam(value = "Your answers") List<AnswerDto> answers,
                                               @RequestParam("userId") @ApiParam(value = "Your user id", example = "1")
                                                       int userId) {
