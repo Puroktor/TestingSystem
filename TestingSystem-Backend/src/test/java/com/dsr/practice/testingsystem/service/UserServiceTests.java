@@ -1,6 +1,7 @@
 package com.dsr.practice.testingsystem.service;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
 import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
@@ -30,6 +31,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class UserServiceTests {
     @Autowired
+    private SampleDataProvider dataProvider;
+    @Autowired
     private UserService userService;
     @MockBean
     private UserRepository userRepository;
@@ -44,18 +47,15 @@ public class UserServiceTests {
 
     @Test
     public void createValidUser() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.STUDENT, "The university", 2, 4, "user@user.com");
-        User user = new User();
-        user.setPassword("password");
-        RegistrationResponseDto responseDto = new RegistrationResponseDto();
+        UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
+        User user = dataProvider.getUser();
         when(userRepository.findByNickname(dto.getNickname())).thenReturn(Optional.empty());
         when(modelMapper.map(dto, User.class)).thenReturn(user);
         when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
         when(userRepository.save(user)).thenReturn(user);
-        when(modelMapper.map(user, RegistrationResponseDto.class)).thenReturn(responseDto);
+        when(modelMapper.map(user, RegistrationResponseDto.class)).thenReturn(new RegistrationResponseDto());
 
-        assertEquals(responseDto, userService.createUser(dto));
+        assertEquals(new RegistrationResponseDto(), userService.createUser(dto));
         verify(userRepository, times(1)).findByNickname(dto.getNickname());
         verify(modelMapper, times(1)).map(dto, User.class);
         verify(passwordEncoder, times(1)).encode(user.getPassword());
@@ -65,9 +65,8 @@ public class UserServiceTests {
 
     @Test
     public void createExistingUser() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.STUDENT, "The university", 2, 4, "user@user.com");
-        User user = new User();
+        UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
+        User user = dataProvider.getUser();
         when(userRepository.findByNickname(dto.getNickname())).thenReturn(Optional.of(user));
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
@@ -76,51 +75,45 @@ public class UserServiceTests {
 
     @Test
     public void createStudentWithoutYear() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.STUDENT, "The university", null, 4, "user@user.com");
+        UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
+        dto.setYear(null);
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
     }
 
     @Test
     public void createStudentWithoutGroup() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.STUDENT, "The university", 2, null, "user@user.com");
+        UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
+        dto.setGroupNumber(null);
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
     }
 
     @Test
     public void createTeacherWithYear() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.TEACHER, "The university", 2, null, "user@user.com");
-
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
-    }
-
-    @Test
-    public void loginValidUser() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.TEACHER, "The university", null, 4, "user@user.com");
+        UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
+        dto.setRole(Role.TEACHER);
+        dto.setGroupNumber(null);
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
     }
 
     @Test
     public void createTeacherWithGroup() {
-        UserRegistrationDto dto = new UserRegistrationDto("User User User", "User", "qwerty",
-                Role.TEACHER, "The university", null, 4, "user@user.com");
+        UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
+        dto.setRole(Role.TEACHER);
+        dto.setYear(null);
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
     }
 
     @Test
     public void loginUser() {
-        UserLoginDto dto = new UserLoginDto("User", "qwerty");
+        UserLoginDto dto = dataProvider.getValidLoginDto();
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 dto.getNickname(), dto.getPassword());
-        User user = new User();
-        JwtTokensDto tokensDto = new JwtTokensDto("token1", "token2");
+        User user = dataProvider.getUser();
+        JwtTokensDto tokensDto = dataProvider.getJwtTokensDto();
         when(authenticationManager.authenticate(authToken)).thenReturn(authToken);
         when(userRepository.findByNickname(dto.getNickname())).thenReturn(Optional.of(user));
         when(tokenProvider.generateAccessToken(user)).thenReturn(tokensDto.getAccessToken());
@@ -135,7 +128,7 @@ public class UserServiceTests {
 
     @Test
     public void loginUserWithWrongCredentials() {
-        UserLoginDto dto = new UserLoginDto("User", "qwerty");
+        UserLoginDto dto = dataProvider.getValidLoginDto();
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 dto.getNickname(), dto.getPassword());
         when(authenticationManager.authenticate(authToken)).thenThrow(UsernameNotFoundException.class);
@@ -147,9 +140,8 @@ public class UserServiceTests {
     @Test
     public void refreshValidToken() {
         String token = "token";
-        User user = new User();
-        user.setNickname("User");
-        JwtTokensDto tokensDto = new JwtTokensDto("token1", "token2");
+        User user = dataProvider.getUser();
+        JwtTokensDto tokensDto = dataProvider.getJwtTokensDto();
         when(tokenProvider.getUsernameFromJwt(token)).thenReturn(user.getNickname());
         when(userRepository.findByNickname(user.getNickname())).thenReturn(Optional.of(user));
         when(tokenProvider.generateAccessToken(user)).thenReturn(tokensDto.getAccessToken());
@@ -165,8 +157,7 @@ public class UserServiceTests {
     @Test
     public void refreshTokenOfMissingUser() {
         String token = "token";
-        User user = new User();
-        user.setNickname("User");
+        User user = dataProvider.getUser();
         when(tokenProvider.getUsernameFromJwt(token)).thenReturn(user.getNickname());
         when(userRepository.findByNickname(user.getNickname())).thenReturn(Optional.empty());
 

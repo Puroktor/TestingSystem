@@ -43,6 +43,7 @@ public class Attempt {
             @JoinColumn(name = "test_id", referencedColumnName = "test_id")})
     @Column(name = "submitted_value")
     @MapKeyJoinColumn(name = "answer_id")
+    @ToString.Exclude
     private Map<Answer, Boolean> submittedAnswers;
 
     @Override

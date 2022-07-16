@@ -77,7 +77,7 @@ public class AttemptControllerTests {
         ResponseEntity<AttemptDto> returned = attemptController.getAttempt(userId, testId);
 
         assertEquals(HttpStatus.OK, returned.getStatusCode());
-        assertEquals(attemptDto, returned.getBody());
+        assertEquals(new AttemptDto(), returned.getBody());
         verify(attemptService, times(1)).getAttempt(userId, testId);
     }
 
@@ -101,7 +101,7 @@ public class AttemptControllerTests {
         ResponseEntity<LeaderboardPageDto> returned = attemptController.getLeaderboardPage(index, size);
 
         assertEquals(HttpStatus.OK, returned.getStatusCode());
-        assertEquals(dto, returned.getBody());
+        assertEquals(new LeaderboardPageDto(), returned.getBody());
         verify(attemptService, times(1)).getLeaderboardPage(index, size);
     }
 

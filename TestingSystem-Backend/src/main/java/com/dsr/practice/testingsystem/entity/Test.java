@@ -1,9 +1,6 @@
 package com.dsr.practice.testingsystem.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -17,6 +14,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
