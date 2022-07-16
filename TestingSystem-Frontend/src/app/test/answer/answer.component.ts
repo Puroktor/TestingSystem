@@ -10,7 +10,7 @@ export class AnswerComponent implements OnInit {
 
   @Input() answer!: Answer;
   @Input() index!: number;
-  @Input() viewing! : boolean;
+  @Input() viewing!: boolean;
   @Input() submittedValue?: boolean;
 
   constructor() {

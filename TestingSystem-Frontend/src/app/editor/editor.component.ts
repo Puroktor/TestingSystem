@@ -185,7 +185,7 @@ export class EditorComponent implements OnInit {
         }
         hasRight = hasRight || answer.isRight;
       }
-      if(!hasRight){
+      if (!hasRight) {
         violations.add('Question must have at least 1 right answer');
       }
     }

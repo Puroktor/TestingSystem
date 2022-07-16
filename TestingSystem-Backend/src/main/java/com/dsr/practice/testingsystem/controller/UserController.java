@@ -1,6 +1,9 @@
 package com.dsr.practice.testingsystem.controller;
 
-import com.dsr.practice.testingsystem.dto.*;
+import com.dsr.practice.testingsystem.dto.JwtTokensDto;
+import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
+import com.dsr.practice.testingsystem.dto.UserLoginDto;
+import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
 import com.dsr.practice.testingsystem.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

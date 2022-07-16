@@ -3,7 +3,6 @@ package com.dsr.practice.testingsystem.mapper;
 import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.QuestionDto;
 import com.dsr.practice.testingsystem.dto.TestDto;
-import com.dsr.practice.testingsystem.dto.TestInfoDto;
 import com.dsr.practice.testingsystem.entity.Answer;
 import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;

@@ -55,7 +55,7 @@ public class TestService {
 
     @Transactional
     public TestDto getTest(int id) {
-        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
+        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id"));
         return testMapper.toDto(test);
     }
 
@@ -130,7 +130,7 @@ public class TestService {
     }
 
     public void deleteTest(int id) {
-        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + id));
+        Test test = testRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invalid test Id"));
         testRepository.delete(test);
     }
 

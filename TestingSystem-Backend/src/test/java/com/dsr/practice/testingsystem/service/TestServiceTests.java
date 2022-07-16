@@ -233,7 +233,7 @@ public class TestServiceTests {
         when(questionRepository.save(ArgumentMatchers.any(Question.class))).thenAnswer(i -> i.getArguments()[0]);
         testService.updateTest(testDto.getId(), testDto);
 
-        assertEquals(oldTest,newTest);
+        assertEquals(oldTest, newTest);
         verify(testRepository, times(1)).findById(testDto.getId());
         verify(testMapper, times(1)).toEntity(testDto);
         verify(testRepository, times(1)).save(oldTest);

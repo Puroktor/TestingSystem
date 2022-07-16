@@ -4,6 +4,6 @@ export interface Question {
   id: number | null
   text: string
   maxScore: number
-  questionTemplateIndex: number|null
+  questionTemplateIndex: number | null
   answers: Answer[]
 }

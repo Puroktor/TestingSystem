@@ -22,7 +22,7 @@ export class LeaderboardComponent implements OnInit {
   nickName: string | null = null;
   pageSize: number = 3;
   isTeacher: boolean = false;
-  dropdownSettings:IDropdownSettings;
+  dropdownSettings: IDropdownSettings;
 
   constructor(private attemptService: AttemptService, private route: ActivatedRoute, private router: Router) {
     this.dropdownSettings = {

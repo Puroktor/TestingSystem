@@ -11,7 +11,7 @@ import {AnswerComponent} from "./test/answer/answer.component";
 import {EditorAnswerComponent} from "./editor/editor-answer/editor-answer.component";
 import {EditorQuestionComponent} from "./editor/editor-question/editor-question.component";
 import {LoadingComponent} from './loading/loading.component';
-import { PaginationComponent } from './pagination/pagination.component';
+import {PaginationComponent} from './pagination/pagination.component';
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {FormsModule} from "@angular/forms";
 

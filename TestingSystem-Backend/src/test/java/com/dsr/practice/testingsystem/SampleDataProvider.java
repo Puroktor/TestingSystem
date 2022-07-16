@@ -73,11 +73,11 @@ public class SampleDataProvider {
         return new UserLoginDto("User", "qwerty");
     }
 
-    public JwtTokensDto getJwtTokensDto(){
+    public JwtTokensDto getJwtTokensDto() {
         return new JwtTokensDto("token1", "token2");
     }
 
-    public User getUser(){
+    public User getUser() {
         return new User(1, "User User User", "User", "qwerty", Role.STUDENT,
                 "The university", 2, 4, "user@user.com", new ArrayList<>());
     }

@@ -21,7 +21,7 @@ export class AttemptService {
     return this.http.post<void>(`${this.apiServerUrl}/attempt`, answers, {params: params, headers: headers});
   }
 
-  public getAttempt(userId: number, testId: number, token: string): Observable<Attempt>  {
+  public getAttempt(userId: number, testId: number, token: string): Observable<Attempt> {
     let headers = new HttpHeaders().set('Authorization', token);
     let params = new HttpParams().set('userId', userId).set('testId', testId)
     return this.http.get<Attempt>(`${this.apiServerUrl}/attempt`, {params: params, headers: headers});
