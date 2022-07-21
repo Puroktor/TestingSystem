@@ -1,11 +1,14 @@
 <div *ngIf="test!=null; else elseBlock">
   <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
-      <div class="flex">
+      <div class="d-flex justify-content-between mb-4">
         <h2>{{test.name}}</h2>
         <b>{{test.programmingLang}}</b>
       </div>
-      <p>Questions: {{test.questionsCount}}</p>
+      <div class="d-flex justify-content-evenly mb-2">
+        <p>Questions count: {{test.questionsCount}}</p>
+        <p>Passing score: {{test.passingScore}}%</p>
+      </div>
     </div>
     <div>
       <app-question

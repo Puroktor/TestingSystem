@@ -7,13 +7,3 @@
 h2 {
   text-decoration: underline;
 }
-
-p {
-  text-align: center;
-  margin: 1rem;
-}
-
-.flex {
-  display: flex;
-  justify-content: space-between;
-}

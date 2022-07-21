@@ -29,6 +29,11 @@ public class TestDto {
     @Max(value = 50, message = "Questions count must be <= 50")
     private Integer questionsCount;
 
+    @NotNull(message = "Enter passing score")
+    @Min(value = 1, message = "Passing score must be >= 1")
+    @Max(value = 100, message = "Passing score must be <= 100")
+    private Integer passingScore;
+
     @NotNull(message = "Enter test type")
     private TestType testType;
 

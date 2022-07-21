@@ -23,7 +23,7 @@ public class SampleDataProvider {
                         new QuestionDto(1, "First Question", 2, null, answers.subList(0, 2)),
                         new QuestionDto(2, "Second question", 4, null, answers.subList(2, 5)))
                 .collect(Collectors.toList());
-        return new TestDto(1, "Java", "First test", 1, TestType.WITH_BANK, questions);
+        return new TestDto(1, "Java", "First test", 1, 1, TestType.WITH_BANK, questions);
     }
 
     public TestDto getValidTestDtoWithOptions() {
@@ -41,7 +41,7 @@ public class SampleDataProvider {
                         new QuestionDto(3, "Question 2.1", 4, 1, answers.subList(4, 5)),
                         new QuestionDto(4, "Question 2.2", 4, 1, answers.subList(5, 6)))
                 .collect(Collectors.toList());
-        return new TestDto(1, "Java", "First test", 2, TestType.WITH_QUESTION_OPTIONS, questions);
+        return new TestDto(1, "Java", "First test", 2, 2, TestType.WITH_QUESTION_OPTIONS, questions);
     }
 
     public Test getValidTestWithBank() {
@@ -56,7 +56,7 @@ public class SampleDataProvider {
                         new Question(1, null, "First Question", 2, null, answers.subList(0, 2)),
                         new Question(2, null, "Second question", 4, null, answers.subList(2, 5)))
                 .collect(Collectors.toList());
-        Test test = new Test(1, "Java", "First test", 1, TestType.WITH_BANK,
+        Test test = new Test(1, "Java", "First test", 1, 1, TestType.WITH_BANK,
                 new ArrayList<>(), questions);
         answers.subList(0, 2).forEach(answer -> answer.setQuestion(questions.get(0)));
         answers.subList(2, 5).forEach(answer -> answer.setQuestion(questions.get(1)));

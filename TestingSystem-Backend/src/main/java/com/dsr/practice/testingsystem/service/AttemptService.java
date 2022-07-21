@@ -35,12 +35,12 @@ public class AttemptService {
             private int all;
         }
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Invalid user Id:" + userId));
+                .orElseThrow(() -> new NoSuchElementException("Invalid user Id"));
         HashMap<Question, Score> questionIdToScoreMap = new HashMap<>();
         Map<Answer, Boolean> submittedAnswers = new HashMap<>();
         for (AnswerDto submittedAnswer : answers) {
             Answer dbAnswer = answerRepository.findById(submittedAnswer.getId())
-                    .orElseThrow(() -> new NoSuchElementException("Invalid answer Id:" + submittedAnswer.getId()));
+                    .orElseThrow(() -> new NoSuchElementException("Invalid answer Id"));
             Question question = dbAnswer.getQuestion();
             Score score = questionIdToScoreMap.getOrDefault(question, new Score());
             if (submittedAnswer.getIsRight()) {
@@ -91,11 +91,11 @@ public class AttemptService {
     @Transactional
     public AttemptDto getAttempt(int userId, int testId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Invalid user Id:" + userId));
+                .orElseThrow(() -> new NoSuchElementException("Invalid user Id"));
         Test test = testRepository.findById(testId)
-                .orElseThrow(() -> new NoSuchElementException("Invalid test Id:" + testId));
+                .orElseThrow(() -> new NoSuchElementException("Invalid test Id"));
         Attempt attempt = attemptRepository.findByUserAndTest(user, test)
-                .orElseThrow(() -> new NoSuchElementException("No such attempt!"));
+                .orElseThrow(() -> new NoSuchElementException("No such attempt"));
         TestDto testDto = testMapper.toDto(test);
         Map<Integer, Boolean> submittedAnswers = attempt.getSubmittedAnswers().entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey().getId(), Map.Entry::getValue));

@@ -2,10 +2,13 @@
   <div class="col-1"></div>
   <div (click)="goToTest()" class="card col-10">
     <h2>{{card.name}}</h2>
-    <b class="right">{{card.programmingLang}}</b>
-    <p>Questions: {{card.questionsCount}}</p>
+    <b>{{card.programmingLang}}</b>
+    <div class="d-flex">
+      <p class="me-3">Questions: {{card.questionsCount}}</p>
+      <p>To pass: {{card.passingScore}}%</p>
+    </div>
   </div>
-  <div class="col-1 cont">
+  <div class="col-1 d-flex justify-content-center">
     <a *ngIf="canEdit" class="button" [routerLink]="'/editor'" [queryParams]="{id: card.id}">🖉</a>
   </div>
 </div>

@@ -5,6 +5,7 @@ export interface FullTest {
   programmingLang: string
   name: string
   questionsCount: number
+  passingScore: number
   testType: string
   questions: Question[]
 }

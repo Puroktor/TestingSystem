@@ -216,7 +216,7 @@ export class EditorComponent implements OnInit {
   }
 
   private generateSampleTest() {
-    this.test = {id: null, name: '', programmingLang: '', questionsCount: 0, testType: "WITH_BANK", questions: []};
+    this.test = {id: null, name: '', programmingLang: '', questionsCount: 0, passingScore:0, testType: "WITH_BANK", questions: []};
   }
 
   private getTestFromServer(value: number) {

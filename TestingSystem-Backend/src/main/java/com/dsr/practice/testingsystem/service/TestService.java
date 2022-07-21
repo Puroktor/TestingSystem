@@ -8,6 +8,7 @@ import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;
 import com.dsr.practice.testingsystem.entity.TestType;
 import com.dsr.practice.testingsystem.mapper.TestMapper;
+import com.dsr.practice.testingsystem.repository.AttemptRepository;
 import com.dsr.practice.testingsystem.repository.QuestionRepository;
 import com.dsr.practice.testingsystem.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.*;
 public class TestService {
     private final TestRepository testRepository;
     private final QuestionRepository questionRepository;
+    private final AttemptRepository attemptRepository;
     private final ModelMapper modelMapper;
     private final TestMapper testMapper;
 
