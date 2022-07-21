@@ -6,16 +6,26 @@
         <input [(ngModel)]="test.programmingLang" class="form-control ms-5" placeholder="Language" maxlength="50">
         <a (click)="deleteTest()" *ngIf="testId!=null" class="button">❌</a>
       </div>
-      <div class="container">
-        <div class="p-text me-2">Type:</div>
-        <select class="form-select type-select me-3" (change)="testTypeChanged($event)">
-          <option value="WITH_BANK" [selected]="test.testType=='WITH_BANK'">With question bank</option>
-          <option value="WITH_QUESTION_OPTIONS" [selected]="test.testType!='WITH_BANK'">With question options
-          </option>
-        </select>
-        <div class="p-text me-2 ms-3">Question count for students:</div>
-        <input [(ngModel)]="test.questionsCount" class="form-control count-inp text-center" type="number" min="1"
-               max="50">
+      <div class="d-flex justify-content-around mb-3">
+        <div>
+          <p class="d-inline me-2">Type:</p>
+          <select class="form-select type-select d-inline" (change)="testTypeChanged($event)">
+            <option value="WITH_BANK" [selected]="test.testType=='WITH_BANK'">With question bank</option>
+            <option value="WITH_QUESTION_OPTIONS" [selected]="test.testType!='WITH_BANK'">With question options
+            </option>
+          </select>
+        </div>
+        <div>
+          <p class="d-inline me-2">Question count for students:</p>
+          <input [(ngModel)]="test.questionsCount" class="form-control count-inp d-inline" type="number" min="1"
+                 max="50">
+        </div>
+        <div>
+          <p class="d-inline me-2">Passing score:</p>
+          <input [(ngModel)]="test.passingScore" class="form-control count-inp d-inline" type="number" min="1"
+                 max="100">
+          <p class="d-inline ms-1">%</p>
+        </div>
       </div>
     </div>
     <div>

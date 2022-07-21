@@ -1,9 +1,6 @@
 package com.dsr.practice.testingsystem.service;
 
-import com.dsr.practice.testingsystem.dto.AnswerDto;
-import com.dsr.practice.testingsystem.dto.AttemptDto;
-import com.dsr.practice.testingsystem.dto.LeaderboardPageDto;
-import com.dsr.practice.testingsystem.dto.TestDto;
+import com.dsr.practice.testingsystem.dto.*;
 import com.dsr.practice.testingsystem.entity.*;
 import com.dsr.practice.testingsystem.mapper.TestMapper;
 import com.dsr.practice.testingsystem.repository.AnswerRepository;
@@ -29,13 +26,13 @@ public class AttemptService {
     private final AttemptRepository attemptRepository;
     private final TestMapper testMapper;
 
-    public void submitAttempt(List<AnswerDto> answers, int userId) {
+    public AttemptResultDto submitAttempt(List<AnswerDto> answers, String nickname) {
         class Score {
             private int correct;
             private int all;
         }
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Invalid user Id"));
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoSuchElementException("Invalid user nickname"));
         HashMap<Question, Score> questionIdToScoreMap = new HashMap<>();
         Map<Answer, Boolean> submittedAnswers = new HashMap<>();
         for (AnswerDto submittedAnswer : answers) {
@@ -57,8 +54,10 @@ public class AttemptService {
             score += entry.getKey().getMaxScore() * Math.max((double) entry.getValue().correct / entry.getValue().all, 0);
             maxScore += entry.getKey().getMaxScore();
         }
-        attemptRepository.save(new Attempt(user, questionIdToScoreMap.keySet().iterator().next().getTest(),
-                score / maxScore * 100, submittedAnswers));
+        double scorePercentage = score / maxScore * 100;
+        Test test = questionIdToScoreMap.keySet().iterator().next().getTest();
+        attemptRepository.save(new Attempt(user, test, scorePercentage, submittedAnswers));
+        return new AttemptResultDto(scorePercentage, scorePercentage >= test.getPassingScore());
     }
 
     public LeaderboardPageDto getLeaderboardPage(int index, int size) {

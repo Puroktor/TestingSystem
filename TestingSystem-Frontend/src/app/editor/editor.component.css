@@ -4,14 +4,6 @@
   background: #eee;
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  align-self: center
-}
-
 .flex {
   display: flex;
   justify-content: space-between;
@@ -25,11 +17,7 @@
 }
 
 .count-inp {
-  width: 5rem;
-}
-
-.p-text {
-  line-height: 20px;
+  width: 4rem;
 }
 
 .button {

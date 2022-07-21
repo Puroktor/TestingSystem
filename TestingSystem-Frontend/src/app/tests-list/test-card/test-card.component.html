@@ -1,14 +1,16 @@
 <div class="row m-0">
   <div class="col-1"></div>
-  <div (click)="goToTest()" class="card col-10">
+  <div (click)="goToTest()" class="card col-10"
+       [ngClass]="card.userScore==null ? 'normal' : (card.userScore >= card.passingScore ? 'passed' : 'failed')">
     <h2>{{card.name}}</h2>
     <b>{{card.programmingLang}}</b>
     <div class="d-flex">
       <p class="me-3">Questions: {{card.questionsCount}}</p>
       <p>To pass: {{card.passingScore}}%</p>
     </div>
+    <p *ngIf="card.userScore!=null">Your score: {{card.userScore.toFixed(2)}}</p>
   </div>
-  <div class="col-1 d-flex justify-content-center">
+  <div class="col-1 d-flex align-items-center">
     <a *ngIf="canEdit" class="button" [routerLink]="'/editor'" [queryParams]="{id: card.id}">🖉</a>
   </div>
 </div>

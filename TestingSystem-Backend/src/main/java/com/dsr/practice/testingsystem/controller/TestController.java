@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,9 +49,10 @@ public class TestController {
             @ApiParam(value = "Index of desired page", example = "1") int index,
             @RequestParam("size") @Min(value = 1, message = "Page size must be >=1")
             @ApiParam(value = "Size of pages", example = "1") int size) {
+        String nickname = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(testService.fetchTestPage(programmingLang, index, size));
+                .body(testService.fetchTestPage(programmingLang, index, size, nickname));
     }
 
     @ApiOperation(value = "Returns full test with right answers by id")

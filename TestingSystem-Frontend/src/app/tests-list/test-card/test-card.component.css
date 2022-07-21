@@ -2,11 +2,26 @@
   padding: 1rem 2rem .5rem 2rem;
   margin: 1rem 0;
   border: 1px dashed #ccc;
+  cursor: pointer;
 }
 
-.card:hover {
+.passed {
+  background: #cefad0;
+}
+.passed:hover{
+  background: #abf7b1;
+}
+
+.failed {
+  background: #ffcccb
+}
+
+.failed:hover{
+  background: #ffb3b2;
+}
+
+.normal:hover {
   background: #eee;
-  cursor: pointer;
 }
 
 .card h2 {

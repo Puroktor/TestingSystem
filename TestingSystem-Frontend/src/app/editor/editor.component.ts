@@ -148,6 +148,9 @@ export class EditorComponent implements OnInit {
     if (this.test.questionsCount < 1 || this.test.questionsCount > 50) {
       violations.add('Questions count must be 1-50');
     }
+    if (this.test.passingScore < 1 || this.test.passingScore > 100) {
+      violations.add('Passing score must be 1-100');
+    }
     if (this.test.questions.length < this.test.questionsCount) {
       violations.add('Number of questions must be >= question count');
     }

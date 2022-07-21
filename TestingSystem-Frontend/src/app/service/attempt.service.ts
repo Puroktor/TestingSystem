@@ -5,6 +5,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {LeaderboardPage} from "../entity/LeaderboardPage";
 import {environment} from "../../environments/environment";
 import {Attempt} from "../entity/Attempt";
+import {AttemptResult} from "../entity/AttemptResult";
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,11 @@ export class AttemptService {
   constructor(private http: HttpClient) {
   }
 
-  public submitAttempt(answers: Answer[], userId: number, token: string): Observable<void> {
+  public submitAttempt(answers: Answer[], userId: number, token: string): Observable<AttemptResult> {
     let headers = new HttpHeaders().set('Authorization', token);
     let params = new HttpParams().set('userId', userId);
-    return this.http.post<void>(`${this.apiServerUrl}/attempt`, answers, {params: params, headers: headers});
+    return this.http.post<AttemptResult>(`${this.apiServerUrl}/attempt`, answers,
+      {params: params, headers: headers});
   }
 
   public getAttempt(userId: number, testId: number, token: string): Observable<Attempt> {

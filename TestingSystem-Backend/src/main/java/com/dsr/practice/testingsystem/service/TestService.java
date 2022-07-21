@@ -4,13 +4,12 @@ import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.QuestionDto;
 import com.dsr.practice.testingsystem.dto.TestDto;
 import com.dsr.practice.testingsystem.dto.TestInfoDto;
-import com.dsr.practice.testingsystem.entity.Question;
-import com.dsr.practice.testingsystem.entity.Test;
-import com.dsr.practice.testingsystem.entity.TestType;
+import com.dsr.practice.testingsystem.entity.*;
 import com.dsr.practice.testingsystem.mapper.TestMapper;
 import com.dsr.practice.testingsystem.repository.AttemptRepository;
 import com.dsr.practice.testingsystem.repository.QuestionRepository;
 import com.dsr.practice.testingsystem.repository.TestRepository;
+import com.dsr.practice.testingsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +27,7 @@ import java.util.*;
 public class TestService {
     private final TestRepository testRepository;
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
     private final AttemptRepository attemptRepository;
     private final ModelMapper modelMapper;
     private final TestMapper testMapper;
@@ -44,15 +44,22 @@ public class TestService {
         return testMapper.toDto(test);
     }
 
-    public Page<TestInfoDto> fetchTestPage(String filter, int index, int size) {
+    public Page<TestInfoDto> fetchTestPage(String filter, int index, int size, String nickname) {
         Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoSuchElementException("Invalid user nickname"));
         Page<Test> page;
         if (filter == null || filter.trim().isEmpty()) {
             page = testRepository.findAll(pageable);
         } else {
             page = testRepository.findAllByProgrammingLang(filter, pageable);
         }
-        return page.map(test -> modelMapper.map(test, TestInfoDto.class));
+        return page.map(test -> {
+            TestInfoDto infoDto = modelMapper.map(test, TestInfoDto.class);
+            Optional<Attempt> userAttempt = attemptRepository.findByUserAndTest(user, test);
+            userAttempt.ifPresent((attempt) -> infoDto.setUserScore(attempt.getScore()));
+            return infoDto;
+        });
     }
 
     @Transactional

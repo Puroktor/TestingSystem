@@ -9,4 +9,5 @@ public class TestInfoDto {
     private String name;
     private Integer passingScore;
     private Integer questionsCount;
+    private Double userScore;
 }

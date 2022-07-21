@@ -4,4 +4,5 @@ export interface TestCard {
   name: string
   passingScore: number
   questionsCount: number
+  userScore: number | null
 }

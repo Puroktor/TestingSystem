@@ -68,7 +68,15 @@ export class TestComponent implements OnInit {
     this.hasSent = true;
     this.attemptService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
-        next: () => this.goToTestsPage(),
+        next: (result) => {
+          let message;
+          if (result.hasPassed) {
+            message = `Congratulations!\nYou have passed the test.\nYour score: ${result.score}%`;
+          } else {
+            message = `You have failed the test.\nYour score: ${result.score}%`;
+          }
+          Swal.fire(message).then(() => this.goToTestsPage());
+        },
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
             setTimeout(() => this.sendAttempt(answers), environment.retryDelay);

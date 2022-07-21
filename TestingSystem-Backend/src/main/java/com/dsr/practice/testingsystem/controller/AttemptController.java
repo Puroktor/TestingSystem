@@ -2,6 +2,7 @@ package com.dsr.practice.testingsystem.controller;
 
 import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.AttemptDto;
+import com.dsr.practice.testingsystem.dto.AttemptResultDto;
 import com.dsr.practice.testingsystem.dto.LeaderboardPageDto;
 import com.dsr.practice.testingsystem.service.AttemptService;
 import io.swagger.annotations.Api;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,15 +33,13 @@ public class AttemptController {
     @ApiOperation(value = "Checks your test")
     @PostMapping("attempt")
     @PreAuthorize("hasAuthority('USER_SUBMIT')")
-    public ResponseEntity<Void> submitAttempt(@RequestBody @NotNull(message = "Provide answers")
+    public ResponseEntity<AttemptResultDto> submitAttempt(@RequestBody @NotNull(message = "Provide answers")
                                               @Size(min = 1, message = "Provide at least one answer") @Valid
-                                              @ApiParam(value = "Your answers") List<AnswerDto> answers,
-                                              @RequestParam("userId") @ApiParam(value = "Your user id", example = "1")
-                                                      int userId) {
-        attemptService.submitAttempt(answers, userId);
+                                              @ApiParam(value = "Your answers") List<AnswerDto> answers) {
+        String nickname = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .build();
+                .body(attemptService.submitAttempt(answers, nickname));
     }
 
     @ApiOperation(value = "Returns attempt with submitted answers")
