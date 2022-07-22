@@ -4,6 +4,7 @@ import {UserService} from "../service/user.service";
 import Swal from "sweetalert2";
 import {HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -12,26 +13,29 @@ import {environment} from "../../environments/environment";
 })
 export class HeaderComponent implements OnInit {
 
-  nickname: string | null = null;
   timer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {
     let accessToken = localStorage.getItem('access-jwt');
-    if (accessToken == null) {
+    if (!accessToken) {
       return;
     }
     let decodedAccess: any = jwt_decode(accessToken);
-    this.nickname = decodedAccess.sub;
     this.timer = setTimeout(() => this.refreshToken(), Math.max(decodedAccess.exp * 1000 - Date.now(), 0));
+  }
+
+  getNickname() {
+    let accessToken = localStorage.getItem('access-jwt');
+    return accessToken ? (jwt_decode(accessToken) as any).sub: null;
   }
 
   logout() {
     localStorage.removeItem('access-jwt');
     localStorage.removeItem('refresh-jwt');
-    window.location.href = '/login';
+    this.router.navigate(['/login']);
   }
 
   private refreshToken() {

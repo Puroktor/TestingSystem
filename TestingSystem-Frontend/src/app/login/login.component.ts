@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         next: response => {
           localStorage.setItem('access-jwt', response.accessToken);
           localStorage.setItem('refresh-jwt', response.refreshToken);
-          window.location.href = '/tests-list';
+          this.router.navigate(['/tests-list'])
         },
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {

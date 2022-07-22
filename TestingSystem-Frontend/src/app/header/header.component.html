@@ -17,9 +17,9 @@
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a *ngIf="nickname == null; else elseBlock" class="nav-link" routerLink="login">Login</a>
+          <a *ngIf="getNickname() == null; else elseBlock" class="nav-link" routerLink="login">Login</a>
           <ng-template #elseBlock>
-            <a (click)="logout()" class="nav-link" role="button">{{nickname}}, Logout</a>
+            <a (click)="logout()" class="nav-link" role="button">{{getNickname()}}, Logout</a>
           </ng-template>
         </li>
       </ul>
