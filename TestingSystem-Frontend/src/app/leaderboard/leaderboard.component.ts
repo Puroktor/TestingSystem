@@ -60,6 +60,15 @@ export class LeaderboardComponent implements OnInit {
     );
   }
 
+  setFields() {
+    if (!this.leaderboard) {
+      return;
+    }
+    for (let record of this.chosenTestRecords) {
+      record.passingScore = this.leaderboard.testRecords.find(test => test.id == record.id)?.passingScore ?? 0;
+    }
+  }
+
   private getBoardFromServer(pageNumb: number) {
     this.attemptService.getLeaderboard(pageNumb, this.pageSize, localStorage.getItem('access-jwt') ?? '')
       .subscribe({

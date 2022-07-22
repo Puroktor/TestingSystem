@@ -2,3 +2,19 @@
   max-width: 150px !important;
   margin: 5px;
 }
+
+.disabled-link{
+  text-decoration: none;
+  pointer-events: none;
+  cursor: default;
+  color: black;
+}
+
+th, td{
+  text-align: center;
+  vertical-align: middle;
+}
+
+.semi-bold{
+  font-weight: 600;
+}

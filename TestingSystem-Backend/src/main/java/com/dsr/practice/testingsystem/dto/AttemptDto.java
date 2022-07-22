@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
@@ -12,6 +13,7 @@ import java.util.Map;
 public class AttemptDto {
     private String nickname;
     private Double score;
+    private LocalDateTime dateTime;
     private TestDto test;
     private Map<Integer, Boolean> answerToSubmittedValueMap;
 }

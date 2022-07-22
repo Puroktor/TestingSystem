@@ -34,8 +34,8 @@ public class AttemptController {
     @PostMapping("attempt")
     @PreAuthorize("hasAuthority('USER_SUBMIT')")
     public ResponseEntity<AttemptResultDto> submitAttempt(@RequestBody @NotNull(message = "Provide answers")
-                                              @Size(min = 1, message = "Provide at least one answer") @Valid
-                                              @ApiParam(value = "Your answers") List<AnswerDto> answers) {
+                                                          @Size(min = 1, message = "Provide at least one answer") @Valid
+                                                          @ApiParam(value = "Your answers") List<AnswerDto> answers) {
         String nickname = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -46,11 +46,10 @@ public class AttemptController {
     @GetMapping("attempt")
     @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<AttemptDto> getAttempt(
-            @RequestParam("userId") @ApiParam(value = "Id of requested user", example = "1") int userId,
-            @RequestParam("testId") @ApiParam(value = "Id of requested test", example = "1") int testId) {
+            @RequestParam("attemptId") @ApiParam(value = "Id of requested attempt", example = "1") int attemptId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(attemptService.getAttempt(userId, testId));
+                .body(attemptService.getAttempt(attemptId));
     }
 
     @ApiOperation(value = "Returns requested page of leaderboard")

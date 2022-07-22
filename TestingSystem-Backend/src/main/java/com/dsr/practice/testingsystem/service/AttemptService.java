@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ public class AttemptService {
         }
         double scorePercentage = score / maxScore * 100;
         Test test = questionIdToScoreMap.keySet().iterator().next().getTest();
-        attemptRepository.save(new Attempt(user, test, scorePercentage, submittedAnswers));
+        attemptRepository.save(new Attempt(null, user, test, scorePercentage, LocalDateTime.now(), submittedAnswers));
         return new AttemptResultDto(scorePercentage, scorePercentage >= test.getPassingScore());
     }
 
@@ -70,38 +71,38 @@ public class AttemptService {
         List<User> userList = userPage.getContent();
         Map<User, LeaderboardPageDto.UserRecord> userToRecordMap = new HashMap<>();
         for (User user : userList) {
-            List<Attempt> attempts = attemptRepository.findAllByUser(user);
             Map<Integer, Double> testIdToScoreMap = new HashMap<>();
             Double total = 0d;
-            for (Attempt attempt : attempts) {
-                total += attempt.getScore();
-                testIdToScoreMap.put(attempt.getTest().getId(), attempt.getScore());
+            for (Test test : testList) {
+                Optional<Attempt> optionalAttempt = attemptRepository.findLatestByUserAndTest(user, test);
+                if (optionalAttempt.isPresent()) {
+                    Attempt attempt = optionalAttempt.get();
+                    total += attempt.getScore();
+                    testIdToScoreMap.put(attempt.getTest().getId(), attempt.getScore());
+                }
             }
             userToRecordMap.put(user, new LeaderboardPageDto.UserRecord(user.getId(), user.getNickname(), total,
                     testIdToScoreMap));
         }
         List<LeaderboardPageDto.TestRecord> testRecordList = new ArrayList<>();
         for (Test test : testList) {
-            testRecordList.add(new LeaderboardPageDto.TestRecord(test.getId(), test.getName()));
+            testRecordList.add(new LeaderboardPageDto.TestRecord(test.getId(), test.getName(), test.getPassingScore()));
         }
         return new LeaderboardPageDto(testRecordList, userPage.map(userToRecordMap::get));
     }
 
     @Transactional
-    public AttemptDto getAttempt(int userId, int testId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Invalid user Id"));
-        Test test = testRepository.findById(testId)
-                .orElseThrow(() -> new NoSuchElementException("Invalid test Id"));
-        Attempt attempt = attemptRepository.findByUserAndTest(user, test)
+    public AttemptDto getAttempt(int attemptId) {
+        Attempt attempt = attemptRepository.findById(attemptId)
                 .orElseThrow(() -> new NoSuchElementException("No such attempt"));
-        TestDto testDto = testMapper.toDto(test);
+        TestDto testDto = testMapper.toDto(attempt.getTest());
         Map<Integer, Boolean> submittedAnswers = attempt.getSubmittedAnswers().entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey().getId(), Map.Entry::getValue));
         testDto.setQuestions(
                 testDto.getQuestions().stream()
                         .filter(questionDto -> submittedAnswers.containsKey(questionDto.getAnswers().get(0).getId()))
                         .collect(Collectors.toList()));
-        return new AttemptDto(user.getNickname(), attempt.getScore(), testDto, submittedAnswers);
+        return new AttemptDto(attempt.getUser().getNickname(), attempt.getScore(), attempt.getDateTime(),
+                testDto, submittedAnswers);
     }
 }

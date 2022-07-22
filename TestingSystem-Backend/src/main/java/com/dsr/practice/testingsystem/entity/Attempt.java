@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,20 +17,15 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(Attempt.AttemptId.class)
 public class Attempt {
-    @Data
-    public static class AttemptId implements Serializable {
-        private Integer user;
-        private Integer test;
-    }
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
     @ManyToOne()
     @JoinColumn(name = "test_id", nullable = false)
     private Test test;
@@ -38,9 +34,12 @@ public class Attempt {
     @Min(value = 0, message = "Your score must be >= 0")
     private Double score;
 
+    @NotNull(message = "Enter attempt dateTime")
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dateTime;
+
     @ElementCollection
-    @JoinTable(name = "submitted_answer", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            @JoinColumn(name = "test_id", referencedColumnName = "test_id")})
+    @JoinTable(name = "submitted_answer", joinColumns = @JoinColumn(name = "attempt_id", referencedColumnName = "id"))
     @Column(name = "submitted_value")
     @MapKeyJoinColumn(name = "answer_id")
     @ToString.Exclude

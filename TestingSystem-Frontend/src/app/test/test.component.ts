@@ -71,9 +71,9 @@ export class TestComponent implements OnInit {
         next: (result) => {
           let message;
           if (result.hasPassed) {
-            message = `Congratulations!\nYou have passed the test.\nYour score: ${result.score}%`;
+            message = `Congratulations!\nYou have passed the test.\nYour score: ${result.score.toFixed(2)}%`;
           } else {
-            message = `You have failed the test.\nYour score: ${result.score}%`;
+            message = `You have failed the test.\nYour score: ${result.score.toFixed(2)}%`;
           }
           Swal.fire(message).then(() => this.goToTestsPage());
         },

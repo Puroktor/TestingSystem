@@ -26,6 +26,7 @@ public class LeaderboardPageDto {
     public static class TestRecord {
         private Integer id;
         private String name;
+        private Integer passingScore;
     }
 
     private List<TestRecord> testRecords;

@@ -8,10 +8,11 @@
       <p>Questions count: {{attempt.test.questionsCount}}</p>
       <p>Passing score: {{attempt.test.passingScore}}%</p>
     </div>
-    <div class="text-center mb-4 mt-2">
+    <div class="text-center mb-3 mt-2">
       <b class="me-4">User: {{attempt.nickname}}</b>
       <b class="ms-4">Score: {{attempt.score.toFixed(2)}}</b>
     </div>
+    <p class="text-center mb-3">Submitted: {{attempt.dateTime | date: 'h:mm, d/M/yyyy'}}</p>
   </div>
   <div>
     <app-question

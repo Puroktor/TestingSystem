@@ -15,8 +15,6 @@ import {Attempt} from "../entity/Attempt";
 })
 export class AttemptComponent implements OnInit {
 
-  userId: number = 0;
-  testId: number = 0;
   attempt?: Attempt;
 
   constructor(private attemptService: AttemptService, private route: ActivatedRoute, private router: Router) {
@@ -33,16 +31,15 @@ export class AttemptComponent implements OnInit {
       Swal.fire('You cannot browse this page!').then(() => this.goToLeaderboard());
       return;
     }
-    this.getQueryParams()
+    this.getQueryParam()
       .subscribe({
         next: value => {
-          if (value[0] == null || value[1] == null) {
-            Swal.fire('!').then(() => this.goToLeaderboard());
+          if (value == null) {
+            Swal.fire('No such attempt').then(() => this.goToLeaderboard());
             return;
           }
-          let userId = +value[0];
-          let testId = +value[1];
-          this.getAttemptFromServer(userId, testId);
+          let attemptId = +value[0];
+          this.getAttemptFromServer(attemptId);
         }
       });
   }
@@ -51,14 +48,14 @@ export class AttemptComponent implements OnInit {
     this.router.navigate(['/leaderboard']);
   }
 
-  private getQueryParams() {
+  private getQueryParam() {
     return this.route.queryParamMap.pipe(
-      map((params: ParamMap) => [params.get('user'), params.get('test')]),
+      map((params: ParamMap) => params.get('id')),
     );
   }
 
-  private getAttemptFromServer(userId: number, testId: number) {
-    this.attemptService.getAttempt(userId, testId, localStorage.getItem('access-jwt') ?? '')
+  private getAttemptFromServer(attemptId: number) {
+    this.attemptService.getAttempt(attemptId, localStorage.getItem('access-jwt') ?? '')
       .subscribe({
         next: value => {
           value.answerToSubmittedValueMap = new Map(Object.entries(value.answerToSubmittedValueMap));
@@ -66,7 +63,7 @@ export class AttemptComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
-            setTimeout(() => this.getAttemptFromServer(userId, testId), environment.retryDelay);
+            setTimeout(() => this.getAttemptFromServer(attemptId), environment.retryDelay);
           } else {
             Swal.fire(err.error.message)
           }
