@@ -52,7 +52,7 @@ export class TestsListComponent implements OnInit {
   }
 
   getPageFromServer(pageNumber: number, programmingLang: string) {
-    this.testService.fetchPage(programmingLang, pageNumber, this.pageSize, localStorage.getItem('access-jwt') ?? '')
+    this.testService.fetchPage(programmingLang, pageNumber, this.pageSize)
       .subscribe({
         next: value => this.page = value,
         error: (err: HttpErrorResponse) => {

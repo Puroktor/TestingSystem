@@ -9,7 +9,9 @@
       <p>Passing score: {{attempt.test.passingScore}}%</p>
     </div>
     <div class="text-center mb-3 mt-2">
-      <b class="me-4">User: {{attempt.nickname}}</b>
+      <b class="me-4">User:
+        <a [routerLink]="'/user'" [queryParams]="{id: attempt.userId}">{{attempt.nickname}}</a>
+      </b>
       <b class="ms-4">Score: {{attempt.score.toFixed(2)}}</b>
     </div>
     <p class="text-center mb-3">Submitted: {{attempt.dateTime | date: 'h:mm, d/M/yyyy'}}</p>
@@ -22,9 +24,6 @@
       [viewing]="true"
       [submittedValues]="attempt.answerToSubmittedValueMap"
     ></app-question>
-  </div>
-  <div class="text-center">
-    <button (click)="goToLeaderboard()" class="btn btn-primary m-1">Go back</button>
   </div>
 </div>
 <ng-template #loadingBlock>

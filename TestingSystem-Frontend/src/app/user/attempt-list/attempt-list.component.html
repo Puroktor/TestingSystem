@@ -1,0 +1,25 @@
+<div *ngIf="attempts != null; else loadingBlock">
+  <div *ngIf="attempts.length!=0; else nothingBlock">
+    <ng-multiselect-dropdown
+      [placeholder]="'Select Tests'"
+      [settings]="dropdownSettings"
+      [data]="tests"
+      [(ngModel)]="chosenTests"
+      (ngModelChange)="onFilterChange()">
+    </ng-multiselect-dropdown>
+    <div class="mb-4"></div>
+    <div *ngFor="let iterAttempt of chosenAttempts"
+         class="d-flex justify-content-between align-items-center m-3 p-3 blue">
+      <span>{{iterAttempt.testName}}</span>
+      <a [style.color]="iterAttempt.hasPassed? 'green': 'red'" [routerLink]="'/attempt'"
+         [queryParams]="{id: iterAttempt.id}">{{iterAttempt.score.toFixed(2)}}</a>
+      <span> {{iterAttempt.dateTime | date: 'h:mm, d MMM yyyy'}}</span>
+    </div>
+  </div>
+</div>
+<ng-template #nothingBlock>
+  <h2 class="text-center m-5 p-5">No attempts yet!</h2>
+</ng-template>
+<ng-template #loadingBlock>
+  <app-loading [text]="'Loading...'"></app-loading>
+</ng-template>

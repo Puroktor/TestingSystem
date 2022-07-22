@@ -4,7 +4,7 @@ import com.dsr.practice.testingsystem.entity.Role;
 import lombok.Data;
 
 @Data
-public class RegistrationResponseDto {
+public class UserDto {
     private Integer id;
 
     private String name;

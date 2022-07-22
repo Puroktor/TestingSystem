@@ -2,6 +2,7 @@ package com.dsr.practice.testingsystem.service;
 
 import com.dsr.practice.testingsystem.dto.*;
 import com.dsr.practice.testingsystem.entity.*;
+import com.dsr.practice.testingsystem.mapper.AttemptMapper;
 import com.dsr.practice.testingsystem.mapper.TestMapper;
 import com.dsr.practice.testingsystem.repository.AnswerRepository;
 import com.dsr.practice.testingsystem.repository.AttemptRepository;
@@ -26,6 +27,7 @@ public class AttemptService {
     private final TestRepository testRepository;
     private final AttemptRepository attemptRepository;
     private final TestMapper testMapper;
+    private final AttemptMapper attemptMapper;
 
     public AttemptResultDto submitAttempt(List<AnswerDto> answers, String nickname) {
         class Score {
@@ -57,8 +59,18 @@ public class AttemptService {
         }
         double scorePercentage = score / maxScore * 100;
         Test test = questionIdToScoreMap.keySet().iterator().next().getTest();
-        attemptRepository.save(new Attempt(null, user, test, scorePercentage, LocalDateTime.now(), submittedAnswers));
-        return new AttemptResultDto(scorePercentage, scorePercentage >= test.getPassingScore());
+        Attempt attempt = attemptRepository.save(new Attempt(null, user, test, scorePercentage, LocalDateTime.now(),
+                submittedAnswers));
+        return attemptMapper.toResultDto(attempt);
+    }
+
+    public List<AttemptResultDto> getAttemptsResults(int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Invalid user nickname"));
+        List<Attempt> attempts = attemptRepository.findAllByUserOrderByDateTimeDesc(user);
+        return attempts.stream()
+                .map(attemptMapper::toResultDto)
+                .collect(Collectors.toList());
     }
 
     public LeaderboardPageDto getLeaderboardPage(int index, int size) {
@@ -102,7 +114,7 @@ public class AttemptService {
                 testDto.getQuestions().stream()
                         .filter(questionDto -> submittedAnswers.containsKey(questionDto.getAnswers().get(0).getId()))
                         .collect(Collectors.toList()));
-        return new AttemptDto(attempt.getUser().getNickname(), attempt.getScore(), attempt.getDateTime(),
-                testDto, submittedAnswers);
+        return new AttemptDto(attempt.getUser().getId(), attempt.getUser().getNickname(),
+                attempt.getScore(), attempt.getDateTime(), testDto, submittedAnswers);
     }
 }

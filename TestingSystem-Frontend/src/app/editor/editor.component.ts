@@ -91,7 +91,7 @@ export class EditorComponent implements OnInit {
 
   private createTest(test: FullTest) {
     this.hasSent = true;
-    this.testService.createTest(test, localStorage.getItem('access-jwt') ?? '').subscribe({
+    this.testService.createTest(test).subscribe({
       next: () => this.goToTestsPage(),
       error: (err: HttpErrorResponse) => {
         if (err.status == 0) {
@@ -105,7 +105,7 @@ export class EditorComponent implements OnInit {
 
   private updateTest(testId: number, test: FullTest) {
     this.hasSent = true;
-    this.testService.updateTest(testId, test, localStorage.getItem('access-jwt') ?? '')
+    this.testService.updateTest(testId, test)
       .subscribe({
         next: () => this.goToTestsPage(),
         error: (err: HttpErrorResponse) => {
@@ -121,7 +121,7 @@ export class EditorComponent implements OnInit {
   deleteTest() {
     if (this.testId != null) {
       this.hasSent = true;
-      this.testService.deleteTest(this.testId, localStorage.getItem('access-jwt') ?? '').subscribe({
+      this.testService.deleteTest(this.testId).subscribe({
         next: () => this.goToTestsPage(),
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
@@ -223,7 +223,7 @@ export class EditorComponent implements OnInit {
   }
 
   private getTestFromServer(value: number) {
-    this.testService.getTest(value, localStorage.getItem('access-jwt') ?? '')
+    this.testService.getTest(value)
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => {

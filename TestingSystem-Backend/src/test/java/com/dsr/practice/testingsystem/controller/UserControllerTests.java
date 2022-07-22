@@ -2,7 +2,7 @@ package com.dsr.practice.testingsystem.controller;
 
 import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
-import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
+import com.dsr.practice.testingsystem.dto.UserDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
 import com.dsr.practice.testingsystem.service.UserService;
@@ -31,11 +31,11 @@ public class UserControllerTests {
     @Test
     public void createValidUser() {
         UserRegistrationDto dto = dataProvider.getValidRegistrationDto();
-        when(userService.createUser(dto)).thenReturn(new RegistrationResponseDto());
-        ResponseEntity<RegistrationResponseDto> returned = userController.createUser(dto);
+        when(userService.createUser(dto)).thenReturn(new UserDto());
+        ResponseEntity<UserDto> returned = userController.createUser(dto);
 
         assertEquals(HttpStatus.CREATED, returned.getStatusCode());
-        assertEquals(new RegistrationResponseDto(), returned.getBody());
+        assertEquals(new UserDto(), returned.getBody());
         verify(userService, times(1)).createUser(dto);
     }
 

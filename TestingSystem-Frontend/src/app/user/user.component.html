@@ -1,0 +1,21 @@
+<div *ngIf="user != null; else loadingBlock" class="row m-0">
+  <div class="col-6 pt-5 d-flex flex-column align-items-center">
+    <h2 class="mb-5 text-center">User info:</h2>
+    <div class="d-flex flex-column blue p-4 pb-3">
+      <p><b>Nickname:</b> {{user.nickname}}</p>
+      <p><b>Name:</b> {{user.name}}</p>
+      <p><b>Email:</b> {{user.email}}</p>
+      <p><b>University:</b> {{user.university}}</p>
+      <p><b>Role:</b> {{user.role.toLowerCase()}}</p>
+      <p *ngIf="user.groupNumber"><b>Group:</b> {{user.groupNumber}}</p>
+      <p *ngIf="user.year"><b>Year:</b> {{user.year}}</p>
+    </div>
+  </div>
+  <div class="col-6 p-5">
+    <h2 class="mb-5 text-center">Attempts:</h2>
+    <app-attempt-list [userId]="user.id"></app-attempt-list>
+  </div>
+</div>
+<ng-template #loadingBlock>
+  <app-loading [text]="'Loading...'"></app-loading>
+</ng-template>

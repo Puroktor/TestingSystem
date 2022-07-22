@@ -8,6 +8,7 @@ import {TestComponent} from "./test/test.component";
 import {EditorComponent} from "./editor/editor.component";
 import {InfoComponent} from "./info/info.component";
 import {AttemptComponent} from "./attempt/attempt.component";
+import {UserComponent} from "./user/user.component";
 
 const routes: Routes = [
   {path: '', component: InfoComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path: 'signup', component: SignupComponent},
   {path: 'test', component: TestComponent},
   {path: 'editor', component: EditorComponent},
-  {path: 'attempt', component: AttemptComponent}
+  {path: 'attempt', component: AttemptComponent},
+  {path: 'user', component: UserComponent}
 ];
 
 @NgModule({
@@ -28,4 +30,4 @@ export class AppRoutingModule {
 }
 
 export const routingComponents = [InfoComponent, TestsListComponent, LoginComponent, SignupComponent,
-  LeaderboardComponent, TestComponent, EditorComponent, AttemptComponent]
+  LeaderboardComponent, TestComponent, EditorComponent, AttemptComponent, UserComponent]

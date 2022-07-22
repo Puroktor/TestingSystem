@@ -1,7 +1,7 @@
 package com.dsr.practice.testingsystem.service;
 
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
-import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
+import com.dsr.practice.testingsystem.dto.UserDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
 import com.dsr.practice.testingsystem.entity.Role;
@@ -26,7 +26,7 @@ public class UserService {
     private final JwtTokenProvider tokenProvider;
     private final ModelMapper modelMapper;
 
-    public RegistrationResponseDto createUser(UserRegistrationDto userDto) {
+    public UserDto createUser(UserRegistrationDto userDto) {
         if (userDto.getRole() == Role.STUDENT && (userDto.getGroupNumber() == null || userDto.getYear() == null)) {
             throw new IllegalArgumentException("Student must have university year and group number!");
         } else if (userDto.getRole() == Role.TEACHER && (userDto.getGroupNumber() != null || userDto.getYear() != null)) {
@@ -37,7 +37,7 @@ public class UserService {
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
-        return modelMapper.map(user, RegistrationResponseDto.class);
+        return modelMapper.map(user, UserDto.class);
     }
 
     public JwtTokensDto loginUser(UserLoginDto userDto) {
@@ -53,5 +53,11 @@ public class UserService {
         User dbUser = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new NoSuchElementException("User doesn't exist"));
         return new JwtTokensDto(tokenProvider.generateAccessToken(dbUser), tokenProvider.generateRefreshToken(dbUser));
+    }
+
+    public UserDto getUser(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User doesn't exist"));
+        return modelMapper.map(user, UserDto.class);
     }
 }

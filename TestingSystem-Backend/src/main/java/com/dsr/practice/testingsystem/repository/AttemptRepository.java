@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AttemptRepository extends CrudRepository<Attempt, Integer> {
-    List<Attempt> findAllByUser(User user);
+    List<Attempt> findAllByUserOrderByDateTimeDesc(User user);
 
     @Query("SELECT a FROM Attempt a WHERE a.user = ?1 AND a.test = ?2 AND a.dateTime = " +
             "(SELECT MAX(dateTime) FROM Attempt WHERE user = ?1 AND test = ?2)")

@@ -16,21 +16,25 @@ export class AttemptService {
   constructor(private http: HttpClient) {
   }
 
-  public submitAttempt(answers: Answer[], userId: number, token: string): Observable<AttemptResult> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public submitAttempt(answers: Answer[], userId: number): Observable<AttemptResult> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     let params = new HttpParams().set('userId', userId);
     return this.http.post<AttemptResult>(`${this.apiServerUrl}/attempt`, answers,
       {params: params, headers: headers});
   }
 
-  public getAttempt(attemptId: number, token: string): Observable<Attempt> {
-    let headers = new HttpHeaders().set('Authorization', token);
-    let params = new HttpParams().set('attemptId', attemptId);
-    return this.http.get<Attempt>(`${this.apiServerUrl}/attempt`, {params: params, headers: headers});
+  public getAttemptsResults(userId: number): Observable<AttemptResult[]>{
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
+    return this.http.get<AttemptResult[]>(`${this.apiServerUrl}/attempts/${userId}`, {headers: headers});
   }
 
-  public getLeaderboard(index: number, size: number, token: string): Observable<LeaderboardPage> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public getAttempt(attemptId: number): Observable<Attempt> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
+    return this.http.get<Attempt>(`${this.apiServerUrl}/attempt/${attemptId}`, {headers: headers});
+  }
+
+  public getLeaderboard(index: number, size: number): Observable<LeaderboardPage> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     let params = new HttpParams().set('index', index).set('size', size);
     return this.http.get<LeaderboardPage>(`${this.apiServerUrl}/leaderboard`, {params: params, headers: headers});
   }

@@ -1,0 +1,12 @@
+p {
+  word-wrap: break-word;
+}
+
+.border{
+  border: 100px #ccc;
+}
+
+.blue{
+  background: #ADD8E6;
+}
+

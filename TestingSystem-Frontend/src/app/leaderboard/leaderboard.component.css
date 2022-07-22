@@ -1,8 +1,3 @@
-:host::ng-deep .selected-item {
-  max-width: 150px !important;
-  margin: 5px;
-}
-
 .disabled-link{
   text-decoration: none;
   pointer-events: none;

@@ -3,7 +3,7 @@ package com.dsr.practice.testingsystem.service;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
-import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
+import com.dsr.practice.testingsystem.dto.UserDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
 import com.dsr.practice.testingsystem.entity.Role;
@@ -53,14 +53,14 @@ public class UserServiceTests {
         when(modelMapper.map(dto, User.class)).thenReturn(user);
         when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
         when(userRepository.save(user)).thenReturn(user);
-        when(modelMapper.map(user, RegistrationResponseDto.class)).thenReturn(new RegistrationResponseDto());
+        when(modelMapper.map(user, UserDto.class)).thenReturn(new UserDto());
 
-        assertEquals(new RegistrationResponseDto(), userService.createUser(dto));
+        assertEquals(new UserDto(), userService.createUser(dto));
         verify(userRepository, times(1)).findByNickname(dto.getNickname());
         verify(modelMapper, times(1)).map(dto, User.class);
         verify(passwordEncoder, times(1)).encode(user.getPassword());
         verify(userRepository, times(1)).save(user);
-        verify(modelMapper, times(1)).map(user, RegistrationResponseDto.class);
+        verify(modelMapper, times(1)).map(user, UserDto.class);
     }
 
     @Test

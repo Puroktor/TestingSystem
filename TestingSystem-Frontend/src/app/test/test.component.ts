@@ -66,7 +66,7 @@ export class TestComponent implements OnInit {
 
   private sendAttempt(answers: Answer[]) {
     this.hasSent = true;
-    this.attemptService.submitAttempt(answers, this.userId, localStorage.getItem('access-jwt') ?? '')
+    this.attemptService.submitAttempt(answers, this.userId)
       .subscribe({
         next: (result) => {
           let message;
@@ -94,7 +94,7 @@ export class TestComponent implements OnInit {
   }
 
   private getTestFromServer(value: number) {
-    this.testService.getShuffledTest(value, localStorage.getItem('access-jwt') ?? '')
+    this.testService.getShuffledTest(value)
       .subscribe({
         next: value => this.test = value,
         error: (err: HttpErrorResponse) => {

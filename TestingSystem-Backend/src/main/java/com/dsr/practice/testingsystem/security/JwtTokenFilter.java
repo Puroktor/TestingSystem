@@ -1,6 +1,7 @@
 package com.dsr.practice.testingsystem.security;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.dsr.practice.testingsystem.dto.ErrorDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(jwtTokenProvider.getAuthTokenFromJwt(token));
             }
             filterChain.doFilter(request, response);
-        } catch (JWTDecodeException e) {
+        } catch (JWTDecodeException | TokenExpiredException e) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

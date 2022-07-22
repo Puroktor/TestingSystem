@@ -15,34 +15,34 @@ export class TestService {
   constructor(private http: HttpClient) {
   }
 
-  public createTest(test: FullTest, token: string): Observable<FullTest> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public createTest(test: FullTest): Observable<FullTest> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     return this.http.post<FullTest>(`${this.apiServerUrl}/test`, test, {headers: headers});
   }
 
-  public getShuffledTest(id: number, token: string): Observable<FullTest> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public getShuffledTest(id: number): Observable<FullTest> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     return this.http.get<FullTest>(`${this.apiServerUrl}/test/shuffled/${id}`, {headers: headers});
   }
 
-  public getTest(id: number, token: string): Observable<FullTest> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public getTest(id: number): Observable<FullTest> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     return this.http.get<FullTest>(`${this.apiServerUrl}/test/${id}`, {headers: headers});
   }
 
-  public fetchPage(programmingLang: string, index: number, size: number, token: string): Observable<Page<TestCard>> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public fetchPage(programmingLang: string, index: number, size: number): Observable<Page<TestCard>> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     let params = new HttpParams().set('programmingLang', programmingLang).set('index', index).set('size', size);
     return this.http.get<Page<TestCard>>(`${this.apiServerUrl}/test`, {params: params, headers: headers});
   }
 
-  public updateTest(id: number, test: FullTest, token: string): Observable<void> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public updateTest(id: number, test: FullTest): Observable<void> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     return this.http.put<void>(`${this.apiServerUrl}/test/${id}`, test, {headers: headers});
   }
 
-  public deleteTest(id: number, token: string): Observable<void> {
-    let headers = new HttpHeaders().set('Authorization', token);
+  public deleteTest(id: number): Observable<void> {
+    let headers = new HttpHeaders().set('Authorization', localStorage.getItem('access-jwt') ?? '');
     return this.http.delete<void>(`${this.apiServerUrl}/test/${id}`, {headers: headers});
   }
 }

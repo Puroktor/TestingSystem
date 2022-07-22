@@ -1,7 +1,7 @@
 package com.dsr.practice.testingsystem.controller;
 
 import com.dsr.practice.testingsystem.dto.JwtTokensDto;
-import com.dsr.practice.testingsystem.dto.RegistrationResponseDto;
+import com.dsr.practice.testingsystem.dto.UserDto;
 import com.dsr.practice.testingsystem.dto.UserLoginDto;
 import com.dsr.practice.testingsystem.dto.UserRegistrationDto;
 import com.dsr.practice.testingsystem.service.UserService;
@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,21 @@ public class UserController {
     @ApiOperation(value = "Creates new user if absent")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("user")
-    public ResponseEntity<RegistrationResponseDto> createUser(
+    public ResponseEntity<UserDto> createUser(
             @RequestBody @NotNull(message = "Enter your registration info") @Valid
             @ApiParam(value = "Your registration info") UserRegistrationDto userRegistrationDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.createUser(userRegistrationDto));
+    }
+
+    @ApiOperation(value = "Returns user by id for teacher")
+    @GetMapping("user/{id}")
+    @PreAuthorize("hasAuthority('USER_EDIT')")
+    public ResponseEntity<UserDto> getUser(@PathVariable @ApiParam(value = "Id of requested user", example = "1") int id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getUser(id));
     }
 
     @ApiOperation(value = "Returns JWT access and refresh tokens if OK")

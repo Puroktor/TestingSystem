@@ -1,23 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {map} from "rxjs/operators";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import Swal from "sweetalert2";
 import jwt_decode from "jwt-decode";
+import {map} from "rxjs/operators";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {AttemptService} from "../service/attempt.service";
-import {Attempt} from "../entity/Attempt";
+import {UserService} from "../service/user.service";
+import {User} from "../entity/User";
 
 @Component({
-  selector: 'app-attempt',
-  templateUrl: './attempt.component.html',
-  styleUrls: ['./attempt.component.css']
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css']
 })
-export class AttemptComponent implements OnInit {
+export class UserComponent implements OnInit {
 
-  attempt?: Attempt;
+  user?: User;
 
-  constructor(private attemptService: AttemptService, private route: ActivatedRoute, private router: Router) {
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -28,18 +28,18 @@ export class AttemptComponent implements OnInit {
     }
     let decoded: any = jwt_decode(token);
     if (!decoded.authorities.includes('USER_EDIT')) {
-      Swal.fire('You cannot browse this page!').then(() => this.goToLeaderboard());
+      Swal.fire('Only teacher can browse this page!').then(() => this.goToLeaderboard());
       return;
     }
     this.getQueryParam()
       .subscribe({
         next: value => {
           if (value == null) {
-            Swal.fire('No such attempt').then(() => this.goToLeaderboard());
+            Swal.fire('No such user').then(() => this.goToLeaderboard());
             return;
           }
-          let attemptId = +value[0];
-          this.getAttemptFromServer(attemptId);
+          let userId = +value[0];
+          this.getUserFromServer(userId);
         }
       });
   }
@@ -54,16 +54,13 @@ export class AttemptComponent implements OnInit {
     );
   }
 
-  private getAttemptFromServer(attemptId: number) {
-    this.attemptService.getAttempt(attemptId)
+  private getUserFromServer(id: number) {
+    this.userService.getUser(id)
       .subscribe({
-        next: value => {
-          value.answerToSubmittedValueMap = new Map(Object.entries(value.answerToSubmittedValueMap));
-          this.attempt = value
-        },
+        next: value => this.user = value,
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {
-            setTimeout(() => this.getAttemptFromServer(attemptId), environment.retryDelay);
+            setTimeout(() => this.getUserFromServer(id), environment.retryDelay);
           } else {
             Swal.fire(err.error.message)
           }

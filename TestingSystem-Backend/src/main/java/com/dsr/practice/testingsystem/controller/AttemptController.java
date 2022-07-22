@@ -43,13 +43,23 @@ public class AttemptController {
     }
 
     @ApiOperation(value = "Returns attempt with submitted answers")
-    @GetMapping("attempt")
+    @GetMapping("attempt/{attemptId}")
     @PreAuthorize("hasAuthority('USER_EDIT')")
     public ResponseEntity<AttemptDto> getAttempt(
-            @RequestParam("attemptId") @ApiParam(value = "Id of requested attempt", example = "1") int attemptId) {
+            @PathVariable @ApiParam(value = "Id of requested attempt", example = "1") int attemptId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(attemptService.getAttempt(attemptId));
+    }
+
+    @ApiOperation(value = "Returns results of attempts of specific user")
+    @GetMapping("attempts/{userId}")
+    @PreAuthorize("hasAuthority('USER_EDIT')")
+    public ResponseEntity<List<AttemptResultDto>> getAttemptsResults(
+            @PathVariable @ApiParam(value = "Id of the user", example = "1") int userId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(attemptService.getAttemptsResults(userId));
     }
 
     @ApiOperation(value = "Returns requested page of leaderboard")

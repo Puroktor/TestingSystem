@@ -70,7 +70,7 @@ export class LeaderboardComponent implements OnInit {
   }
 
   private getBoardFromServer(pageNumb: number) {
-    this.attemptService.getLeaderboard(pageNumb, this.pageSize, localStorage.getItem('access-jwt') ?? '')
+    this.attemptService.getLeaderboard(pageNumb, this.pageSize)
       .subscribe({
         next: value => {
           value.userRecords.content.forEach(userRecord => {

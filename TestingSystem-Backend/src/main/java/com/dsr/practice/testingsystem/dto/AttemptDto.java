@@ -11,6 +11,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttemptDto {
+    private Integer userId;
     private String nickname;
     private Double score;
     private LocalDateTime dateTime;
