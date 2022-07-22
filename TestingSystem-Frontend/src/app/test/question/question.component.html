@@ -11,7 +11,7 @@
     *ngFor="let iterAnswer of question.answers; index as i"
     [answer]="iterAnswer"
     [index]="i"
-    [viewing]="viewing"
     [submittedValue]="submittedValues?.get(iterAnswer.id?.toString() ?? '')"
+    [viewing]="viewing"
   ></app-answer>
 </div>

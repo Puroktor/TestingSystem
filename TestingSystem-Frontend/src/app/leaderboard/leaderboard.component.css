@@ -1,15 +1,15 @@
-.disabled-link{
+.disabled-link {
   text-decoration: none;
   pointer-events: none;
   cursor: default;
   color: black;
 }
 
-th, td{
+th, td {
   text-align: center;
   vertical-align: middle;
 }
 
-.semi-bold{
+.semi-bold {
   font-weight: 600;
 }

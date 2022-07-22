@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import Swal from "sweetalert2";
-import jwt_decode from "jwt-decode";
 import {HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AttemptService} from "../service/attempt.service";
 import {Attempt} from "../entity/Attempt";
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-attempt',
@@ -17,17 +17,16 @@ export class AttemptComponent implements OnInit {
 
   attempt?: Attempt;
 
-  constructor(private attemptService: AttemptService, private route: ActivatedRoute, private router: Router) {
+  constructor(private userService: UserService, private attemptService: AttemptService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem('access-jwt')
-    if (token == null) {
+    if (this.userService.username.getValue() == null) {
       Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
       return;
     }
-    let decoded: any = jwt_decode(token);
-    if (!decoded.authorities.includes('USER_EDIT')) {
+    if (!this.userService.authorities.getValue().includes('USER_EDIT')) {
       Swal.fire('You cannot browse this page!').then(() => this.goToLeaderboard());
       return;
     }

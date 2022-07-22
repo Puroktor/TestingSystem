@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import Swal from "sweetalert2";
-import jwt_decode from "jwt-decode";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -21,13 +20,11 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem('access-jwt')
-    if (token == null) {
+    if (this.userService.username.getValue() == null) {
       Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
       return;
     }
-    let decoded: any = jwt_decode(token);
-    if (!decoded.authorities.includes('USER_EDIT')) {
+    if (!this.userService.authorities.getValue().includes('USER_EDIT')) {
       Swal.fire('Only teacher can browse this page!').then(() => this.goToLeaderboard());
       return;
     }
@@ -65,6 +62,6 @@ export class UserComponent implements OnInit {
             Swal.fire(err.error.message)
           }
         }
-      })
+      });
   }
 }

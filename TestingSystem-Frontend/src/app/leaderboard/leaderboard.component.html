@@ -1,11 +1,11 @@
-<div class="m-0" *ngIf="leaderboard!=null; else elseBlock">
+<div *ngIf="leaderboard!=null; else elseBlock" class="m-0">
   <div class="mt-3 mb-3 ms-5 me-5">
     <ng-multiselect-dropdown
-      [placeholder]="'Select Tests'"
-      [settings]="dropdownSettings"
-      [data]="leaderboard.testRecords"
+      (ngModelChange)="setFields()"
       [(ngModel)]="chosenTestRecords"
-      (ngModelChange)="setFields()">
+      [data]="leaderboard.testRecords"
+      [placeholder]="'Select Tests'"
+      [settings]="dropdownSettings">
     </ng-multiselect-dropdown>
   </div>
   <table *ngIf="!leaderboard.userRecords.empty; else emptyBlock" class="table table-bordered">
@@ -18,7 +18,7 @@
         *ngFor="let iterTestRecord of chosenTestRecords"
         [style.width.%]="85 / chosenTestRecords.length"
         scope="col">
-        <a [routerLink]="['/test']" [queryParams]="{id: iterTestRecord.id}">{{iterTestRecord.name}}</a>
+        <a [queryParams]="{id: iterTestRecord.id}" [routerLink]="['/test']">{{iterTestRecord.name}}</a>
       </th>
     </tr>
     </thead>
@@ -28,8 +28,8 @@
       [ngClass]="{'table-info': userRecord.nickname == nickName}">
       <td>{{leaderboard.userRecords.number * pageSize + i + 1}}</td>
       <th scope="row">
-        <a class="semi-bold" [class.disabled-link]="!isTeacher"
-           [routerLink]="'/user'" [queryParams]="{id: userRecord.id}">
+        <a [class.disabled-link]="!isTeacher" [queryParams]="{id: userRecord.id}"
+           [routerLink]="'/user'" class="semi-bold">
           {{userRecord.nickname}}
         </a>
       </th>
@@ -43,7 +43,7 @@
     </tr>
     </tbody>
   </table>
-  <app-pagination [page]="leaderboard.userRecords" [baseUrl]="'/leaderboard'"></app-pagination>
+  <app-pagination [baseUrl]="'/leaderboard'" [page]="leaderboard.userRecords"></app-pagination>
 </div>
 <ng-template #emptyBlock>
   <h1 class="text-center m-5 p-5">Nobody is here!</h1>

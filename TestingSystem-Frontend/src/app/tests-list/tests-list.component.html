@@ -2,7 +2,7 @@
   <div class="col-2"></div>
   <div class="search col-8">
     <input (input)="filterPage()" [readonly]="page==null" class="form-control" id="filterInput"
-           placeholder="Enter language:" maxlength="50" type="text">
+           maxlength="50" placeholder="Enter language:" type="text">
   </div>
   <div class="col-2 button-cont">
     <a *ngIf="canEdit" class="btn btn-secondary" routerLink="/editor">New Test</a>
@@ -19,7 +19,7 @@
   <ng-template #nothingBlock>
     <h1 class="text-center m-5 p-5">Nothing is here!</h1>
   </ng-template>
-  <app-pagination [page]="page" [filter]="lang" [baseUrl]="'/tests-list'"></app-pagination>
+  <app-pagination [baseUrl]="'/tests-list'" [filter]="lang" [page]="page"></app-pagination>
 </div>
 <ng-template #loadingBlock>
   <app-loading [text]="'Loading...'"></app-loading>

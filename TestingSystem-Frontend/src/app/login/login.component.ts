@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../service/user.service";
 import Swal from "sweetalert2";
 import {Router} from "@angular/router";
-import {environment} from "../../environments/environment";
-import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +15,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('access-jwt') != null) {
+    if (this.userService.username.getValue() != null) {
       this.router.navigate(['/tests-list']);
     }
   }
@@ -43,16 +41,11 @@ export class LoginComponent implements OnInit {
     this.hasSent = true;
     this.userService.loginUser({nickname: name, password: password})
       .subscribe({
-        next: response => {
-          localStorage.setItem('access-jwt', response.accessToken);
-          localStorage.setItem('refresh-jwt', response.refreshToken);
-          this.router.navigate(['/tests-list'])
-        },
-        error: (err: HttpErrorResponse) => {
-          if (err.status == 0) {
-            setTimeout(() => this.sendRequest(name, password), environment.retryDelay);
+        next: error => {
+          if (error) {
+            Swal.fire(error).then(() => this.hasSent = false);
           } else {
-            Swal.fire(err.error.message).then(() => this.hasSent = false)
+            this.router.navigate(['/tests-list']);
           }
         }
       });

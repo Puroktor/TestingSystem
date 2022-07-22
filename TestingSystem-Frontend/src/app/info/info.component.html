@@ -2,7 +2,7 @@
   <h2>This is a testing system.</h2>
   <h4>It was created for teachers and their students.</h4>
   <h5>This system allows you to create, edit and pass different types of test.</h5>
-  <p *ngIf="isLoggedIn; else elseBlock">To get started please <a routerLink="/login">login</a>.</p>
+  <p *ngIf="isNotLoggedIn; else elseBlock">To get started please <a routerLink="/login">login</a>.</p>
   <ng-template #elseBlock>
     <p>Enjoy!</p>
   </ng-template>

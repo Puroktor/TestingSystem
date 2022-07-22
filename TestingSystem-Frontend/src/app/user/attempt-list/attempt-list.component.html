@@ -1,19 +1,19 @@
 <div *ngIf="attempts != null; else loadingBlock">
   <div *ngIf="attempts.length!=0; else nothingBlock">
     <ng-multiselect-dropdown
-      [placeholder]="'Select Tests'"
-      [settings]="dropdownSettings"
-      [data]="tests"
+      (ngModelChange)="onFilterChange()"
       [(ngModel)]="chosenTests"
-      (ngModelChange)="onFilterChange()">
+      [data]="tests"
+      [placeholder]="'Select Tests'"
+      [settings]="dropdownSettings">
     </ng-multiselect-dropdown>
     <div class="mb-4"></div>
     <div *ngFor="let iterAttempt of chosenAttempts"
          class="d-flex justify-content-between align-items-center m-3 p-3 blue">
       <span>{{iterAttempt.testName}}</span>
-      <a [style.color]="iterAttempt.hasPassed? 'green': 'red'" [routerLink]="'/attempt'"
-         [queryParams]="{id: iterAttempt.id}">{{iterAttempt.score.toFixed(2)}}</a>
-      <span> {{iterAttempt.dateTime | date: 'h:mm, d MMM yyyy'}}</span>
+      <a [queryParams]="{id: iterAttempt.id}" [routerLink]="'/attempt'"
+         [style.color]="iterAttempt.hasPassed? 'green': 'red'">{{iterAttempt.score.toFixed(2)}}</a>
+      <span> {{iterAttempt.dateTime | date: 'HH:mm, d MMM yyyy'}}</span>
     </div>
   </div>
 </div>

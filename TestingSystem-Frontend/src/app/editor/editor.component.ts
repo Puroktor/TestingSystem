@@ -5,7 +5,6 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import Swal from 'sweetalert2';
 import {TestService} from '../service/test.service';
-import jwt_decode from 'jwt-decode';
 import {UserService} from '../service/user.service';
 import {environment} from "../../environments/environment";
 
@@ -19,26 +18,21 @@ export class EditorComponent implements OnInit {
   @Input() test?: FullTest;
   testId: number | null = null;
   hasSent: boolean = false;
-  private userId!: number;
 
-  constructor(private testService: TestService, private userService: UserService, private route: ActivatedRoute,
-              private router: Router) {
+  constructor(private testService: TestService, private userService: UserService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem('access-jwt')
-    if (token == null) {
+    if (this.userService.username.getValue() == null) {
       this.goToTestsPage();
       return;
-    } else {
-      let decoded: any = jwt_decode(token);
-      if (!decoded.authorities.includes('USER_EDIT')) {
-        Swal.fire('You cannot browse this page').then(() => this.goToTestsPage());
-        return;
-      } else {
-        this.userId = decoded.id;
-      }
     }
+    if (!this.userService.authorities.getValue().includes('USER_EDIT')) {
+      Swal.fire('You cannot browse this page').then(() => this.goToTestsPage());
+      return;
+    }
+
     this.getTestId().subscribe({
       next: value => {
         if (value == null) {
@@ -89,6 +83,22 @@ export class EditorComponent implements OnInit {
     }
   }
 
+  deleteTest() {
+    if (this.testId != null) {
+      this.hasSent = true;
+      this.testService.deleteTest(this.testId).subscribe({
+        next: () => this.goToTestsPage(),
+        error: (err: HttpErrorResponse) => {
+          if (err.status == 0) {
+            setTimeout(() => this.deleteTest(), environment.retryDelay);
+          } else {
+            Swal.fire(err.error.message).then(() => this.hasSent = false)
+          }
+        }
+      });
+    }
+  }
+
   private createTest(test: FullTest) {
     this.hasSent = true;
     this.testService.createTest(test).subscribe({
@@ -116,22 +126,6 @@ export class EditorComponent implements OnInit {
           }
         }
       });
-  }
-
-  deleteTest() {
-    if (this.testId != null) {
-      this.hasSent = true;
-      this.testService.deleteTest(this.testId).subscribe({
-        next: () => this.goToTestsPage(),
-        error: (err: HttpErrorResponse) => {
-          if (err.status == 0) {
-            setTimeout(() => this.deleteTest(), environment.retryDelay);
-          } else {
-            Swal.fire(err.error.message).then(() => this.hasSent = false)
-          }
-        }
-      });
-    }
   }
 
   private validateTest(): boolean {
@@ -219,7 +213,15 @@ export class EditorComponent implements OnInit {
   }
 
   private generateSampleTest() {
-    this.test = {id: null, name: '', programmingLang: '', questionsCount: 0, passingScore:0, testType: "WITH_BANK", questions: []};
+    this.test = {
+      id: null,
+      name: '',
+      programmingLang: '',
+      questionsCount: 0,
+      passingScore: 0,
+      testType: "WITH_BANK",
+      questions: []
+    };
   }
 
   private getTestFromServer(value: number) {

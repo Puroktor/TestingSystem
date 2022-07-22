@@ -2,28 +2,28 @@
   <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
       <div class="flex">
-        <input [(ngModel)]="test.name" class="form-control" placeholder="Title" maxlength="50">
-        <input [(ngModel)]="test.programmingLang" class="form-control ms-5" placeholder="Language" maxlength="50">
+        <input [(ngModel)]="test.name" class="form-control" maxlength="50" placeholder="Title">
+        <input [(ngModel)]="test.programmingLang" class="form-control ms-5" maxlength="50" placeholder="Language">
         <a (click)="deleteTest()" *ngIf="testId!=null" class="button">❌</a>
       </div>
       <div class="d-flex justify-content-around mb-3">
         <div>
           <p class="d-inline me-2">Type:</p>
-          <select class="form-select type-select d-inline" (change)="testTypeChanged($event)">
-            <option value="WITH_BANK" [selected]="test.testType=='WITH_BANK'">With question bank</option>
-            <option value="WITH_QUESTION_OPTIONS" [selected]="test.testType!='WITH_BANK'">With question options
+          <select (change)="testTypeChanged($event)" class="form-select type-select d-inline">
+            <option [selected]="test.testType=='WITH_BANK'" value="WITH_BANK">With question bank</option>
+            <option [selected]="test.testType!='WITH_BANK'" value="WITH_QUESTION_OPTIONS">With question options
             </option>
           </select>
         </div>
         <div>
           <p class="d-inline me-2">Question count for students:</p>
-          <input [(ngModel)]="test.questionsCount" class="form-control count-inp d-inline" type="number" min="1"
-                 max="50">
+          <input [(ngModel)]="test.questionsCount" class="form-control count-inp d-inline" max="50" min="1"
+                 type="number">
         </div>
         <div>
           <p class="d-inline me-2">Passing score:</p>
-          <input [(ngModel)]="test.passingScore" class="form-control count-inp d-inline" type="number" min="1"
-                 max="100">
+          <input [(ngModel)]="test.passingScore" class="form-control count-inp d-inline" max="100" min="1"
+                 type="number">
           <p class="d-inline ms-1">%</p>
         </div>
       </div>

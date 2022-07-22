@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-info',
@@ -7,13 +8,12 @@ import {Component, OnInit} from '@angular/core';
 })
 export class InfoComponent implements OnInit {
 
-  isLoggedIn: boolean = false;
+  isNotLoggedIn: boolean = this.userService.username.getValue() == null;
 
-  constructor() {
+  constructor(private userService: UserService) {
   }
 
   ngOnInit(): void {
-    this.isLoggedIn = localStorage.getItem('access-jwt') == null;
   }
 
 }

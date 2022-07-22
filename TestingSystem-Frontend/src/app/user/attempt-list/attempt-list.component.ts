@@ -41,7 +41,7 @@ export class AttemptListComponent implements OnInit {
     }
     this.chosenAttempts = [];
     for (let attempt of this.attempts) {
-      if(this.chosenTests.find(test => test.id == attempt.testId)){
+      if (this.chosenTests.find(test => test.id == attempt.testId)) {
         this.chosenAttempts.push(attempt);
       }
     }

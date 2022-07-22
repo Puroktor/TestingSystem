@@ -6,10 +6,10 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import {Answer} from "../entity/Answer";
-import jwt_decode from 'jwt-decode';
 import {environment} from "../../environments/environment";
 import {AttemptService} from "../service/attempt.service";
 import {AttemptResult} from "../entity/AttemptResult";
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-test',
@@ -21,26 +21,21 @@ export class TestComponent implements OnInit {
   test?: FullTest;
   result?: AttemptResult;
   hasSent: boolean = false;
-  private userId!: number;
 
-  constructor(private testService: TestService, private attemptService: AttemptService, private route: ActivatedRoute,
-              private router: Router) {
+  constructor(private testService: TestService, private attemptService: AttemptService, private userService: UserService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem('access-jwt');
-    if (token == null) {
+    if (this.userService.username.getValue() == null) {
       Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
       return;
-    } else {
-      let decoded: any = jwt_decode(token);
-      if (!decoded.authorities.includes('USER_SUBMIT')) {
-        Swal.fire('You cannot browse this page').then(() => this.goToTestsPage());
-        return;
-      } else {
-        this.userId = decoded.id;
-      }
     }
+    if (!this.userService.authorities.getValue().includes('USER_SUBMIT')) {
+      Swal.fire('You cannot browse this page').then(() => this.goToTestsPage());
+      return;
+    }
+
     this.getTestId().subscribe({
       next: value => {
         if (value == null) {
@@ -68,7 +63,7 @@ export class TestComponent implements OnInit {
 
   private sendAttempt(answers: Answer[]) {
     this.hasSent = true;
-    this.attemptService.submitAttempt(answers, this.userId)
+    this.attemptService.submitAttempt(answers)
       .subscribe({
         next: (value) => {
           this.hasSent = false;

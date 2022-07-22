@@ -6,15 +6,15 @@
     <input (input)="changeRole($event)" class="form-range" max="1" min="0" step="1" type="range">
     <b>Student</b>
     <br>
-    <input class="inp m-3 p-1" id="name" placeholder="Full name" type="text" maxlength="100">
+    <input class="inp m-3 p-1" id="name" maxlength="100" placeholder="Full name" type="text">
     <br>
-    <input class="inp m-3 p-1" id="nickname" placeholder="Nickname" type="text" maxlength="50">
+    <input class="inp m-3 p-1" id="nickname" maxlength="50" placeholder="Nickname" type="text">
     <br>
-    <input class="inp m-3 p-1" id="email" placeholder="Email" type="text" maxlength="320">
+    <input class="inp m-3 p-1" id="email" maxlength="320" placeholder="Email" type="text">
     <br>
-    <input class="inp m-3 p-1" id="password" placeholder="Password" type="password" maxlength="256">
+    <input class="inp m-3 p-1" id="password" maxlength="256" placeholder="Password" type="password">
     <br>
-    <input class="inp m-3 p-1" id="university" placeholder="University" type="text" maxlength="100">
+    <input class="inp m-3 p-1" id="university" maxlength="100" placeholder="University" type="text">
     <br>
     <div [style.display]="isVisible ? 'inline' : 'none'">
       <select class="inp m-3 p-1" id="year" required>

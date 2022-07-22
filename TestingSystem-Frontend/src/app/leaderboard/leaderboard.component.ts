@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpErrorResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
-import jwt_decode from "jwt-decode";
 import {LeaderboardPage} from "../entity/LeaderboardPage";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
@@ -9,6 +8,7 @@ import {environment} from "../../environments/environment";
 import {BoardTestRecord} from "../entity/BoardTestRecord";
 import {IDropdownSettings} from "ng-multiselect-dropdown";
 import {AttemptService} from "../service/attempt.service";
+import {UserService} from "../service/user.service";
 
 @Component({
   selector: 'app-leaderboard',
@@ -24,7 +24,8 @@ export class LeaderboardComponent implements OnInit {
   isTeacher: boolean = false;
   dropdownSettings: IDropdownSettings;
 
-  constructor(private attemptService: AttemptService, private route: ActivatedRoute, private router: Router) {
+  constructor(private attemptService: AttemptService, private userService: UserService,
+              private route: ActivatedRoute, private router: Router) {
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -36,14 +37,12 @@ export class LeaderboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem('access-jwt');
-    if (token == null) {
+    if (this.userService.username.getValue() == null) {
       Swal.fire('Login to see this page!').then(() => this.router.navigate(['/login']));
       return;
     }
-    let decoded: any = jwt_decode(token);
-    this.nickName = decoded.sub;
-    this.isTeacher = decoded.authorities.includes('USER_EDIT');
+    this.nickName = this.userService.username.getValue();
+    this.isTeacher = this.userService.authorities.getValue().includes('USER_EDIT');
     this.getPageNumber()
       .subscribe({
         next: value => {
@@ -85,6 +84,6 @@ export class LeaderboardComponent implements OnInit {
             Swal.fire(err.error.message);
           }
         }
-      })
+      });
   }
 }

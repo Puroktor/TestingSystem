@@ -33,7 +33,7 @@
     <h1 class="mb-3">{{result?.hasPassed ? 'Congratulations!' : 'Oh no!'}}</h1>
     <p>{{result?.hasPassed ? 'You have passed the test.' : 'You have failed the test.'}}</p>
     <p>Your score: {{result?.score}}</p>
-    <p>Submit time: {{result?.dateTime | date: 'h:mm, d MMM yyyy'}}</p>
+    <p>Submit time: {{result?.dateTime | date: 'HH:mm, d MMM yyyy'}}</p>
     <button (click)="goToTestsPage()" class="btn btn-primary m-1">Ok</button>
   </div>
 </ng-template>

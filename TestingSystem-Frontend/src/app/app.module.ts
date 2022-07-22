@@ -14,7 +14,7 @@ import {LoadingComponent} from './loading/loading.component';
 import {PaginationComponent} from './pagination/pagination.component';
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {FormsModule} from "@angular/forms";
-import { AttemptListComponent } from './user/attempt-list/attempt-list.component';
+import {AttemptListComponent} from './user/attempt-list/attempt-list.component';
 
 
 @NgModule({

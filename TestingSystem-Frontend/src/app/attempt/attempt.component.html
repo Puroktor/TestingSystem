@@ -10,19 +10,19 @@
     </div>
     <div class="text-center mb-3 mt-2">
       <b class="me-4">User:
-        <a [routerLink]="'/user'" [queryParams]="{id: attempt.userId}">{{attempt.nickname}}</a>
+        <a [queryParams]="{id: attempt.userId}" [routerLink]="'/user'">{{attempt.nickname}}</a>
       </b>
       <b class="ms-4">Score: {{attempt.score.toFixed(2)}}</b>
     </div>
-    <p class="text-center mb-3">Submitted: {{attempt.dateTime | date: 'h:mm, d/M/yyyy'}}</p>
+    <p class="text-center mb-3">Submitted: {{attempt.dateTime | date: 'HH:mm, d/M/yyyy'}}</p>
   </div>
   <div>
     <app-question
       *ngFor="let iterQuestion of attempt.test.questions; index as i"
       [index]="i"
       [question]="iterQuestion"
-      [viewing]="true"
       [submittedValues]="attempt.answerToSubmittedValueMap"
+      [viewing]="true"
     ></app-question>
   </div>
 </div>

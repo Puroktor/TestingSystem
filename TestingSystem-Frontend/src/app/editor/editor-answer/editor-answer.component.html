@@ -1,6 +1,6 @@
 <div class="answer">
   <a (click)="delete()" class="delete">❌</a>
   <div class="m-1">{{index + 1}}.</div>
-  <input class="form-control me-2 mt-2 mb-2" placeholder="Answer" [(ngModel)]="answer.text" maxlength="200">
+  <input [(ngModel)]="answer.text" class="form-control me-2 mt-2 mb-2" maxlength="200" placeholder="Answer">
   <input (change)="onChecked($event)" [checked]="answer.isRight" class="form-check-input" type="checkbox" value="">
 </div>

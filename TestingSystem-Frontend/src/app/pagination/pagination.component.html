@@ -1,12 +1,12 @@
 <div class="center text-center">
-  <a class="link" [ngClass]="{'disabled': page.first==true}" [routerLink]="baseUrl"
-     [queryParams]="{page:page.number-1, filter:filter}">⯇</a>
-  <a class="me-3" [ngClass]="{'disabled': page.first==true}" [routerLink]="baseUrl"
-     [queryParams]="{page: 0, filter:filter}">First</a>
+  <a [ngClass]="{'disabled': page.first==true}" [queryParams]="{page:page.number-1, filter:filter}" [routerLink]="baseUrl"
+     class="link">⯇</a>
+  <a [ngClass]="{'disabled': page.first==true}" [queryParams]="{page: 0, filter:filter}" [routerLink]="baseUrl"
+     class="me-3">First</a>
   <p>Page {{page.number + 1}} of {{page.totalPages}}</p>
-  <a class="ms-3" [ngClass]="{'disabled': page.last==true}" [routerLink]="baseUrl"
-     [queryParams]="{page: page.totalPages-1, filter:filter}">Last</a>
-  <a class="link" [ngClass]="{'disabled': page.last==true}" [routerLink]="baseUrl"
-     [queryParams]="{page:page.number+1, filter:filter}">⯈</a>
+  <a [ngClass]="{'disabled': page.last==true}" [queryParams]="{page: page.totalPages-1, filter:filter}" [routerLink]="baseUrl"
+     class="ms-3">Last</a>
+  <a [ngClass]="{'disabled': page.last==true}" [queryParams]="{page:page.number+1, filter:filter}" [routerLink]="baseUrl"
+     class="link">⯈</a>
 </div>
 

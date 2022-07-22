@@ -2,20 +2,20 @@
   <div class="head">
     <div>
       <h5 class="d-inline">Question </h5>
-      <h5 class="d-inline" *ngIf="question.questionTemplateIndex==null; else inputBlock">{{index + 1}}</h5>
+      <h5 *ngIf="question.questionTemplateIndex==null; else inputBlock" class="d-inline">{{index + 1}}</h5>
       <ng-template #inputBlock>
-        <input (change)="indexChanged($event)" class="form-control inp text-center" type="number"
-               value="{{(question.questionTemplateIndex ?? 0) + 1}}" min="1" max="{{test.questionsCount}}">
+        <input (change)="indexChanged($event)" class="form-control inp text-center" max="{{test.questionsCount}}"
+               min="1" type="number" value="{{(question.questionTemplateIndex ?? 0) + 1}}">
       </ng-template>
     </div>
     <div>
       <i>Max score:</i>
-      <input [(ngModel)]="question.maxScore" class="form-control inp score-inp text-center" type="number" min="0">
+      <input [(ngModel)]="question.maxScore" class="form-control inp score-inp text-center" min="0" type="number">
       <a (click)="deleteQuestion()" class="button ms-4">❌</a>
     </div>
   </div>
   <div class="p-2">
-    <input [(ngModel)]="question.text" class="form-control text-center" placeholder="Question text" maxlength="500">
+    <input [(ngModel)]="question.text" class="form-control text-center" maxlength="500" placeholder="Question text">
   </div>
   <app-editor-answer
     *ngFor="let iterAnswer of question.answers; index as i"
@@ -23,7 +23,7 @@
     [index]="i"
     [question]="question"
   ></app-editor-answer>
-  <div class="text-center" *ngIf="question.answers.length<10">
+  <div *ngIf="question.answers.length<10" class="text-center">
     <a (click)="newAnswer()" class="button">+</a>
   </div>
 </div>
