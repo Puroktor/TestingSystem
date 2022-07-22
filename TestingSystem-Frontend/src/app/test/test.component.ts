@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FullTest} from "../entity/FullTest";
 import {TestService} from "../service/test.service";
 import {map} from "rxjs/operators";
@@ -9,6 +9,7 @@ import {Answer} from "../entity/Answer";
 import jwt_decode from 'jwt-decode';
 import {environment} from "../../environments/environment";
 import {AttemptService} from "../service/attempt.service";
+import {AttemptResult} from "../entity/AttemptResult";
 
 @Component({
   selector: 'app-test',
@@ -17,7 +18,8 @@ import {AttemptService} from "../service/attempt.service";
 })
 export class TestComponent implements OnInit {
 
-  @Input() test?: FullTest;
+  test?: FullTest;
+  result?: AttemptResult;
   hasSent: boolean = false;
   private userId!: number;
 
@@ -68,14 +70,9 @@ export class TestComponent implements OnInit {
     this.hasSent = true;
     this.attemptService.submitAttempt(answers, this.userId)
       .subscribe({
-        next: (result) => {
-          let message;
-          if (result.hasPassed) {
-            message = `Congratulations!\nYou have passed the test.\nYour score: ${result.score.toFixed(2)}%`;
-          } else {
-            message = `You have failed the test.\nYour score: ${result.score.toFixed(2)}%`;
-          }
-          Swal.fire(message).then(() => this.goToTestsPage());
+        next: (value) => {
+          this.hasSent = false;
+          this.result = value;
         },
         error: (err: HttpErrorResponse) => {
           if (err.status == 0) {

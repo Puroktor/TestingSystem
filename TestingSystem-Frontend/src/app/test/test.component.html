@@ -1,4 +1,4 @@
-<div *ngIf="test!=null; else elseBlock">
+<div *ngIf="test && !result; else result ? resultBlock : loadingBlock">
   <div [style.display]="!hasSent ? 'block' : 'none'">
     <div class="info">
       <div class="d-flex justify-content-between mb-4">
@@ -25,6 +25,15 @@
   </div>
 </div>
 <app-loading [style.display]="hasSent ? 'block' : 'none'" [text]="'Waiting for response...'"></app-loading>
-<ng-template #elseBlock>
+<ng-template #loadingBlock>
   <app-loading [text]="'Loading...'"></app-loading>
+</ng-template>
+<ng-template #resultBlock>
+  <div class="text-center m-5 p-5">
+    <h1>{{result?.hasPassed ? 'Congratulations!' : 'Oh no!'}}</h1>
+    <p>{{result?.hasPassed ? 'You have passed the test.' : 'You have failed the test.'}}</p>
+    <p>Your score: {{result?.score}}</p>
+    <p>Submit time: {{result?.dateTime | date: 'h:mm, d MMM yyyy'}}</p>
+    <button (click)="goToTestsPage()" class="btn btn-primary m-1">Ok</button>
+  </div>
 </ng-template>
