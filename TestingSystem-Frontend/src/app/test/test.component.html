@@ -30,7 +30,7 @@
 </ng-template>
 <ng-template #resultBlock>
   <div class="text-center m-5 p-5">
-    <h1>{{result?.hasPassed ? 'Congratulations!' : 'Oh no!'}}</h1>
+    <h1 class="mb-3">{{result?.hasPassed ? 'Congratulations!' : 'Oh no!'}}</h1>
     <p>{{result?.hasPassed ? 'You have passed the test.' : 'You have failed the test.'}}</p>
     <p>Your score: {{result?.score}}</p>
     <p>Submit time: {{result?.dateTime | date: 'h:mm, d MMM yyyy'}}</p>

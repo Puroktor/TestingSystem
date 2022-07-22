@@ -86,7 +86,7 @@ public class AttemptService {
             Map<Integer, Double> testIdToScoreMap = new HashMap<>();
             Double total = 0d;
             for (Test test : testList) {
-                Optional<Attempt> optionalAttempt = attemptRepository.findLatestByUserAndTest(user, test);
+                Optional<Attempt> optionalAttempt = attemptRepository.findTopByUserAndTestOrderByDateTimeDesc(user, test);
                 if (optionalAttempt.isPresent()) {
                     Attempt attempt = optionalAttempt.get();
                     total += attempt.getScore();

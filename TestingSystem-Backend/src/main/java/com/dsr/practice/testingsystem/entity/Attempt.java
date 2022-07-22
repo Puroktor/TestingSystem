@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Entity
+@Table(indexes = @Index(columnList = "dateTime"))
 @Getter
 @Setter
 @ToString

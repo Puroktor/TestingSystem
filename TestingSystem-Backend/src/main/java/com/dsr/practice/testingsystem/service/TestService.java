@@ -56,7 +56,7 @@ public class TestService {
         }
         return page.map(test -> {
             TestInfoDto infoDto = modelMapper.map(test, TestInfoDto.class);
-            Optional<Attempt> userAttempt = attemptRepository.findLatestByUserAndTest(user, test);
+            Optional<Attempt> userAttempt = attemptRepository.findTopByUserAndTestOrderByDateTimeDesc(user, test);
             userAttempt.ifPresent((attempt) -> infoDto.setUserScore(attempt.getScore()));
             return infoDto;
         });
