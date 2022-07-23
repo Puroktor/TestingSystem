@@ -45,9 +45,9 @@ public class TestService {
     }
 
     public Page<TestInfoDto> fetchTestPage(String filter, int index, int size, String nickname) {
-        Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new NoSuchElementException("Invalid user nickname"));
+        Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
         Page<Test> page;
         if (filter == null || filter.trim().isEmpty()) {
             page = testRepository.findAll(pageable);

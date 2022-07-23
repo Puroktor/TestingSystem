@@ -50,12 +50,11 @@ public class Attempt {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Attempt attempt = (Attempt) o;
-        return user != null && Objects.equals(user, attempt.user)
-                && test != null && Objects.equals(test, attempt.test);
+        return id != null && Objects.equals(id, attempt.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, test);
+        return getClass().hashCode();
     }
 }

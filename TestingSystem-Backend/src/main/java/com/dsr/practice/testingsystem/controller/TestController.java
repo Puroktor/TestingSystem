@@ -48,7 +48,7 @@ public class TestController {
             @ApiParam(value = "Index of desired page", example = "1") int index,
             @RequestParam("size") @Min(value = 1, message = "Page size must be >=1")
             @ApiParam(value = "Size of pages", example = "1") int size) {
-        String nickname = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String nickname = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(testService.fetchTestPage(programmingLang, index, size, nickname));

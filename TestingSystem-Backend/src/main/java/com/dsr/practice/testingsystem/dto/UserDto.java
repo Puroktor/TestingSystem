@@ -1,9 +1,13 @@
 package com.dsr.practice.testingsystem.dto;
 
 import com.dsr.practice.testingsystem.entity.Role;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
     private Integer id;
 

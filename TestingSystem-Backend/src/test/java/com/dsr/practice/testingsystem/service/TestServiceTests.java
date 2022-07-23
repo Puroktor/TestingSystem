@@ -4,11 +4,15 @@ import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.dto.QuestionDto;
 import com.dsr.practice.testingsystem.dto.TestDto;
 import com.dsr.practice.testingsystem.dto.TestInfoDto;
+import com.dsr.practice.testingsystem.entity.Attempt;
 import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;
+import com.dsr.practice.testingsystem.entity.User;
 import com.dsr.practice.testingsystem.mapper.TestMapper;
+import com.dsr.practice.testingsystem.repository.AttemptRepository;
 import com.dsr.practice.testingsystem.repository.QuestionRepository;
 import com.dsr.practice.testingsystem.repository.TestRepository;
+import com.dsr.practice.testingsystem.repository.UserRepository;
 import org.mockito.ArgumentMatchers;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.modelmapper.ModelMapper;
@@ -34,6 +38,10 @@ public class TestServiceTests {
     private TestRepository testRepository;
     @MockBean
     private QuestionRepository questionRepository;
+    @MockBean
+    private UserRepository userRepository;
+    @MockBean
+    private AttemptRepository attemptRepository;
     @MockBean
     private ModelMapper modelMapper;
     @MockBean
@@ -86,50 +94,56 @@ public class TestServiceTests {
     }
 
     @org.junit.jupiter.api.Test
-    public void fetchTestPageWithFilter() {
-        String filter = "filter";
+    public void fetchTestPageOfMissingUser() {
+        String filter = "filter", nickname = "user";
         int index = 0, size = 1;
-        Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
-        Test test = new Test();
-        TestInfoDto testInfoDto = new TestInfoDto();
-        Page<Test> page = new PageImpl<>(Collections.singletonList(test));
-        when(testRepository.findAllByProgrammingLang(filter, pageable)).thenReturn(page);
-        when(modelMapper.map(test, TestInfoDto.class)).thenReturn(testInfoDto);
+        when(userRepository.findByNickname(nickname)).thenReturn(Optional.empty());
 
-        assertEquals(new PageImpl<>(Collections.singletonList(testInfoDto)), testService.fetchTestPage(filter, index, size));
-        verify(testRepository, times(1)).findAllByProgrammingLang(filter, pageable);
-        verify(modelMapper, times(1)).map(test, TestInfoDto.class);
+        assertThrows(NoSuchElementException.class, () -> testService.fetchTestPage(filter, index, size, nickname));
+        verify(userRepository, times(1)).findByNickname(nickname);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void fetchTestPageWithFilter() {
+        fetchTestPage("filter");
     }
 
     @org.junit.jupiter.api.Test
     public void fetchTestPageWithNullFilter() {
-        int index = 0, size = 1;
-        Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
-        Test test = new Test();
-        TestInfoDto testInfoDto = new TestInfoDto();
-        Page<Test> page = new PageImpl<>(Collections.singletonList(test));
-        when(testRepository.findAll(pageable)).thenReturn(page);
-        when(modelMapper.map(test, TestInfoDto.class)).thenReturn(testInfoDto);
-
-        assertEquals(new PageImpl<>(Collections.singletonList(testInfoDto)), testService.fetchTestPage(null, index, size));
-        verify(testRepository, times(1)).findAll(pageable);
-        verify(modelMapper, times(1)).map(test, TestInfoDto.class);
+        fetchTestPage(null);
     }
 
     @org.junit.jupiter.api.Test
     public void fetchTestPageWithBlankFilter() {
-        String filter = "         ";
+        fetchTestPage("        ");
+    }
+
+    private void fetchTestPage(String filter) {
+        String nickname = "user";
         int index = 0, size = 1;
         Pageable pageable = PageRequest.of(index, size, Sort.by("id").descending());
-        Test test = new Test();
-        TestInfoDto testInfoDto = new TestInfoDto();
+        Test test = dataProvider.getValidTestWithBank();
+        User user = dataProvider.getUser();
         Page<Test> page = new PageImpl<>(Collections.singletonList(test));
+        Attempt attempt = new Attempt();
+        attempt.setScore(100d);
+        when(userRepository.findByNickname(nickname)).thenReturn(Optional.of(user));
+        when(testRepository.findAllByProgrammingLang(filter, pageable)).thenReturn(page);
         when(testRepository.findAll(pageable)).thenReturn(page);
-        when(modelMapper.map(test, TestInfoDto.class)).thenReturn(testInfoDto);
+        when(modelMapper.map(test, TestInfoDto.class)).thenReturn(new TestInfoDto());
+        when(attemptRepository.findTopByUserAndTestOrderByDateTimeDesc(user, test)).thenReturn(Optional.of(attempt));
 
-        assertEquals(new PageImpl<>(Collections.singletonList(testInfoDto)), testService.fetchTestPage(filter, index, size));
-        verify(testRepository, times(1)).findAll(pageable);
+        TestInfoDto infoDto = new TestInfoDto();
+        infoDto.setUserScore(attempt.getScore());
+        boolean isBlank = filter == null || filter.trim().isEmpty();
+        assertEquals(new PageImpl<>(Collections.singletonList(infoDto)),
+                testService.fetchTestPage(filter, index, size, nickname));
+        verify(userRepository, times(1)).findByNickname(nickname);
+        verify(testRepository, times(isBlank ? 0 : 1)).findAllByProgrammingLang(filter, pageable);
+        verify(testRepository, times(isBlank ? 1 : 0)).findAll(pageable);
         verify(modelMapper, times(1)).map(test, TestInfoDto.class);
+        verify(attemptRepository, times(1)).findTopByUserAndTestOrderByDateTimeDesc(
+                dataProvider.getUser(), dataProvider.getValidTestWithBank());
     }
 
     @org.junit.jupiter.api.Test

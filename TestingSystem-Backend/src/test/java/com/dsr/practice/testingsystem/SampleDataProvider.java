@@ -4,6 +4,7 @@ import com.dsr.practice.testingsystem.dto.*;
 import com.dsr.practice.testingsystem.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,5 +81,22 @@ public class SampleDataProvider {
     public User getUser() {
         return new User(1, "User User User", "User", "qwerty", Role.STUDENT,
                 "The university", 2, 4, "user@user.com", new ArrayList<>());
+    }
+
+    public UserDto getUserDto() {
+        return new UserDto(1, "User User User", "User", Role.STUDENT,
+                "The university", 2, 4, "user@user.com");
+    }
+
+    public String getString(int length) {
+        return new String(new char[length]).replace('\0', 'a');
+    }
+
+    public AttemptResultDto getAttemptResult() {
+        return new AttemptResultDto(1, 1, "Test", LocalDateTime.MIN, 10d, false);
+    }
+
+    public AnswerDto getValidAnswerDto() {
+        return new AnswerDto(1, "Answer", true);
     }
 }

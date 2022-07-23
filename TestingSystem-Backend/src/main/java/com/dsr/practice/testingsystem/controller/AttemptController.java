@@ -36,7 +36,7 @@ public class AttemptController {
     public ResponseEntity<AttemptResultDto> submitAttempt(@RequestBody @NotNull(message = "Provide answers")
                                                           @Size(min = 1, message = "Provide at least one answer") @Valid
                                                           @ApiParam(value = "Your answers") List<AnswerDto> answers) {
-        String nickname = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String nickname = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(attemptService.submitAttempt(answers, nickname));

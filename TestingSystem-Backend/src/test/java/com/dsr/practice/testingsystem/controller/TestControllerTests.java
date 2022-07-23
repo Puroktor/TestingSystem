@@ -71,7 +71,7 @@ public class TestControllerTests {
     @WithMockUser(authorities = "USER_EDIT")
     public void createTestWithTooBigName() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
-        testDto.setName(new String(new char[51]).replace('\0', 'a'));
+        testDto.setName(dataProvider.getString(51));
         assertThrows(ValidationException.class, () -> testController.createTest(testDto));
     }
 
@@ -103,7 +103,7 @@ public class TestControllerTests {
     @WithMockUser(authorities = "USER_EDIT")
     public void createTestWitTooBigQuestionText() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
-        testDto.getQuestions().get(0).setText(new String(new char[501]).replace('\0', 'a'));
+        testDto.getQuestions().get(0).setText(dataProvider.getString(501));
         assertThrows(ValidationException.class, () -> testController.createTest(testDto));
     }
 
@@ -143,7 +143,7 @@ public class TestControllerTests {
     @WithMockUser(authorities = "USER_EDIT")
     public void createTestWithTooBigAnswerText() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
-        testDto.getQuestions().get(0).getAnswers().get(0).setText(new String(new char[201]).replace('\0', 'a'));
+        testDto.getQuestions().get(0).getAnswers().get(0).setText(dataProvider.getString(201));
         assertThrows(ValidationException.class, () -> testController.createTest(testDto));
     }
 
@@ -153,18 +153,18 @@ public class TestControllerTests {
         Page<TestInfoDto> page = new PageImpl<>(Collections.emptyList());
         String filter = "filter";
         int index = 0, size = 1;
-        when(testService.fetchTestPage(filter, index, size)).thenReturn(page);
+        when(testService.fetchTestPage(filter, index, size, "user")).thenReturn(page);
         ResponseEntity<Page<TestInfoDto>> returned = testController.fetchTestPage(filter, index, size);
 
         assertEquals(HttpStatus.OK, returned.getStatusCode());
         assertEquals(new PageImpl<>(Collections.emptyList()), returned.getBody());
-        verify(testService, times(1)).fetchTestPage(filter, index, size);
+        verify(testService, times(1)).fetchTestPage(filter, index, size, "user");
     }
 
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")
     public void fetchTestPageWithTooBigFilter() {
-        String filter = new String(new char[51]).replace('\0', 'a');
+        String filter = dataProvider.getString(51);
         int index = -1, size = 1;
         assertThrows(ValidationException.class, () -> testController.fetchTestPage(filter, index, size));
     }
@@ -240,7 +240,7 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithBlankLang() {
+    public void updateTestWithBlankLang() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.setProgrammingLang("");
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -248,7 +248,7 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithNullLang() {
+    public void updateTestWithNullLang() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.setProgrammingLang(null);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -256,15 +256,15 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithTooBigLang() {
+    public void updateTestWithTooBigLang() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
-        testDto.setProgrammingLang(new String(new char[51]).replace('\0', 'a'));
+        testDto.setProgrammingLang(dataProvider.getString(51));
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
     }
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithoutType() {
+    public void updateTestWithoutType() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.setTestType(null);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -272,7 +272,7 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithTooSmallQuestionCount() {
+    public void updateTestWithTooSmallQuestionCount() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.setQuestionsCount(0);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -280,7 +280,7 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithTooBigQuestionCount() {
+    public void updateTestWithTooBigQuestionCount() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.setQuestionsCount(100);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -288,7 +288,7 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithNullScore() {
+    public void updateTestWithNullScore() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.getQuestions().get(0).setMaxScore(null);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -296,7 +296,7 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithZeroScore() {
+    public void updateTestWithZeroScore() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.getQuestions().get(0).setMaxScore(0);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
@@ -304,9 +304,33 @@ public class TestControllerTests {
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
-    public void updateValidTestWithNullRightAnswer() {
+    public void updateTestWithNullRightAnswer() {
         TestDto testDto = dataProvider.getValidTestDtoWithBank();
         testDto.getQuestions().get(0).getAnswers().get(0).setIsRight(null);
+        assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_EDIT")
+    public void updateTestWithNullPassingScore() {
+        TestDto testDto = dataProvider.getValidTestDtoWithBank();
+        testDto.setPassingScore(null);
+        assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_EDIT")
+    public void updateTestWithZeroPassingScore() {
+        TestDto testDto = dataProvider.getValidTestDtoWithBank();
+        testDto.setPassingScore(0);
+        assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_EDIT")
+    public void updateTestWithTooBigPassingScore() {
+        TestDto testDto = dataProvider.getValidTestDtoWithBank();
+        testDto.setPassingScore(101);
         assertThrows(ValidationException.class, () -> testController.updateTest(testDto.getId(), testDto));
     }
 

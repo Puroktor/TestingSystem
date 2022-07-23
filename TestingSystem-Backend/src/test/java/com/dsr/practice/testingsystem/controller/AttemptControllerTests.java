@@ -1,7 +1,9 @@
 package com.dsr.practice.testingsystem.controller;
 
+import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.dto.AnswerDto;
 import com.dsr.practice.testingsystem.dto.AttemptDto;
+import com.dsr.practice.testingsystem.dto.AttemptResultDto;
 import com.dsr.practice.testingsystem.dto.LeaderboardPageDto;
 import com.dsr.practice.testingsystem.service.AttemptService;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class AttemptControllerTests {
     @Autowired
+    private SampleDataProvider dataProvider;
+    @Autowired
     private AttemptController attemptController;
     @MockBean
     private AttemptService attemptService;
@@ -33,63 +37,64 @@ public class AttemptControllerTests {
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")
     public void submitAttempt() {
-        int userId = 1;
-        AnswerDto dto = new AnswerDto(1, "Answer", true);
+        AnswerDto dto = dataProvider.getValidAnswerDto();
         List<AnswerDto> list = Collections.singletonList(dto);
-        doNothing().when(attemptService).submitAttempt(list, userId);
-        ResponseEntity<Void> returned = attemptController.submitAttempt(list, userId);
+        when(attemptService.submitAttempt(list, "user")).thenReturn(dataProvider.getAttemptResult());
+        ResponseEntity<AttemptResultDto> returned = attemptController.submitAttempt(list);
 
         assertEquals(HttpStatus.OK, returned.getStatusCode());
-        verify(attemptService, times(1)).submitAttempt(list, userId);
+        assertEquals(dataProvider.getAttemptResult(), returned.getBody());
+        verify(attemptService, times(1)).submitAttempt(list, "user");
     }
 
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")
     public void submitAttemptWithInvalidAnswer() {
-        AnswerDto dto = new AnswerDto(1, "Answer", null);
+        AnswerDto dto = dataProvider.getValidAnswerDto();
+        dto.setIsRight(null);
         assertThrows(ValidationException.class,
-                () -> attemptController.submitAttempt(Collections.singletonList(dto), 1));
+                () -> attemptController.submitAttempt(Collections.singletonList(dto)));
     }
 
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")
     public void submitAttemptWithNullAnswerList() {
-        assertThrows(ValidationException.class, () -> attemptController.submitAttempt(null, 1));
+        assertThrows(ValidationException.class, () -> attemptController.submitAttempt(null));
     }
 
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")
     public void submitAttemptWithEmptyAnswerList() {
-        assertThrows(ValidationException.class, () -> attemptController.submitAttempt(new ArrayList<>(), 1));
+        assertThrows(ValidationException.class, () -> attemptController.submitAttempt(new ArrayList<>()));
     }
 
     @Test
     public void submitAttemptAsUnauthorized() {
-        assertThrows(AuthenticationException.class, () -> attemptController.submitAttempt(new ArrayList<>(), 1));
+        assertThrows(AuthenticationException.class, () -> attemptController.submitAttempt(new ArrayList<>()));
     }
 
     @Test
     @WithMockUser(authorities = "USER_EDIT")
     public void getAttempt() {
         AttemptDto attemptDto = new AttemptDto();
-        int userId = 1, testId = 1;
-        when(attemptService.getAttempt(userId, testId)).thenReturn(attemptDto);
-        ResponseEntity<AttemptDto> returned = attemptController.getAttempt(userId, testId);
+        int attemptId = 1;
+        when(attemptService.getAttempt(attemptId)).thenReturn(attemptDto);
+        ResponseEntity<AttemptDto> returned = attemptController.getAttempt(attemptId);
 
         assertEquals(HttpStatus.OK, returned.getStatusCode());
         assertEquals(new AttemptDto(), returned.getBody());
-        verify(attemptService, times(1)).getAttempt(userId, testId);
+        verify(attemptService, times(1)).getAttempt(attemptId);
     }
 
     @Test
     @WithMockUser(authorities = "USER_SUBMIT")
     public void getAttemptAsStudent() {
-        assertThrows(AccessDeniedException.class, () -> attemptController.getAttempt(1, 1));
+        assertThrows(AccessDeniedException.class, () -> attemptController.getAttempt(1));
     }
 
     @Test
     public void getAttemptAsUnauthorized() {
-        assertThrows(AuthenticationException.class, () -> attemptController.getAttempt(1, 1));
+        assertThrows(AuthenticationException.class, () -> attemptController.getAttempt(1));
     }
 
     @Test
@@ -120,5 +125,29 @@ public class AttemptControllerTests {
     @Test
     public void getLeaderboardPageAsUnauthorized() {
         assertThrows(AuthenticationException.class, () -> attemptController.getLeaderboardPage(1, 1));
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_EDIT")
+    public void getAttemptsResults() {
+        int attemptId = 1;
+        when(attemptService.getAttemptsResults(attemptId)).thenReturn(
+                Collections.singletonList(dataProvider.getAttemptResult()));
+        ResponseEntity<List<AttemptResultDto>> returned = attemptController.getAttemptsResults(attemptId);
+
+        assertEquals(HttpStatus.OK, returned.getStatusCode());
+        assertEquals(Collections.singletonList(dataProvider.getAttemptResult()), returned.getBody());
+        verify(attemptService, times(1)).getAttemptsResults(attemptId);
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER_SUBMIT")
+    public void getAttemptsResultsAsStudent() {
+        assertThrows(AccessDeniedException.class, () -> attemptController.getAttemptsResults(1));
+    }
+
+    @Test
+    public void getAttemptsResultsAsUnauthorized() {
+        assertThrows(AuthenticationException.class, () -> attemptController.getAttemptsResults(1));
     }
 }

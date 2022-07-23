@@ -53,9 +53,9 @@ public class UserServiceTests {
         when(modelMapper.map(dto, User.class)).thenReturn(user);
         when(passwordEncoder.encode(user.getPassword())).thenReturn(user.getPassword());
         when(userRepository.save(user)).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(new UserDto());
+        when(modelMapper.map(user, UserDto.class)).thenReturn(dataProvider.getUserDto());
 
-        assertEquals(new UserDto(), userService.createUser(dto));
+        assertEquals(dataProvider.getUserDto(), userService.createUser(dto));
         verify(userRepository, times(1)).findByNickname(dto.getNickname());
         verify(modelMapper, times(1)).map(dto, User.class);
         verify(passwordEncoder, times(1)).encode(user.getPassword());
@@ -173,5 +173,25 @@ public class UserServiceTests {
 
         assertThrows(JWTDecodeException.class, () -> userService.refreshToken(token));
         verify(tokenProvider, times(1)).getUsernameFromJwt(token);
+    }
+
+    @Test
+    public void getExistingUser() {
+        int userId = 1;
+        when(userRepository.findById(userId)).thenReturn(Optional.of(dataProvider.getUser()));
+        when(modelMapper.map(dataProvider.getUser(), UserDto.class)).thenReturn(dataProvider.getUserDto());
+
+        assertEquals(dataProvider.getUserDto(), userService.getUser(userId));
+        verify(userRepository, times(1)).findById(userId);
+        verify(modelMapper, times(1)).map(dataProvider.getUser(), UserDto.class);
+    }
+
+    @Test
+    public void getMissingUser() {
+        int userId = 1;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> userService.getUser(userId));
+        verify(userRepository, times(1)).findById(userId);
     }
 }
