@@ -6,4 +6,5 @@ My practice project at DSR Corporation.
 * Create, read (pagination implemented), update, delete tests and pass tests of 2 types:
   * with question bank
   * with question options
-* Get a leaderboard (also with pagination)
+* Get a leaderboard (also with pagination and filter by tests)
+* View user profiles and all their attempts
