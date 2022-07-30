@@ -7,20 +7,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.persistence.EntityManager;
 
 @DataJpaTest
-@Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public abstract class PostgresRepository {
-    @Container
-    protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14.4-alpine")
-            .withDatabaseName("test-db")
-            .withUsername("user")
-            .withPassword("pass");
+    protected static final PostgreSQLContainer<?> postgres;
+
+    static {
+        postgres = new PostgreSQLContainer<>("postgres:14.4-alpine")
+                .withDatabaseName("test-db")
+                .withUsername("user")
+                .withPassword("pass");
+        postgres.start();
+    }
 
     @DynamicPropertySource
     protected static void registerPgProperties(DynamicPropertyRegistry registry) {
