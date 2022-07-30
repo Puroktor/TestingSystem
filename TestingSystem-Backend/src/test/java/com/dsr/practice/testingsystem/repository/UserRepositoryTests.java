@@ -1,10 +1,16 @@
 package com.dsr.practice.testingsystem.repository;
 
+import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.ActiveProfiles;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +18,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UserRepositoryTests extends PostgresRepository {
+@SpringBootTest
+@ActiveProfiles("test")
+@AutoConfigureTestEntityManager
+@Transactional
+public class UserRepositoryTests {
+    @Autowired
+    private SampleDataProvider dataProvider;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @org.junit.jupiter.api.Test
     public void findPageOfTopByDifferentRole() {

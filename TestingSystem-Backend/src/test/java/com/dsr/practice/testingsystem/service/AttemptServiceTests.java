@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class AttemptServiceTests {
     @Autowired
     private SampleDataProvider dataProvider;

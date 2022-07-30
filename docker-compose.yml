@@ -22,7 +22,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/testing_system_db
+      - SPRING_PROFILES_ACTIVE=docker
     networks:
       - db-back
       - back-front

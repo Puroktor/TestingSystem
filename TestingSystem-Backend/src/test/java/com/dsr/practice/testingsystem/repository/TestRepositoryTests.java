@@ -1,19 +1,33 @@
 package com.dsr.practice.testingsystem.repository;
 
+import com.dsr.practice.testingsystem.SampleDataProvider;
 import com.dsr.practice.testingsystem.entity.Question;
 import com.dsr.practice.testingsystem.entity.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.ActiveProfiles;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestRepositoryTests extends PostgresRepository {
+@SpringBootTest
+@ActiveProfiles("test")
+@AutoConfigureTestEntityManager
+@Transactional
+public class TestRepositoryTests {
+    @Autowired
+    private SampleDataProvider dataProvider;
     @Autowired
     private TestRepository testRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @org.junit.jupiter.api.Test
     public void findAllByExistingProgrammingLang() {

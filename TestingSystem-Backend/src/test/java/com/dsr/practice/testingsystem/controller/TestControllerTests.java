@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.validation.ValidationException;
 import java.util.Collections;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class TestControllerTests {
     @Autowired
     private SampleDataProvider dataProvider;

@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class UserServiceTests {
     @Autowired
     private SampleDataProvider dataProvider;
