@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  testing-system-postgres:
+    image: "postgres:14.4-alpine"
+    container_name:  testing-system-postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=testing_system_db
+      - POSTGRES_USER=testing_system_user
+      - POSTGRES_PASSWORD=a,Pf{`?-vaP6Q;ya
+
+  testing-system-backend:
+    build: ./TestingSystem-Backend
+    container_name: testing-system-backend
+    ports:
+      - 8081:8081
+    links:
+      - testing-system-postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://testing-system-postgres:5432/testing_system_db
+
+  testing-system-frontend:
+    build: ./TestingSystem-Frontend
+    container_name: testing-system-frontend
+    ports:
+      - 4200:4200
+    links:
+      - testing-system-backend
+      
+volumes:
+  db-data:
