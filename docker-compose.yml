@@ -19,8 +19,6 @@ services:
     container_name: testing-system-backend
     ports:
       - 8081:8081
-    links:
-      - testing-system-postgres
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://testing-system-postgres:5432/testing_system_db
 
@@ -29,8 +27,6 @@ services:
     container_name: testing-system-frontend
     ports:
       - 4200:4200
-    links:
-      - testing-system-backend
       
 volumes:
   db-data:
