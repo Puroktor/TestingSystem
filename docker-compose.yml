@@ -2,9 +2,9 @@ version: '3'
 
 services:
 
-  testing-system-postgres:
+  postgres:
     image: "postgres:14.4-alpine"
-    container_name: testing-system-postgres
+    container_name: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -16,20 +16,20 @@ services:
     networks:
       - db-back
 
-  testing-system-backend:
+  backend:
     build: ./TestingSystem-Backend
-    container_name: testing-system-backend
+    container_name: backend
     ports:
       - "8081:8081"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://testing-system-postgres:5432/testing_system_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/testing_system_db
     networks:
       - db-back
       - back-front
 
-  testing-system-frontend:
+  frontend:
     build: ./TestingSystem-Frontend
-    container_name: testing-system-frontend
+    container_name: frontend
     ports:
       - "4200:4200"
     networks:
