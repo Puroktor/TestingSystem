@@ -4,29 +4,40 @@ services:
 
   testing-system-postgres:
     image: "postgres:14.4-alpine"
-    container_name:  testing-system-postgres
+    container_name: testing-system-postgres
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_DB=testing_system_db
       - POSTGRES_USER=testing_system_user
       - POSTGRES_PASSWORD=a,Pf{`?-vaP6Q;ya
+    networks:
+      - db-back
 
   testing-system-backend:
     build: ./TestingSystem-Backend
     container_name: testing-system-backend
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://testing-system-postgres:5432/testing_system_db
+    networks:
+      - db-back
+      - back-front
 
   testing-system-frontend:
     build: ./TestingSystem-Frontend
     container_name: testing-system-frontend
     ports:
-      - 4200:4200
-      
+      - "4200:4200"
+    networks:
+      - back-front
+
 volumes:
   db-data:
+
+networks:
+  back-front:
+  db-back:

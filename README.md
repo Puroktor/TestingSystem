@@ -8,3 +8,7 @@ My practice project at DSR Corporation.
   * with question options
 * Get a leaderboard (also with pagination and filter by tests)
 * View user profiles and all their attempts
+
+### Other features:
+* JUnit tests (133 test cases)
+* Launch in Docker
