@@ -20,7 +20,7 @@ export class LeaderboardComponent implements OnInit {
   leaderboard?: LeaderboardPage;
   chosenTestRecords: BoardTestRecord[] = [];
   nickName: string | null = null;
-  pageSize: number = 3;
+  pageSize: number = 5;
   isTeacher: boolean = false;
   dropdownSettings: IDropdownSettings;
 

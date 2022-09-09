@@ -35,7 +35,8 @@ export class UserComponent implements OnInit {
             Swal.fire('No such user').then(() => this.goToLeaderboard());
             return;
           }
-          let userId = +value[0];
+          let userId = +value;
+          console.log(userId);
           this.getUserFromServer(userId);
         }
       });
