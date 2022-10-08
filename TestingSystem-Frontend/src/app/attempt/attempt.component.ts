@@ -37,7 +37,7 @@ export class AttemptComponent implements OnInit {
             Swal.fire('No such attempt').then(() => this.goToLeaderboard());
             return;
           }
-          let attemptId = +value[0];
+          let attemptId = +value;
           this.getAttemptFromServer(attemptId);
         }
       });
